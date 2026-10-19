@@ -1,0 +1,14 @@
+# Each entry here maps a local resource to one or more corresponding objects in Postman Cloud
+
+
+# Each entry here maps a local resource to one or more corresponding objects in Postman Cloud
+
+cloudResources:
+  collections:
+    ../postman/collections/DIPE API: 32794028-e5b3b099-61cf-4ee0-8087-1af353d157ac
+
+localResources:
+  collections:
+    - ../postman/collections/DIPE API
+workspace:
+  id: 21dcb140-f5b2-46d6-95c8-e54b3f07989b
