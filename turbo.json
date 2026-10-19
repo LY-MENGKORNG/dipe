@@ -1,0 +1,40 @@
+{
+  "ui": "tui",
+  "$schema": "./node_modules/turbo/schema.json",
+  "globalDependencies": [".env", ".env.*"],
+  "tasks": {
+    "dev": {
+      "persistent": true,
+      "cache": false
+    },
+    "build": {
+      "dependsOn": ["^build"],
+      "outputs": ["dist"],
+      "persistent": true,
+      "with": ["@repo/frontend#build", "@repo/backend#build"]
+    },
+    "start": {
+      "dependsOn": ["^start"],
+      "with": ["@repo/backend#start"]
+    },
+    "preview": {
+      "dependsOn": ["^preview"]
+    },
+    "//#lint": {
+      "cache": false
+    },
+    "//#lint:check": {},
+    "//#fmt": {
+      "cache": false
+    },
+    "//#fmt:check": {},
+    "fmt": {
+      "dependsOn": ["^fmt"],
+      "persistent": true,
+      "cache": false
+    },
+    "fmt:check": {
+      "dependsOn": ["^fmt"]
+    }
+  }
+}

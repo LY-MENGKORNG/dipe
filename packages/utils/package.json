@@ -1,0 +1,7 @@
+{
+  "name": "@repo/utils",
+  "description": "Shared utility package",
+  "exports": {
+    ".": "./src/index.ts"
+  }
+}

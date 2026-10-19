@@ -1,0 +1,9 @@
+{
+  "$schema": "./node_modules/oxfmt/configuration_schema.json",
+  "singleQuote": true,
+  "trailingComma": "all",
+  "printWidth": 80,
+  "semi": false,
+  "sortPackageJson": false,
+  "ignorePatterns": ["src/modules/db/migrations/**"]
+}
