@@ -1,0 +1,23 @@
+$kind: http-example
+request:
+  url: '{{base_url}}/github/users/octocat'
+  method: GET
+  pathVariables:
+    - key: 'username'
+      value: 'octocat'
+response:
+  statusCode: 200
+  statusText: OK
+  headers:
+    Content-Type: application/json; charset=utf-8
+  body:
+    type: json
+    content: |-
+      {
+        "login": "octocat",
+        "name": "The Octocat",
+        "avatar_url": "https://avatars.githubusercontent.com/u/583231?v=4",
+        "html_url": "https://github.com/octocat",
+        "public_repos": 8,
+        "followers": 24650
+      }

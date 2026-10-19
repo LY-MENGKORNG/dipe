@@ -1,0 +1,12 @@
+$kind: http-request
+method: GET
+url: '{{base_url}}/auth/me'
+order: 4000
+scripts:
+  - type: afterResponse
+    language: text/javascript
+    code: |-
+      pm.test("200 OK", () => pm.response.to.have.status(200));
+      const body = pm.response.json();
+      pm.test("is the admin", () => pm.expect(body.role).to.equal("admin"));
+      pm.test("never exposes the password hash", () => pm.expect(body).to.not.have.property("password_hash"));

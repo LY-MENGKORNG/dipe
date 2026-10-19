@@ -1,0 +1,20 @@
+$kind: http-request
+method: POST
+url: '{{base_url}}/users'
+order: 3000
+headers:
+  - key: Content-Type
+    value: application/json
+body:
+  type: json
+  content: |-
+    {
+      "name": "Demo User",
+      "email": "{{user_email}}",
+      "password": "Password1"
+    }
+scripts:
+  - type: afterResponse
+    language: text/javascript
+    code: |-
+      pm.test("409 Conflict (unique email, Prisma P2002)", () => pm.response.to.have.status(409));

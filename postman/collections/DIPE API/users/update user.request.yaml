@@ -1,0 +1,24 @@
+$kind: http-request
+method: PATCH
+url: '{{base_url}}/users/:id'
+order: 7000
+pathVariables:
+  - key: id
+    value: '{{user_id}}'
+headers:
+  - key: Content-Type
+    value: application/json
+body:
+  type: json
+  content: |-
+    {
+      "name": "Demo User Renamed"
+    }
+scripts:
+  - type: afterResponse
+    language: text/javascript
+    code: |-
+      pm.test("200 OK", () => pm.response.to.have.status(200));
+      const body = pm.response.json();
+      pm.test("name changed", () => pm.expect(body.name).to.equal("Demo User Renamed"));
+      pm.test("role untouched by partial update", () => pm.expect(body.role).to.equal("employee"));

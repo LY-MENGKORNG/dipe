@@ -1,0 +1,11 @@
+$kind: http-request
+method: GET
+url: '{{base_url}}/users'
+order: 8000
+auth:
+  type: noauth
+scripts:
+  - type: afterResponse
+    language: text/javascript
+    code: |-
+      pm.test("401 Unauthorized (AuthGuard)", () => pm.response.to.have.status(401));

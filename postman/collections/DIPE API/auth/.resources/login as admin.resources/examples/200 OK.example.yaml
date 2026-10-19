@@ -1,0 +1,28 @@
+$kind: http-example
+request:
+  url: '{{base_url}}/auth/login'
+  method: POST
+  headers:
+    - key: 'Content-Type'
+      value: 'application/json'
+  body:
+    type: json
+    content: |-
+      {
+        "email": "{{admin_email}}",
+        "password": "{{admin_password}}"
+      }
+response:
+  statusCode: 200
+  statusText: OK
+  headers:
+    Content-Type: application/json; charset=utf-8
+    X-RateLimit-Limit: '5'
+  body:
+    type: json
+    content: |-
+      {
+        "accessToken": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJzdWIiOjIsImVtYWlsIjoiYWRtaW5AZGlwZS5kZXYiLCJyb2xlIjoiYWRtaW4ifQ.signature",
+        "tokenType": "Bearer",
+        "expiresIn": "1h"
+      }

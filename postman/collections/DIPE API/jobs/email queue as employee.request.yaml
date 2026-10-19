@@ -1,0 +1,14 @@
+$kind: http-request
+method: GET
+url: '{{base_url}}/jobs/email'
+order: 2000
+auth:
+  type: bearer
+  credentials:
+    - key: token
+      value: '{{employee_token}}'
+scripts:
+  - type: afterResponse
+    language: text/javascript
+    code: |-
+      pm.test("403 Forbidden (admin only)", () => pm.response.to.have.status(403));

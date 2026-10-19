@@ -1,0 +1,38 @@
+name: DIPE local
+values:
+  - key: base_url
+    value: 'http://localhost:3000/api'
+    enabled: true
+    type: default
+  - key: admin_email
+    value: admin@dipe.dev
+    enabled: true
+    type: default
+  - key: admin_password
+    value: Admin@12345
+    enabled: true
+    type: secret
+  - key: employee_email
+    value: employee@dipe.dev
+    enabled: true
+    type: default
+  - key: employee_password
+    value: Employee@12345
+    enabled: true
+    type: secret
+  - key: admin_token
+    value: ''
+    enabled: true
+    type: secret
+  - key: employee_token
+    value: ''
+    enabled: true
+    type: secret
+  - key: user_email
+    value: ''
+    enabled: true
+    type: default
+  - key: user_id
+    value: ''
+    enabled: true
+    type: default

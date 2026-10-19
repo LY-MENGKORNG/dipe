@@ -1,0 +1,13 @@
+$kind: http-request
+method: GET
+url: '{{base_url}}/users/:id'
+order: 5000
+pathVariables:
+  - key: id
+    value: '{{user_id}}'
+scripts:
+  - type: afterResponse
+    language: text/javascript
+    code: |-
+      pm.test("200 OK", () => pm.response.to.have.status(200));
+      pm.test("is the created user", () => pm.expect(pm.response.json().email).to.equal(pm.environment.get("user_email")));

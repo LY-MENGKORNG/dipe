@@ -1,0 +1,28 @@
+$kind: http-example
+request:
+  url: '{{base_url}}/users'
+  method: POST
+  headers:
+    - key: 'Content-Type'
+      value: 'application/json'
+  body:
+    type: json
+    content: |-
+      {
+        "name": "Demo User",
+        "email": "{{user_email}}",
+        "password": "Password1"
+      }
+response:
+  statusCode: 403
+  statusText: Forbidden
+  headers:
+    Content-Type: application/json; charset=utf-8
+  body:
+    type: json
+    content: |-
+      {
+        "message": "Insufficient role",
+        "error": "Forbidden",
+        "statusCode": 403
+      }

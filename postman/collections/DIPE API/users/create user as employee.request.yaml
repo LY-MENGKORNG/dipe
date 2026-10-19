@@ -1,0 +1,25 @@
+$kind: http-request
+method: POST
+url: '{{base_url}}/users'
+order: 9000
+auth:
+  type: bearer
+  credentials:
+    - key: token
+      value: '{{employee_token}}'
+headers:
+  - key: Content-Type
+    value: application/json
+body:
+  type: json
+  content: |-
+    {
+      "name": "Not Allowed",
+      "email": "not-allowed@dipe.dev",
+      "password": "Password1"
+    }
+scripts:
+  - type: afterResponse
+    language: text/javascript
+    code: |-
+      pm.test("403 Forbidden (RolesGuard)", () => pm.response.to.have.status(403));

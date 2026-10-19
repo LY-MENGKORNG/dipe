@@ -1,0 +1,28 @@
+$kind: http-request
+method: GET
+url: '{{base_url}}/users?limit=5&offset=0'
+order: 1000
+queryParams:
+  - key: limit
+    value: '5'
+  - key: offset
+    value: '0'
+  - key: q
+    value: ''
+    disabled: true
+  - key: role
+    value: admin
+    disabled: true
+scripts:
+  - type: afterResponse
+    language: text/javascript
+    code: |-
+      pm.test("200 OK", () => pm.response.to.have.status(200));
+      const body = pm.response.json();
+      pm.test("is paginated", () => {
+        pm.expect(body.data).to.be.an("array");
+        pm.expect(body.limit).to.equal(5);
+        pm.expect(body.total).to.be.a("number");
+      });
+      pm.test("no password hashes", () => body.data.forEach((u) => pm.expect(u).to.not.have.property("password_hash")));
+examples: './.resources/list users.resources/examples'

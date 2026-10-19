@@ -1,0 +1,24 @@
+$kind: collection
+name: DIPE API
+description: |-
+  Workshop demo API — "Data, Integration & Production Essentials".
+
+  Run the folders in order: **auth** logs in and stores `admin_token` / `employee_token`,
+  the other folders reuse them. Requests use the admin token by default (collection auth);
+  requests that demonstrate 401/403 override it.
+
+  Prerequisites: Postgres + Redis running, `bun run db:migrate:dev && bun run db:seed`, API on `base_url`.
+variables:
+  - key: base_url
+    value: ''
+  - key: admin_email
+    value: ''
+  - key: admin_token
+    value: ''
+auth:
+  - id: 2d7724bd-b1d9-4e9e-a4db-162470ab8ca1
+    name: bearer auth
+    type: bearer
+    credentials:
+      - key: token
+        value: '{{admin_token}}'

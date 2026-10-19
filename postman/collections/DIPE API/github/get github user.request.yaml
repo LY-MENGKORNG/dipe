@@ -1,0 +1,23 @@
+$kind: http-request
+method: GET
+url: '{{base_url}}/github/users/:username'
+order: 1000
+pathVariables:
+  - key: username
+    value: octocat
+auth:
+  type: bearer
+  credentials:
+    - key: token
+      value: '{{employee_token}}'
+scripts:
+  - type: afterResponse
+    language: text/javascript
+    code: |-
+      pm.test("200 OK", () => pm.response.to.have.status(200));
+      const body = pm.response.json();
+      pm.test("validated GitHub profile", () => {
+        pm.expect(body.login).to.equal("octocat");
+        pm.expect(body.public_repos).to.be.a("number");
+      });
+examples: './.resources/get github user.resources/examples'

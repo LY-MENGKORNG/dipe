@@ -1,0 +1,28 @@
+$kind: http-example
+request:
+  url: '{{base_url}}/users?limit=5&offset=0'
+  method: GET
+  queryParams:
+    - key: 'limit'
+      value: '5'
+    - key: 'offset'
+      value: '0'
+    - key: 'q'
+      value: ''
+      disabled: true
+    - key: 'role'
+      value: 'admin'
+      disabled: true
+response:
+  statusCode: 401
+  statusText: Unauthorized
+  headers:
+    Content-Type: application/json; charset=utf-8
+  body:
+    type: json
+    content: |-
+      {
+        "message": "Missing bearer token",
+        "error": "Unauthorized",
+        "statusCode": 401
+      }

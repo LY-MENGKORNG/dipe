@@ -1,0 +1,35 @@
+$kind: http-request
+description: |-
+  Returns a snapshot of the email job queue, including counts by status and a list of recent jobs.
+
+  **Endpoint:** `GET /jobs/email`
+
+  **Response fields:**
+
+  - `counts` — object with queue depth broken down by state: `waiting`, `active`, `completed`, `failed`, `delayed`.
+      
+  - `recent` — array of recent job objects. Each job has at minimum a `name` (e.g. `"welcome"`) and a `data` object containing the recipient `email`.
+      
+
+  **Tests included:**
+
+  - Asserts HTTP 200 OK.
+      
+  - Asserts `counts` contains all five expected state keys.
+      
+  - Asserts that a `welcome` email job exists in `recent` for the demo user identified by the `user_email` environment variable.
+method: GET
+url: "{{base_url}}/jobs/email"
+order: 1000
+scripts:
+  - type: afterResponse
+    code: |-
+      pm.test("200 OK", () => pm.response.to.have.status(200));
+      const body = pm.response.json();
+      pm.test("has queue counts", () => pm.expect(body.counts).to.include.keys("waiting", "active", "completed", "failed", "delayed"));
+      pm.test("welcome email was queued for the demo user", () => {
+        const job = body.recent.find((j) => j.data.email === pm.environment.get("user_email"));
+        pm.expect(job, "job for demo user").to.exist;
+        pm.expect(job.name).to.equal("welcome");
+      });
+    language: text/javascript

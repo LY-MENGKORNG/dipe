@@ -1,0 +1,3 @@
+$kind: collection
+description: BullMQ email queue (Redis). Admin only.
+order: 4000

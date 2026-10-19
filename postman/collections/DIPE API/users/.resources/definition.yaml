@@ -1,0 +1,5 @@
+$kind: collection
+description: |-
+  Users CRUD backed by PostgreSQL + Prisma. Reads need any valid token, writes need the `admin` role.
+  Creating a user also enqueues a welcome email job (see **jobs**).
+order: 2000

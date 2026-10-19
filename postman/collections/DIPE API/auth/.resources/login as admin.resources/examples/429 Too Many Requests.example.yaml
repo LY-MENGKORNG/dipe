@@ -1,0 +1,27 @@
+$kind: http-example
+request:
+  url: '{{base_url}}/auth/login'
+  method: POST
+  headers:
+    - key: 'Content-Type'
+      value: 'application/json'
+  body:
+    type: json
+    content: |-
+      {
+        "email": "{{admin_email}}",
+        "password": "{{admin_password}}"
+      }
+response:
+  statusCode: 429
+  statusText: Too Many Requests
+  headers:
+    Content-Type: application/json; charset=utf-8
+    Retry-After: '60'
+  body:
+    type: json
+    content: |-
+      {
+        "statusCode": 429,
+        "message": "ThrottlerException: Too Many Requests"
+      }

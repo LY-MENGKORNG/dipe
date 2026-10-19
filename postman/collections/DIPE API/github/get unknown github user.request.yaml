@@ -1,0 +1,12 @@
+$kind: http-request
+method: GET
+url: '{{base_url}}/github/users/:username'
+order: 2000
+pathVariables:
+  - key: username
+    value: this-user-should-not-exist-zz9q
+scripts:
+  - type: afterResponse
+    language: text/javascript
+    code: |-
+      pm.test("404 mapped from upstream", () => pm.response.to.have.status(404));

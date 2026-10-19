@@ -1,0 +1,21 @@
+$kind: http-request
+method: POST
+url: '{{base_url}}/users'
+order: 4000
+headers:
+  - key: Content-Type
+    value: application/json
+body:
+  type: json
+  content: |-
+    {
+      "name": "X",
+      "email": "not-an-email",
+      "password": "short"
+    }
+scripts:
+  - type: afterResponse
+    language: text/javascript
+    code: |-
+      pm.test("400 Bad Request (Zod validation)", () => pm.response.to.have.status(400));
+      pm.test("lists every invalid field", () => pm.expect(pm.response.json().errors).to.have.length.of.at.least(3));

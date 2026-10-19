@@ -1,0 +1,21 @@
+$kind: http-example
+request:
+  url: '{{base_url}}/github/users/octocat'
+  method: GET
+  pathVariables:
+    - key: 'username'
+      value: 'octocat'
+response:
+  statusCode: 504
+  statusText: Gateway Timeout
+  headers:
+    Content-Type: application/json; charset=utf-8
+  body:
+    type: json
+    content: |-
+      {
+        "statusCode": 504,
+        "message": "Upstream timed out",
+        "error": "TimeoutError",
+        "upstream": "api.github.com"
+      }
