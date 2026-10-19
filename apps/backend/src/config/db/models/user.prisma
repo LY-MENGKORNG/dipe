@@ -1,0 +1,20 @@
+enum Role {
+  employee
+  staff
+  admin
+}
+
+model User {
+  id            Int      @id @default(autoincrement())
+  createdAt     DateTime @default(now())
+  updatedAt     DateTime @updatedAt
+  name          String
+  email         String   @unique
+  password_hash String
+  role          Role     @default(employee)
+  isActive      Boolean  @default(true)
+
+  postedPosts Post[] @relation("post_poster")
+
+  @@map("user")
+}

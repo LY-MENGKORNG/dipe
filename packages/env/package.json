@@ -1,0 +1,10 @@
+{
+  "name": "@repo/env",
+  "description": "Shared package for environment variable",
+  "exports": {
+    ".": "./src/index.ts"
+  },
+  "dependencies": {
+    "zod": "^4.6.5"
+  }
+}

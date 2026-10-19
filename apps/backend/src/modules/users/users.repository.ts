@@ -1,0 +1,64 @@
+import { Injectable } from "@nestjs/common";
+import { InjectedRespository } from "@config/respository.config";
+import type { Prisma } from "@config/db/generated/client";
+import type { ListUserQuery } from "./dto/create-user.dto";
+
+export const publicUser = {
+  id: true,
+  name: true,
+  email: true,
+  role: true,
+  isActive: true,
+  createdAt: true,
+  updatedAt: true,
+} as const satisfies Prisma.UserSelect;
+
+export type PublicUser = Prisma.UserGetPayload<{ select: typeof publicUser }>;
+
+@Injectable()
+export class UserRepository extends InjectedRespository {
+  async findMany({ q, role, limit, offset }: ListUserQuery) {
+    const where: Prisma.UserWhereInput = {
+      role,
+      ...(q && {
+        OR: [
+          { name: { contains: q, mode: "insensitive" } },
+          { email: { contains: q, mode: "insensitive" } },
+        ],
+      }),
+    };
+
+    const [data, total] = await this.db.$transaction([
+      this.db.user.findMany({
+        where,
+        select: publicUser,
+        orderBy: { createdAt: "desc" },
+        take: limit,
+        skip: offset,
+      }),
+      this.db.user.count({ where }),
+    ]);
+
+    return { data, total, limit, offset };
+  }
+
+  findById(id: number) {
+    return this.db.user.findUnique({ where: { id }, select: publicUser });
+  }
+
+  findByEmailWithSecret(email: string) {
+    return this.db.user.findUnique({ where: { email } });
+  }
+
+  create(data: Prisma.UserCreateInput) {
+    return this.db.user.create({ data, select: publicUser });
+  }
+
+  update(id: number, data: Prisma.UserUpdateInput) {
+    return this.db.user.update({ where: { id }, data, select: publicUser });
+  }
+
+  delete(id: number) {
+    return this.db.user.delete({ where: { id }, select: publicUser });
+  }
+}
