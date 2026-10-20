@@ -2,7 +2,7 @@ import { Injectable } from "@nestjs/common";
 import { ConfigService } from "@nestjs/config";
 import type { Env } from "@repo/env";
 import { http, type HttpInstance } from "@repo/http";
-import { type GithubUser, githubUserSchema } from "./dto/github.dto";
+import { GithubUser, githubUserSchema } from "./github.schema";
 
 @Injectable()
 export class GithubClient {
