@@ -17,18 +17,18 @@ export const meta: SlideMeta = {
 </script>
 
 <script setup lang="ts">
-import { Badge } from '@/components/ui/badge'
+import { Badge, type BadgeVariants } from '@/components/ui/badge'
 import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from '@/components/ui/table'
 import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs'
 import CodeSnippet from '@/components/deck/CodeSnippet.vue'
 import SlideLayout from '@/components/deck/SlideLayout.vue'
 
-const routes = [
-  { verb: 'POST', path: '/users', call: 'user.create' },
-  { verb: 'GET', path: '/users', call: 'user.findMany' },
-  { verb: 'GET', path: '/users/:id', call: 'user.findUnique' },
-  { verb: 'PATCH', path: '/users/:id', call: 'user.update' },
-  { verb: 'DELETE', path: '/users/:id', call: 'user.delete' },
+const routes: {verb: string, path: string, call: string, variant: BadgeVariants["variant"] }[] = [
+  { verb: 'POST', path: '/users', call: 'user.create', variant: 'default' },
+  { verb: 'GET', path: '/users', call: 'user.findMany', variant: 'secondary' },
+  { verb: 'GET', path: '/users/:id', call: 'user.findUnique', variant: 'secondary' },
+  { verb: 'PATCH', path: '/users/:id', call: 'user.update', variant: 'outline' },
+  { verb: 'DELETE', path: '/users/:id', call: 'user.delete', variant: 'destructive' },
 ]
 
 const ops = [
@@ -136,7 +136,7 @@ const ops = [
         <TableBody>
           <TableRow v-for="route in routes" :key="route.verb + route.path">
             <TableCell>
-              <Badge :variant="route.verb === 'DELETE' ? 'destructive' : route.verb === 'GET' ? 'secondary' : 'default'">
+              <Badge :variant="route.variant">
                 {{ route.verb }}
               </Badge>
             </TableCell>
