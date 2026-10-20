@@ -1,22 +1,20 @@
 $kind: http-request
 method: POST
-url: '{{base_url}}/auth/login'
+url: "{{base_url}}/auth/login"
 order: 1000
 auth:
   type: noauth
 headers:
-  - key: Content-Type
-    value: application/json
+  Content-Type: application/json
 body:
   type: json
   content: |-
     {
-      "email": "{{admin_email}}",
-      "password": "{{admin_password}}"
+        "email": "{{admin_email}}",
+        "password": "{{admin_password}}"
     }
 scripts:
   - type: afterResponse
-    language: text/javascript
     code: |-
       pm.test("200 OK", () => pm.response.to.have.status(200));
       const body = pm.response.json();
@@ -25,4 +23,5 @@ scripts:
         pm.expect(body.accessToken).to.be.a("string").and.not.empty;
       });
       pm.environment.set("admin_token", body.accessToken);
-examples: './.resources/login as admin.resources/examples'
+    language: text/javascript
+examples: ./.resources/login as admin.resources/examples
