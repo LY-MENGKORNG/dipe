@@ -1,5 +1,5 @@
 import { ROLES } from "@common/constants/role";
-import { z } from "zod/v4"
+import { z } from "zod/v4";
 
 const userFields = {
   name: z.string().trim().min(2).max(80),

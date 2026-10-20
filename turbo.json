@@ -28,13 +28,5 @@
       "cache": false
     },
     "//#fmt:check": {},
-    "fmt": {
-      "dependsOn": ["^fmt"],
-      "persistent": true,
-      "cache": false
-    },
-    "fmt:check": {
-      "dependsOn": ["^fmt"]
-    }
   }
 }

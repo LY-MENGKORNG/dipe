@@ -1,10 +1,15 @@
 {
   "name": "@repo/http",
   "description": "Fetch-based HTTP client for the monorepo. Derived from Ky 2.2.0 by Sindre Sorhus (MIT), see LICENSE.ky",
+  "scripts": {
+    "fmt": "bun --bun run oxfmt --write \"src/**/*.ts\"",
+    "fmt:check": "bun --bun run oxfmt --check \"src/**/*.ts\"",
+    "lint": "bun --bun run oxlint --type-aware src --fix",
+    "lint:check": "bun --bun run oxlint --type-aware src"
+  },
   "exports": {
     ".": "./src/index.ts"
   },
-  "license": "MIT",
   "devDependencies": {
     "@type-challenges/utils": "^0.1.1"
   }

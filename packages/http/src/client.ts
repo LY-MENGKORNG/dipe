@@ -1,5 +1,3 @@
-/*! MIT License © Sindre Sorhus */
-
 import { Http } from './core/Http.js'
 import {
   requestMethods,
@@ -21,7 +19,6 @@ const createRequest = (
   try {
     return Http.create(input, getOptions())
   } catch (error: unknown) {
-    // eslint-disable-next-line @typescript-eslint/prefer-promise-reject-errors -- A hook can throw any value, and it must be preserved exactly.
     const result = Promise.reject(error) as ResponsePromise
     // Matches `Http.create()`, which only exposes `.bytes()` when the environment implements it.
     for (const type of getSupportedResponseTypes()) {
