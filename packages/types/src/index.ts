@@ -5,14 +5,4 @@ export type Mutable<T> = {
 export type ObjectEntries<T> =
 	T extends ArrayLike<infer U> ? Array<[string, U]> : Array<{ [K in keyof T]: [K, T[K]] }[keyof T]>
 
-export type Role = 'employee' | 'staff' | 'admin'
-
-export interface User {
-	id: number
-	name: string
-	email: string
-	role: Role
-	isActive: boolean
-	createdAt: string
-	updatedAt: string
-}
+export type * from "../../../apps/backend/src/config/db/generated/browser"

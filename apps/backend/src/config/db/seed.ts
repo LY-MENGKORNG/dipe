@@ -23,13 +23,41 @@ const users: { name: string; email: string; password: string; role: Role }[] = [
 ];
 
 for (const { password, ...user } of users) {
-  const password_hash = await Bun.password.hash(password);
+  const passwordHash = await Bun.password.hash(password);
   await db.user.upsert({
     where: { email: user.email },
-    update: { password_hash, role: user.role, isActive: true },
-    create: { ...user, password_hash },
+    update: { passwordHash, role: user.role, isActive: true },
+    create: { ...user, passwordHash },
   });
   console.log(`seeded ${user.role}: ${user.email}`);
+}
+
+const tags = ["nestjs", "prisma", "postgres", "bun"];
+
+for (const name of tags) {
+  await db.tag.upsert({ where: { name }, update: {}, create: { name } });
+}
+console.log(`seeded tags: ${tags.join(", ")}`);
+
+const posts = [
+  { title: "Getting started with NestJS", tags: ["nestjs", "bun"] },
+  { title: "Many-to-many with Prisma", tags: ["prisma", "postgres"] },
+  { title: "Transactions in a repository", tags: ["nestjs", "prisma"] },
+];
+
+const poster = await db.user.findUniqueOrThrow({ where: { email: users[0]!.email } });
+
+for (const post of posts) {
+  if (await db.post.findFirst({ where: { title: post.title } })) continue;
+
+  await db.post.create({
+    data: {
+      title: post.title,
+      poster: { connect: { id: poster.id } },
+      tags: { create: post.tags.map((name) => ({ tag: { connect: { name } } })) },
+    },
+  });
+  console.log(`seeded post: ${post.title}`);
 }
 
 await db.$disconnect();

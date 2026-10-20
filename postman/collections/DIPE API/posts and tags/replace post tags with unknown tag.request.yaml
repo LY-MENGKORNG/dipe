@@ -1,0 +1,21 @@
+$kind: http-request
+method: PUT
+url: '{{base_url}}/posts/:id/tags'
+order: 7000
+pathVariables:
+  - key: id
+    value: '{{post_id}}'
+headers:
+  - key: Content-Type
+    value: application/json
+body:
+  type: json
+  content: |-
+    {
+      "tagIds": [999999]
+    }
+scripts:
+  - type: afterResponse
+    language: text/javascript
+    code: |-
+      pm.test("404 Not Found (nested connect, Prisma P2025)", () => pm.response.to.have.status(404));

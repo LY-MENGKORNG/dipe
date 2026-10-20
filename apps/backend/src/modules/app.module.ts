@@ -1,6 +1,6 @@
 import { BullModule } from "@nestjs/bullmq";
 import { join } from "node:path";
-import { Module } from "@nestjs/common";
+import { MiddlewareConsumer, Module, NestModule } from "@nestjs/common";
 import { ConfigModule } from "@nestjs/config";
 import { APP_FILTER, APP_GUARD, APP_PIPE } from "@nestjs/core";
 import { ThrottlerGuard, ThrottlerModule } from "@nestjs/throttler";
@@ -16,6 +16,10 @@ import { GithubModule } from "@modules/github/github.module";
 import { NotificationsModule } from "@modules/notifications/notifications.module";
 import { ObserveModule } from "@modules/observe.module";
 import { UsersModule } from "./users/users.module";
+import { PostsModule } from './posts/posts.module';
+import { TagsModule } from './tags/tags.module';
+import { AuthMiddleware } from "./auth/auth.middleware";
+import { AuthController } from "./auth/auth.controller";
 
 @Module({
   imports: [
@@ -61,6 +65,8 @@ import { UsersModule } from "./users/users.module";
     AuthModule,
     GithubModule,
     NotificationsModule,
+    PostsModule,
+    TagsModule,
   ],
   providers: [
     { provide: APP_GUARD, useClass: ThrottlerGuard },
@@ -71,4 +77,8 @@ import { UsersModule } from "./users/users.module";
     { provide: APP_FILTER, useClass: UpstreamExceptionFilter },
   ],
 })
-export class AppModule {}
+export class AppModule implements NestModule {
+  configure(consumer: MiddlewareConsumer) {
+    consumer.apply(AuthMiddleware).forRoutes(AuthController);
+  }
+}

@@ -69,8 +69,8 @@ describe("UsersService", () => {
 
     const [data] = repository.create.mock.calls[0] as [Record<string, unknown>];
     expect(data).not.toHaveProperty("password");
-    expect(data.password_hash).toStartWith("$argon2id$");
-    expect(await Bun.password.verify("Password1", data.password_hash as string)).toBeTrue();
+    expect(data.passwordHash).toStartWith("$argon2id$");
+    expect(await Bun.password.verify("Password1", data.passwordHash as string)).toBeTrue();
   });
 
   it("enqueues a welcome email after creating the user", async () => {

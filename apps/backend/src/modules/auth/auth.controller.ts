@@ -10,12 +10,14 @@ import {
 } from "@nestjs/swagger";
 import { CurrentUser, Public } from "@common/decorators";
 import type { AuthUser } from "@common/types/auth";
-import { UserResponseDto } from "@modules/users/dto/create-user.dto";
 import { UsersService } from "@modules/users/users.service";
 import { AuthService } from "./auth.service";
 import { LoginDto, TokenResponseDto } from "./dto/login.dto";
+import { UserResponseDto } from "@modules/users/dto/user.dto";
 
+// docs
 @ApiTags("Auth")
+// ---
 @Controller("auth")
 export class AuthController {
   constructor(
@@ -37,11 +39,13 @@ export class AuthController {
     return this.auth.login(dto);
   }
 
-  @Get("me")
+  // docs
   @ApiBearerAuth("bearer")
   @ApiOperation({ summary: "The authenticated user" })
   @ApiOkResponse({ type: UserResponseDto })
   @ApiUnauthorizedResponse({ description: "Missing or invalid bearer token" })
+  // ---
+  @Get("me")
   me(@CurrentUser() user: AuthUser) {
     return this.users.findOne(user.sub);
   }

@@ -1,5 +1,4 @@
 $kind: collection
-name: DIPE API
 description: |-
   Workshop demo API — "Data, Integration & Production Essentials".
 
@@ -9,16 +8,13 @@ description: |-
 
   Prerequisites: Postgres + Redis running, `bun run db:migrate:dev && bun run db:seed`, API on `base_url`.
 variables:
-  - key: base_url
-    value: ''
-  - key: admin_email
-    value: ''
-  - key: admin_token
-    value: ''
+  base_url: ""
+  admin_email: ""
+  admin_token: ""
+  admin_password: ""
 auth:
   - id: 2d7724bd-b1d9-4e9e-a4db-162470ab8ca1
-    name: bearer auth
     type: bearer
+    name: bearer auth
     credentials:
-      - key: token
-        value: '{{admin_token}}'
+      token: "{{admin_token}}"

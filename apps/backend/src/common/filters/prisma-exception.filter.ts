@@ -10,7 +10,7 @@ const statusByCode: Record<string, { status: number; message: string }> = {
 
 @Catch(Prisma.PrismaClientKnownRequestError)
 export class PrismaExceptionFilter implements ExceptionFilter {
-  catch(exception: Prisma.PrismaClientKnownRequestError, host: ArgumentsHost) {
+  catch(exception: Prisma.PrismaClientKnownRequestError, host: ArgumentsHost): void {
     const reply = host.switchToHttp().getResponse<FastifyReply>();
     const mapped = statusByCode[exception.code] ?? {
       status: HttpStatus.INTERNAL_SERVER_ERROR,

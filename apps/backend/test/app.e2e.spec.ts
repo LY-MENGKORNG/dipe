@@ -34,7 +34,7 @@ describe("DIPE API (e2e)", () => {
           name: user.name,
           email: user.email,
           role,
-          password_hash: await Bun.password.hash(user.password),
+          passwordHash: await Bun.password.hash(user.password),
         },
       });
       createdIds.push(created.id);
@@ -149,6 +149,71 @@ describe("DIPE API (e2e)", () => {
     });
   });
 
+  describe("tags", () => {
+    it("links posts and tags in both directions", async () => {
+      const post = await db.post.create({ data: { title: `E2E Post ${suffix}`, userId: createdIds[0]! } });
+      const tagIds: number[] = [];
+
+      try {
+        for (const name of [`e2e-a-${suffix}`, `e2e-b-${suffix}`]) {
+          const created = await app.inject({ method: "POST", url: "/api/tags", headers: as(adminToken), payload: { name } });
+          expect(created.statusCode).toBe(201);
+          tagIds.push(created.json<{ id: number }>().id);
+        }
+
+        const duplicate = await app.inject({
+          method: "POST",
+          url: "/api/tags",
+          headers: as(adminToken),
+          payload: { name: `E2E-A-${suffix}` },
+        });
+        expect(duplicate.statusCode).toBe(409);
+
+        const forbidden = await app.inject({
+          method: "PUT",
+          url: `/api/posts/${post.id}/tags`,
+          headers: as(employeeToken),
+          payload: { tagIds },
+        });
+        expect(forbidden.statusCode).toBe(403);
+
+        const replaced = await app.inject({
+          method: "PUT",
+          url: `/api/posts/${post.id}/tags`,
+          headers: as(adminToken),
+          payload: { tagIds },
+        });
+        expect(replaced.statusCode).toBe(200);
+        expect(replaced.json<{ tags: { id: number }[] }>().tags.map((t) => t.id)).toEqual(tagIds);
+
+        const unknownTag = await app.inject({
+          method: "PUT",
+          url: `/api/posts/${post.id}/tags`,
+          headers: as(adminToken),
+          payload: { tagIds: [tagIds[0], 999_999] },
+        });
+        expect(unknownTag.statusCode).toBe(404);
+
+        const byName = await app.inject({
+          method: "GET",
+          url: `/api/posts?tag=e2e-b-${suffix}`,
+          headers: as(employeeToken),
+        });
+        expect(byName.json<{ id: number }[]>().map((p) => p.id)).toEqual([post.id]);
+
+        const byTag = await app.inject({ method: "GET", url: `/api/tags/${tagIds[0]}/posts`, headers: as(employeeToken) });
+        expect(byTag.json<{ id: number }[]>().map((p) => p.id)).toEqual([post.id]);
+
+        const removed = await app.inject({ method: "DELETE", url: `/api/tags/${tagIds[1]}`, headers: as(adminToken) });
+        expect(removed.statusCode).toBe(200);
+        expect(await db.postTag.count({ where: { postId: post.id } })).toBe(1);
+      } finally {
+        await db.post.delete({ where: { id: post.id } });
+        await db.tag.deleteMany({ where: { id: { in: tagIds } } });
+      }
+    });
+  });
+
   describe("transactions", () => {
     it("rolls back every repository write when the callback throws", async () => {
       const transactions = app.get(TransactionHost);
@@ -157,7 +222,7 @@ describe("DIPE API (e2e)", () => {
 
       const error = await transactions
         .run(async () => {
-          await users.create({ name: "Rollback", email, password_hash: "x" });
+          await users.create({ name: "Rollback", email, passwordHash: "x" });
           expect(await users.findByEmailWithSecret(email)).not.toBeNull();
           throw new Error("boom");
         })
@@ -173,7 +238,7 @@ describe("DIPE API (e2e)", () => {
       const email = `commit-${suffix}@dipe.dev`;
 
       const created = await transactions.run(() =>
-        users.create({ name: "Commit", email, password_hash: "x" }),
+        users.create({ name: "Commit", email, passwordHash: "x" }),
       );
       createdIds.push(created.id);
 

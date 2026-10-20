@@ -1,8 +1,9 @@
 import { Injectable, NotFoundException } from "@nestjs/common";
 import { EmailProducer } from "@modules/notifications/email.producer";
-import type { CreateUserDto, ListUserQuery } from "./dto/create-user.dto";
+import type { CreateUserDto,  } from "./dto/create-user.dto";
 import type { UpdateUserDto } from "./dto/update-user.dto";
 import { UserRepository } from "./users.repository";
+import { ListUserQuery } from "./dto/user.dto";
 
 @Injectable()
 export class UsersService {
@@ -14,7 +15,7 @@ export class UsersService {
   async create({ password, ...data }: CreateUserDto) {
     const user = await this.repository.create({
       ...data,
-      password_hash: await Bun.password.hash(password),
+      passwordHash: await Bun.password.hash(password),
     });
 
     await this.email.sendWelcome({ userId: user.id, email: user.email, name: user.name });
@@ -30,6 +31,12 @@ export class UsersService {
     const user = await this.repository.findById(id);
     if (!user) throw new NotFoundException(`User #${id} not found`);
     return user;
+  }
+
+  async findOneWithPosts(id: number) {
+    const userWithPosts = await this.repository.findByIdWithPosts(id);
+    if (!userWithPosts) throw new NotFoundException(`User #${id} not found`);
+    return userWithPosts;
   }
 
   async update(id: number, { password, ...data }: UpdateUserDto) {

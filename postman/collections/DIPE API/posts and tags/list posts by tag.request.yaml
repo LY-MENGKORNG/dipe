@@ -1,0 +1,14 @@
+$kind: http-request
+method: GET
+url: '{{base_url}}/posts?tag={{tag_name}}'
+order: 8000
+queryParams:
+  - key: tag
+    value: '{{tag_name}}'
+scripts:
+  - type: afterResponse
+    language: text/javascript
+    code: |-
+      pm.test("200 OK", () => pm.response.to.have.status(200));
+      const ids = pm.response.json().map((p) => String(p.id));
+      pm.test("only the tagged post", () => pm.expect(ids).to.eql([pm.environment.get("post_id")]));

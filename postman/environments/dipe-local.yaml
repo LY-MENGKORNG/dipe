@@ -36,3 +36,19 @@ values:
     value: ''
     enabled: true
     type: default
+  - key: tag_name
+    value: ''
+    enabled: true
+    type: default
+  - key: tag_id
+    value: ''
+    enabled: true
+    type: default
+  - key: post_id
+    value: ''
+    enabled: true
+    type: default
+  - key: post_tag_ids
+    value: ''
+    enabled: true
+    type: default

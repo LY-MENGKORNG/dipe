@@ -3,15 +3,15 @@ model Post {
   id          Int      @id @default(autoincrement())
   title       String
   description String?
-  createdAt   DateTime @default(now())
-  updatedAt   DateTime @updatedAt
+  createdAt   DateTime @default(now()) @map("created_at")
+  updatedAt   DateTime @updatedAt @map("updated_at")
 
   // references
-  postId Int
-  poster User @relation("post_poster", fields: [postId], references: [id])
+  userId Int       @map("user_id")
+  poster User      @relation("post_poster", fields: [userId], references: [id])
+  tags   PostTag[]
 
   // indexes/constrants
-  @@index([postId])
-
+  @@index([userId])
   @@map("post")
 }

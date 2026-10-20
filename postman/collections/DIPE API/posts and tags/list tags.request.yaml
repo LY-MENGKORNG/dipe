@@ -1,0 +1,12 @@
+$kind: http-request
+method: GET
+url: '{{base_url}}/tags'
+order: 3000
+scripts:
+  - type: afterResponse
+    language: text/javascript
+    code: |-
+      pm.test("200 OK", () => pm.response.to.have.status(200));
+      const body = pm.response.json();
+      const demo = body.find((t) => t.name === pm.environment.get("tag_name"));
+      pm.test("includes the new tag with no posts yet", () => pm.expect(demo.postCount).to.equal(0));

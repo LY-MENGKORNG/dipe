@@ -10,11 +10,15 @@ import { WsAdapter } from "@nestjs/platform-ws";
 import { type FastifyRequest } from "fastify";
 
 const app = await safeTry(
-  NestFactory.create<NestFastifyApplication>(AppModule, new FastifyAdapter(), {
-    instrument: ObserveInstrument,
-    cors: { origin: env.ALLOW_ORIGINS, methods: requestMethods as string[] },
-    snapshot: true,
-  }),
+  NestFactory.create<NestFastifyApplication>(
+    AppModule,
+    new FastifyAdapter(),
+    {
+      instrument: ObserveInstrument,
+      cors: { origin: env.ALLOW_ORIGINS, methods: requestMethods as string[] },
+      snapshot: true,
+    }
+  ),
 );
 
 if (isError(app)) {

@@ -5,8 +5,8 @@ export const githubUserSchema = z.object({
   name: z.string().nullable(),
   avatar_url: z.url(),
   html_url: z.url(),
-  public_repos: z.number().int(),
-  followers: z.number().int(),
+  public_repos: z.int().positive(),
+  followers: z.int().positive(),
 });
 
 export type GithubUser = z.infer<typeof githubUserSchema>;
