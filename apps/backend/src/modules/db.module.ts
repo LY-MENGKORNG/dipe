@@ -1,23 +1,15 @@
-import { Global, Inject, Module } from "@nestjs/common";
-import { ConfigModule, ConfigService } from "@nestjs/config";
+import { Global, Inject, Module, type OnApplicationShutdown } from "@nestjs/common";
 import { PRISMA } from "@common/constants";
+import { TransactionHost } from "@common/database";
 import { db, type PrismaDB } from "@config/db";
 import { safeTry } from "@repo/utils";
 
 @Global()
 @Module({
-  imports: [ConfigModule],
-  controllers: [],
-  providers: [
-    {
-      provide: PRISMA,
-      inject: [ConfigService],
-      useFactory: (_config: ConfigService) => db,
-    },
-  ],
-  exports: [PRISMA],
+  providers: [{ provide: PRISMA, useValue: db }, TransactionHost],
+  exports: [PRISMA, TransactionHost],
 })
-export class DBModule {
+export class DBModule implements OnApplicationShutdown {
   constructor(@Inject(PRISMA) private readonly db: PrismaDB) {}
 
   async onApplicationShutdown() {

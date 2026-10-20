@@ -1,5 +1,5 @@
 import { Injectable } from "@nestjs/common";
-import { InjectedRespository } from "@config/respository.config";
+import { BaseRepository } from "@common/database";
 import type { Prisma } from "@config/db/generated/client";
 import type { ListUserQuery } from "./dto/create-user.dto";
 
@@ -16,7 +16,7 @@ export const publicUser = {
 export type PublicUser = Prisma.UserGetPayload<{ select: typeof publicUser }>;
 
 @Injectable()
-export class UserRepository extends InjectedRespository {
+export class UserRepository extends BaseRepository {
   async findMany({ q, role, limit, offset }: ListUserQuery) {
     const where: Prisma.UserWhereInput = {
       role,
@@ -28,16 +28,18 @@ export class UserRepository extends InjectedRespository {
       }),
     };
 
-    const [data, total] = await this.db.$transaction([
-      this.db.user.findMany({
-        where,
-        select: publicUser,
-        orderBy: { createdAt: "desc" },
-        take: limit,
-        skip: offset,
-      }),
-      this.db.user.count({ where }),
-    ]);
+    const [data, total] = await this.transaction(() =>
+      Promise.all([
+        this.db.user.findMany({
+          where,
+          select: publicUser,
+          orderBy: { createdAt: "desc" },
+          take: limit,
+          skip: offset,
+        }),
+        this.db.user.count({ where }),
+      ]),
+    );
 
     return { data, total, limit, offset };
   }

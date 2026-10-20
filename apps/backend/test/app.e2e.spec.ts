@@ -2,9 +2,11 @@ import { afterAll, beforeAll, describe, expect, it, mock } from "bun:test";
 import { FastifyAdapter, type NestFastifyApplication } from "@nestjs/platform-fastify";
 import { Test } from "@nestjs/testing";
 import { MailerService } from "@nestjs-modules/mailer";
+import { TransactionHost } from "@common/database";
 import { db } from "@config/db";
 import { AppModule } from "@modules/app.module";
 import { GithubClient } from "@modules/github/github.client";
+import { UserRepository } from "@modules/users/users.repository";
 
 const suffix = Date.now();
 const admin = { name: "E2E Admin", email: `e2e-admin-${suffix}@dipe.dev`, password: "Admin@12345" };
@@ -144,6 +146,38 @@ describe("DIPE API (e2e)", () => {
 
       const missing = await app.inject({ method: "GET", url: `/api/users/${id}`, headers: as(adminToken) });
       expect(missing.statusCode).toBe(404);
+    });
+  });
+
+  describe("transactions", () => {
+    it("rolls back every repository write when the callback throws", async () => {
+      const transactions = app.get(TransactionHost);
+      const users = app.get(UserRepository);
+      const email = `rollback-${suffix}@dipe.dev`;
+
+      const error = await transactions
+        .run(async () => {
+          await users.create({ name: "Rollback", email, password_hash: "x" });
+          expect(await users.findByEmailWithSecret(email)).not.toBeNull();
+          throw new Error("boom");
+        })
+        .catch((e: unknown) => e);
+
+      expect((error as Error).message).toBe("boom");
+      expect(await db.user.findUnique({ where: { email } })).toBeNull();
+    });
+
+    it("commits every repository write when the callback succeeds", async () => {
+      const transactions = app.get(TransactionHost);
+      const users = app.get(UserRepository);
+      const email = `commit-${suffix}@dipe.dev`;
+
+      const created = await transactions.run(() =>
+        users.create({ name: "Commit", email, password_hash: "x" }),
+      );
+      createdIds.push(created.id);
+
+      expect(await db.user.findUnique({ where: { email } })).not.toBeNull();
     });
   });
 
