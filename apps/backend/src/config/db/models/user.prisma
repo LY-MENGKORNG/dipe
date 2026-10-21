@@ -5,16 +5,18 @@ enum Role {
 }
 
 model User {
-  id            Int      @id @default(autoincrement())
-  createdAt     DateTime @default(now())
-  updatedAt     DateTime @updatedAt
-  name          String
-  email         String   @unique
-  password_hash String
-  role          Role     @default(employee)
-  isActive      Boolean  @default(true)
+  // fields
+  id           Int      @id @default(autoincrement())
+  name         String
+  email        String   @unique
+  passwordHash String   @map("password_hash")
+  role         Role     @default(employee)
+  isActive     Boolean  @default(true) @map("is_active")
+  createdAt    DateTime @default(now()) @map("created_at")
+  updatedAt    DateTime @updatedAt @map("updated_at")
 
-  postedPosts Post[] @relation("post_poster")
+  // references
+  posts Post[] @relation("post_poster")
 
   @@map("user")
 }

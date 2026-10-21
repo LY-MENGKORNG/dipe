@@ -33,7 +33,7 @@ const rows = [
   { topic: 'Events & queues', outcome: 'Send "welcome email" in the background', min: 10 },
   { topic: 'Security', outcome: 'Login + protected endpoint', min: 20 },
   { topic: 'Testing', outcome: 'One unit + one E2E test passing', min: 15 },
-  { topic: 'OpenAPI & Swagger', outcome: 'Try every endpoint from /docs', min: 10 },
+  { topic: 'API Documentation', outcome: 'How to build & document a reliable API', min: 10 },
   { topic: 'Live demo & Q&A', outcome: 'Run the whole thing end to end', min: 15 },
 ]
 </script>

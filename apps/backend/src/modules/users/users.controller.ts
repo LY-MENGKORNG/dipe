@@ -10,6 +10,7 @@ import {
   Query,
 } from "@nestjs/common";
 import {
+  ApiBadRequestResponse,
   ApiBearerAuth,
   ApiConflictResponse,
   ApiCreatedResponse,
@@ -21,14 +22,15 @@ import {
   ApiUnauthorizedResponse,
 } from "@nestjs/swagger";
 import { Roles } from "@common/decorators";
-import {
-  CreateUserDto,
-  ListUserQuery,
-  UserListResponseDto,
-  UserResponseDto,
-} from "./dto/create-user.dto";
+import { CreateUserDto } from "./dto/create-user.dto";
 import { UpdateUserDto } from "./dto/update-user.dto";
 import { UsersService } from "./users.service";
+import {
+  ListUserQuery,
+  UserListResponseDto,
+  UserPostsResponseDto,
+  UserResponseDto,
+} from "./dto/user.dto";
 
 // docs
 @ApiTags("Users")
@@ -68,6 +70,16 @@ export class UsersController {
   @Get(":id")
   findOne(@Param("id", ParseIntPipe) id: number) {
     return this.usersService.findOne(id);
+  }
+
+  // docs
+  @ApiOperation({ summary: "Get one user with posts" })
+  @ApiOkResponse({ type: UserPostsResponseDto })
+  @ApiNotFoundResponse({ description: "No user with this id" })
+  // ---
+  @Get(":id/posts")
+  findOneWithPosts(@Param("id", ParseIntPipe) id: number) {
+    return this.usersService.findOneWithPosts(id);
   }
 
   // docs

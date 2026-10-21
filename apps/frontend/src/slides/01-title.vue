@@ -26,7 +26,7 @@ const topics = [
   { icon: ListTodo, label: 'Events & queues' },
   { icon: ShieldCheck, label: 'Security' },
   { icon: TestTubeDiagonal, label: 'Testing' },
-  { icon: BookOpenText, label: 'OpenAPI & Swagger' },
+  { icon: BookOpenText, label: 'API Documentation' },
 ]
 </script>
 

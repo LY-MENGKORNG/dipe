@@ -8,12 +8,12 @@ import { AuthService } from "./auth.service";
 
 describe("AuthService", () => {
   let service: AuthService;
-  let password_hash: string;
+  let passwordHash: string;
   const repository = { findByEmailWithSecret: mock() };
   const jwt = { signAsync: mock().mockResolvedValue("signed.jwt.token") };
 
   beforeAll(async () => {
-    password_hash = await Bun.password.hash("Password1");
+    passwordHash = await Bun.password.hash("Password1");
   });
 
   beforeEach(async () => {
@@ -38,7 +38,7 @@ describe("AuthService", () => {
       email: "a@dipe.dev",
       role: "admin",
       isActive: true,
-      password_hash,
+      passwordHash,
     });
 
     const result = await service.login({ email: "a@dipe.dev", password: "Password1" });
@@ -52,7 +52,7 @@ describe("AuthService", () => {
   });
 
   it("rejects a wrong password", async () => {
-    repository.findByEmailWithSecret.mockResolvedValue({ id: 7, isActive: true, password_hash });
+    repository.findByEmailWithSecret.mockResolvedValue({ id: 7, isActive: true, passwordHash });
 
     const error = await service
       .login({ email: "a@dipe.dev", password: "nope" })
@@ -73,7 +73,7 @@ describe("AuthService", () => {
   });
 
   it("rejects a deactivated user", async () => {
-    repository.findByEmailWithSecret.mockResolvedValue({ id: 7, isActive: false, password_hash });
+    repository.findByEmailWithSecret.mockResolvedValue({ id: 7, isActive: false, passwordHash });
 
     const error = await service
       .login({ email: "a@dipe.dev", password: "Password1" })

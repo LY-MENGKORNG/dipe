@@ -1,0 +1,25 @@
+$kind: http-request
+method: POST
+url: '{{base_url}}/tags'
+order: 1000
+headers:
+  - key: Content-Type
+    value: application/json
+body:
+  type: json
+  content: |-
+    {
+      "name": "{{tag_name}}"
+    }
+scripts:
+  - type: beforeRequest
+    language: text/javascript
+    code: |-
+      pm.environment.set("tag_name", `demo-${Date.now()}`);
+  - type: afterResponse
+    language: text/javascript
+    code: |-
+      pm.test("201 Created", () => pm.response.to.have.status(201));
+      const body = pm.response.json();
+      pm.test("keeps the lowercase name", () => pm.expect(body.name).to.equal(pm.environment.get("tag_name")));
+      pm.environment.set("tag_id", String(body.id));

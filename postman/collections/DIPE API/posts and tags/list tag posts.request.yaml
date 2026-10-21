@@ -1,0 +1,14 @@
+$kind: http-request
+method: GET
+url: '{{base_url}}/tags/:id/posts'
+order: 9000
+pathVariables:
+  - key: id
+    value: '{{tag_id}}'
+scripts:
+  - type: afterResponse
+    language: text/javascript
+    code: |-
+      pm.test("200 OK", () => pm.response.to.have.status(200));
+      const ids = pm.response.json().map((p) => String(p.id));
+      pm.test("same post from the tag side", () => pm.expect(ids).to.eql([pm.environment.get("post_id")]));

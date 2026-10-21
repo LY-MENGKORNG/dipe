@@ -1,7 +1,7 @@
 import { Injectable } from "@nestjs/common";
 import { BaseRepository } from "@common/database";
 import type { Prisma } from "@config/db/generated/client";
-import type { ListUserQuery } from "./dto/create-user.dto";
+import { ListUserQuery } from "./dto/user.dto";
 
 export const publicUser = {
   id: true,
@@ -32,7 +32,7 @@ export class UserRepository extends BaseRepository {
       Promise.all([
         this.db.user.findMany({
           where,
-          select: publicUser,
+          omit: { passwordHash: true },
           orderBy: { createdAt: "desc" },
           take: limit,
           skip: offset,
@@ -46,6 +46,17 @@ export class UserRepository extends BaseRepository {
 
   findById(id: number) {
     return this.db.user.findUnique({ where: { id }, select: publicUser });
+  }
+  findByIdWithPosts(id: number) {
+    return this.db.user.findUnique({
+      where: { id },
+      omit: { passwordHash: true },
+      include: {
+        posts: {
+          omit: { userId: true },
+        },
+      },
+    });
   }
 
   findByEmailWithSecret(email: string) {

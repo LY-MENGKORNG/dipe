@@ -2,8 +2,8 @@
 import type { SlideMeta } from '.'
 
 export const meta: SlideMeta = {
-  title: 'OpenAPI & Swagger',
-  section: 'OpenAPI & Swagger',
+  title: 'API Documentation',
+  section: 'API Documentation',
   notes: [
     'OpenAPI is the spec (a JSON/YAML description of every route, schema and auth scheme). Swagger UI / Scalar are viewers that render it and let you send requests.',
     'Nest builds the document from code: controllers and routes come for free; DTO schemas come from nestjs-zod; descriptions and responses from @Api* decorators.',
@@ -94,8 +94,8 @@ const tabs = [
 
 <template>
   <SlideLayout
-    section="OpenAPI & Swagger"
-    title="OpenAPI & Swagger"
+    section="API Documentation"
+    title="API Documentation"
     subtitle="The code is the documentation: schemas and routes flow into an interactive page at /docs."
   >
     <div class="flex flex-wrap items-center gap-2">
