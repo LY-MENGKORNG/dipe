@@ -1,4 +1,4 @@
-import { Body, Controller, Get, Param, ParseIntPipe, Put, Query } from '@nestjs/common';
+import { Body, Controller, Get, Param, ParseIntPipe, Put, Query } from "@nestjs/common";
 import {
   ApiTags,
   ApiBearerAuth,
@@ -7,22 +7,22 @@ import {
   ApiOkResponse,
   ApiNotFoundResponse,
   ApiForbiddenResponse,
-} from '@nestjs/swagger';
-import { Roles } from '@common/decorators';
-import { PostsService } from './posts.service';
+} from "@nestjs/swagger";
+import { Roles } from "@common/decorators";
+import { PostsService } from "./posts.service";
 import {
   ListPostQuery,
   PostListResponseDto,
   PostWithRelationsResponseDto,
   ReplacePostTagsDto,
-} from './dto/posts.dto';
+} from "./dto/posts.dto";
 
 // docs
 @ApiTags("Posts")
 @ApiBearerAuth("bearer")
 @ApiUnauthorizedResponse({ description: "Missing or invalid bearer token" })
 // ---
-@Controller('posts')
+@Controller("posts")
 export class PostsController {
   constructor(private readonly postService: PostsService) {}
 
@@ -32,7 +32,7 @@ export class PostsController {
   // ---
   @Get()
   getPosts(@Query() query: ListPostQuery) {
-    return this.postService.findMany(query)
+    return this.postService.findMany(query);
   }
 
   // docs
@@ -41,9 +41,9 @@ export class PostsController {
   @ApiNotFoundResponse({ description: "No post with this id, or an unknown tag id" })
   @ApiForbiddenResponse({ description: "Admin role required" })
   // ---
-  @Put(':id/tags')
+  @Put(":id/tags")
   @Roles(["admin"])
-  replaceTags(@Param('id', ParseIntPipe) id: number, @Body() dto: ReplacePostTagsDto) {
-    return this.postService.replaceTags(id, dto)
+  replaceTags(@Param("id", ParseIntPipe) id: number, @Body() dto: ReplacePostTagsDto) {
+    return this.postService.replaceTags(id, dto);
   }
 }

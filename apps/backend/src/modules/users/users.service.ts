@@ -1,6 +1,6 @@
 import { Injectable, NotFoundException } from "@nestjs/common";
 import { EmailProducer } from "@modules/notifications/email.producer";
-import type { CreateUserDto,  } from "./dto/create-user.dto";
+import type { CreateUserDto } from "./dto/create-user.dto";
 import type { UpdateUserDto } from "./dto/update-user.dto";
 import { UserRepository } from "./users.repository";
 import { ListUserQuery } from "./dto/user.dto";

@@ -16,8 +16,8 @@ import { GithubModule } from "@modules/github/github.module";
 import { NotificationsModule } from "@modules/notifications/notifications.module";
 import { ObserveModule } from "@modules/observe.module";
 import { UsersModule } from "./users/users.module";
-import { PostsModule } from './posts/posts.module';
-import { TagsModule } from './tags/tags.module';
+import { PostsModule } from "./posts/posts.module";
+import { TagsModule } from "./tags/tags.module";
 import { AuthMiddleware } from "./auth/auth.middleware";
 import { AuthController } from "./auth/auth.controller";
 

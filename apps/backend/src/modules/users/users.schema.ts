@@ -10,7 +10,7 @@ export const userFields = {
   password: z.string().min(8).max(128),
   role: z.enum(ROLES),
   isActive: z.boolean(),
-} as const
+} as const;
 
 export const createUserSchema = z.object({
   ...omit(userFields, ["id"]),
@@ -23,7 +23,7 @@ export const updateUserSchema = z.object(omit(userFields, ["id"])).partial();
 export const listUserQuerySchema = z.object({
   q: z.string().trim().min(1).optional(),
   role: z.enum(ROLES).optional(),
-  ...commonSchema
+  ...commonSchema,
 });
 
 export const userResponseSchema = z.object({
@@ -37,11 +37,11 @@ export const userResponseSchema = z.object({
 });
 
 export const userPostsResponseSchema = userResponseSchema.extend({
-  posts: postResponseSchema.omit({ userId: true }).array()
+  posts: postResponseSchema.omit({ userId: true }).array(),
 });
 
 export const userListResponseSchema = z.object({
   data: userResponseSchema.array(),
   total: z.int().nonnegative(),
-  ...commonSchema
+  ...commonSchema,
 });

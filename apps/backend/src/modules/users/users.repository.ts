@@ -53,10 +53,10 @@ export class UserRepository extends BaseRepository {
       omit: { passwordHash: true },
       include: {
         posts: {
-          omit: { userId: true }
-        }
-      }
-    })
+          omit: { userId: true },
+        },
+      },
+    });
   }
 
   findByEmailWithSecret(email: string) {

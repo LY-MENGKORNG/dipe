@@ -9,22 +9,22 @@ const postWithRelations = {
       omit: {
         passwordHash: true,
         createdAt: true,
-        updatedAt: true
-      }
+        updatedAt: true,
+      },
     },
     tags: {
       select: { tag: { select: { id: true, name: true } } },
-      orderBy: { tag: { name: "asc" } }
-    }
-  }
-} as const satisfies Prisma.PostDefaultArgs
+      orderBy: { tag: { name: "asc" } },
+    },
+  },
+} as const satisfies Prisma.PostDefaultArgs;
 
-type PostWithRelations = Prisma.PostGetPayload<typeof postWithRelations>
+type PostWithRelations = Prisma.PostGetPayload<typeof postWithRelations>;
 
 const flattenTags = ({ tags, ...post }: PostWithRelations) => ({
   ...post,
-  tags: tags.map(({ tag }) => tag)
-})
+  tags: tags.map(({ tag }) => tag),
+});
 
 @Injectable()
 export class PostRepository extends BaseRepository {
@@ -33,11 +33,11 @@ export class PostRepository extends BaseRepository {
       ...postWithRelations,
       where: {
         ...(tag && { tags: { some: { tag: { name: tag } } } }),
-        ...(tagId && { tags: { some: { tagId } } })
+        ...(tagId && { tags: { some: { tagId } } }),
       },
-      orderBy: { createdAt: "desc" }
-    })
-    return posts.map(flattenTags)
+      orderBy: { createdAt: "desc" },
+    });
+    return posts.map(flattenTags);
   }
 
   async replaceTags(id: number, tagIds: number[]) {
@@ -47,10 +47,10 @@ export class PostRepository extends BaseRepository {
       data: {
         tags: {
           deleteMany: {},
-          create: tagIds.map((tagId) => ({ tag: { connect: { id: tagId } } }))
-        }
-      }
-    })
-    return flattenTags(post)
+          create: tagIds.map((tagId) => ({ tag: { connect: { id: tagId } } })),
+        },
+      },
+    });
+    return flattenTags(post);
   }
 }

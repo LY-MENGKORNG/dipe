@@ -10,7 +10,7 @@ import {
   Query,
 } from "@nestjs/common";
 import {
-    ApiBadRequestResponse,
+  ApiBadRequestResponse,
   ApiBearerAuth,
   ApiConflictResponse,
   ApiCreatedResponse,
@@ -22,12 +22,15 @@ import {
   ApiUnauthorizedResponse,
 } from "@nestjs/swagger";
 import { Roles } from "@common/decorators";
-import {
-  CreateUserDto,
-} from "./dto/create-user.dto";
+import { CreateUserDto } from "./dto/create-user.dto";
 import { UpdateUserDto } from "./dto/update-user.dto";
 import { UsersService } from "./users.service";
-import { ListUserQuery, UserListResponseDto, UserPostsResponseDto, UserResponseDto } from "./dto/user.dto";
+import {
+  ListUserQuery,
+  UserListResponseDto,
+  UserPostsResponseDto,
+  UserResponseDto,
+} from "./dto/user.dto";
 
 // docs
 @ApiTags("Users")

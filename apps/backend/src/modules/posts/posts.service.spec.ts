@@ -1,9 +1,9 @@
 import { beforeEach, describe, expect, it, mock } from "bun:test";
-import { Test, TestingModule } from '@nestjs/testing';
-import { PostsService } from './posts.service';
-import { PostRepository } from './posts.repository';
+import { Test, TestingModule } from "@nestjs/testing";
+import { PostsService } from "./posts.service";
+import { PostRepository } from "./posts.repository";
 
-describe('PostsService', () => {
+describe("PostsService", () => {
   let service: PostsService;
   const repository = { findMany: mock(), replaceTags: mock() };
 
@@ -17,7 +17,7 @@ describe('PostsService', () => {
     service = module.get<PostsService>(PostsService);
   });
 
-  it('passes the tag filter to the repository', async () => {
+  it("passes the tag filter to the repository", async () => {
     repository.findMany.mockResolvedValue([]);
 
     await service.findMany({ tag: "prisma" });
@@ -25,7 +25,7 @@ describe('PostsService', () => {
     expect(repository.findMany).toHaveBeenCalledWith({ tag: "prisma" });
   });
 
-  it('drops duplicate tag ids before replacing tags', async () => {
+  it("drops duplicate tag ids before replacing tags", async () => {
     repository.replaceTags.mockResolvedValue({});
 
     await service.replaceTags(1, { tagIds: [2, 3, 2] });
