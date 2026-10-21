@@ -1,3 +1,8 @@
+/**
+ * INFO: End-to-end (E2E) testing is a software testing methodology that validates an application’s complete workflow
+ * from start to finish, simulating real-world user scenarios to ensure all integrated components function correctly.
+ */
+
 import { afterAll, beforeAll, describe, expect, it, mock } from "bun:test";
 import { FastifyAdapter, type NestFastifyApplication } from "@nestjs/platform-fastify";
 import { Test } from "@nestjs/testing";
