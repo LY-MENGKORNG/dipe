@@ -5,6 +5,7 @@ enum Role {
 }
 
 model User {
+  // fields
   id           Int      @id @default(autoincrement())
   name         String
   email        String   @unique
@@ -14,6 +15,7 @@ model User {
   createdAt    DateTime @default(now()) @map("created_at")
   updatedAt    DateTime @updatedAt @map("updated_at")
 
+  // references
   posts Post[] @relation("post_poster")
 
   @@map("user")
