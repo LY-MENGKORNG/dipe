@@ -69,7 +69,7 @@ import { AuthController } from "./auth/auth.controller";
     TagsModule,
   ],
   providers: [
-    { provide: APP_GUARD, useClass: ThrottlerGuard },
+    { provide: APP_GUARD, useClass: ThrottlerGuard }, // applies it globally.
     { provide: APP_GUARD, useClass: AuthGuard },
     { provide: APP_GUARD, useClass: RolesGuard },
     { provide: APP_PIPE, useClass: ZodValidationPipe },
