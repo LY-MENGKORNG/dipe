@@ -1,5 +1,5 @@
 import { ROLES } from "@common/constants/role";
-import { commonSchema, omit } from "@common/helpers/schema";
+import { commonSchema, isoDate, omit } from "@common/helpers/schema";
 import { postResponseSchema } from "@modules/posts/schema/posts.schema";
 import { z } from "zod/v4";
 
@@ -32,8 +32,8 @@ export const userResponseSchema = z.object({
   email: z.email(),
   role: z.enum(ROLES),
   isActive: z.boolean(),
-  createdAt: z.iso.datetime(),
-  updatedAt: z.iso.datetime(),
+  createdAt: isoDate,
+  updatedAt: isoDate,
 });
 
 export const userPostsResponseSchema = userResponseSchema.extend({

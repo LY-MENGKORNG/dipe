@@ -13,14 +13,13 @@ import {
   ApiBadRequestResponse,
   ApiBearerAuth,
   ApiConflictResponse,
-  ApiCreatedResponse,
   ApiForbiddenResponse,
   ApiNotFoundResponse,
-  ApiOkResponse,
   ApiOperation,
   ApiTags,
   ApiUnauthorizedResponse,
 } from "@nestjs/swagger";
+import { ZodResponse } from "nestjs-zod";
 import { Roles } from "@common/decorators";
 import { CreateUserDto } from "./dto/create-user.dto";
 import { UpdateUserDto } from "./dto/update-user.dto";
@@ -43,7 +42,7 @@ export class UsersController {
 
   // docs
   @ApiOperation({ summary: "Create a user (admin)" })
-  @ApiCreatedResponse({ type: UserResponseDto })
+  @ZodResponse({ status: 201, type: UserResponseDto })
   @ApiConflictResponse({ description: "Email already used" })
   @ApiForbiddenResponse({ description: "Admin role required" })
   // ---
@@ -55,7 +54,7 @@ export class UsersController {
 
   // docs
   @ApiOperation({ summary: "List users" })
-  @ApiOkResponse({ type: UserListResponseDto })
+  @ZodResponse({ status: 200, type: UserListResponseDto })
   // ---
   @Get()
   findAll(@Query() query: ListUserQuery) {
@@ -64,7 +63,7 @@ export class UsersController {
 
   // docs
   @ApiOperation({ summary: "Get one user" })
-  @ApiOkResponse({ type: UserResponseDto })
+  @ZodResponse({ status: 200, type: UserResponseDto })
   @ApiNotFoundResponse({ description: "No user with this id" })
   // ---
   @Get(":id")
@@ -74,7 +73,7 @@ export class UsersController {
 
   // docs
   @ApiOperation({ summary: "Get one user with posts" })
-  @ApiOkResponse({ type: UserPostsResponseDto })
+  @ZodResponse({ status: 200, type: UserPostsResponseDto })
   @ApiNotFoundResponse({ description: "No user with this id" })
   // ---
   @Get(":id/posts")
@@ -84,7 +83,7 @@ export class UsersController {
 
   // docs
   @ApiOperation({ summary: "Update a user (admin)" })
-  @ApiOkResponse({ type: UserResponseDto })
+  @ZodResponse({ status: 200, type: UserResponseDto })
   @ApiNotFoundResponse({ description: "No user with this id" })
   @ApiForbiddenResponse({ description: "Admin role required" })
   // ---
@@ -96,7 +95,7 @@ export class UsersController {
 
   // docs
   @ApiOperation({ summary: "Delete a user (admin)" })
-  @ApiOkResponse({ type: UserResponseDto })
+  @ZodResponse({ status: 200, type: UserResponseDto })
   @ApiNotFoundResponse({ description: "No user with this id" })
   @ApiConflictResponse({ description: "User still has posts" })
   @ApiForbiddenResponse({ description: "Admin role required" })

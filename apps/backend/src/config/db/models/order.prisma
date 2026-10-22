@@ -1,3 +1,9 @@
+enum OrderStatus {
+  pending
+  preparing
+  accepted
+}
+
 model Order {
   id Int @id @default(autoincrement())
 

@@ -9,8 +9,8 @@ import {
 
 export class ListUserQuery extends createZodDto(listUserQuerySchema) {}
 
-export class UserResponseDto extends createZodDto(userResponseSchema) {}
+export class UserResponseDto extends createZodDto(userResponseSchema, { codec: true }) {}
 
-export class UserPostsResponseDto extends createZodDto(userPostsResponseSchema) {}
+export class UserPostsResponseDto extends createZodDto(userPostsResponseSchema, { codec: true }) {}
 
-export class UserListResponseDto extends createZodDto(userListResponseSchema) {}
+export class UserListResponseDto extends createZodDto(userListResponseSchema, { codec: true }) {}

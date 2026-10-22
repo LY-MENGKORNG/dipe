@@ -1,4 +1,5 @@
 import { z } from "zod/v4";
+import { isoDate } from "@common/helpers/schema";
 
 export const tagFields = {
   id: z.number().int().positive(),
@@ -13,7 +14,7 @@ export const tagSummarySchema = z.object({
 });
 
 export const tagResponseSchema = tagSummarySchema.extend({
-  createdAt: z.iso.datetime(),
+  createdAt: isoDate,
 });
 
 export const tagListResponseSchema = tagResponseSchema

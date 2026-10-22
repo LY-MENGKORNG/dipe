@@ -2,14 +2,13 @@ import { Body, Controller, Delete, Get, Param, ParseIntPipe, Post } from "@nestj
 import {
   ApiBearerAuth,
   ApiConflictResponse,
-  ApiCreatedResponse,
   ApiForbiddenResponse,
   ApiNotFoundResponse,
-  ApiOkResponse,
   ApiOperation,
   ApiTags,
   ApiUnauthorizedResponse,
 } from "@nestjs/swagger";
+import { ZodResponse } from "nestjs-zod";
 import { Roles } from "@common/decorators";
 import { PostListResponseDto } from "@modules/posts/dto/posts.dto";
 import { CreateTagDto, TagListResponseDto, TagResponseDto } from "./dto/tags.dto";
@@ -26,7 +25,7 @@ export class TagsController {
 
   // docs
   @ApiOperation({ summary: "List tags with their post count" })
-  @ApiOkResponse({ type: TagListResponseDto })
+  @ZodResponse({ status: 200, type: TagListResponseDto })
   // ---
   @Get()
   findAll() {
@@ -35,7 +34,7 @@ export class TagsController {
 
   // docs
   @ApiOperation({ summary: "Create a tag (admin)" })
-  @ApiCreatedResponse({ type: TagResponseDto })
+  @ZodResponse({ status: 201, type: TagResponseDto })
   @ApiConflictResponse({ description: "Tag name already used" })
   @ApiForbiddenResponse({ description: "Admin role required" })
   // ---
@@ -47,7 +46,7 @@ export class TagsController {
 
   // docs
   @ApiOperation({ summary: "List posts with this tag" })
-  @ApiOkResponse({ type: PostListResponseDto })
+  @ZodResponse({ status: 200, type: PostListResponseDto })
   @ApiNotFoundResponse({ description: "No tag with this id" })
   // ---
   @Get(":id/posts")
@@ -57,7 +56,7 @@ export class TagsController {
 
   // docs
   @ApiOperation({ summary: "Delete a tag and detach it from every post (admin)" })
-  @ApiOkResponse({ type: TagResponseDto })
+  @ZodResponse({ status: 200, type: TagResponseDto })
   @ApiNotFoundResponse({ description: "No tag with this id" })
   @ApiForbiddenResponse({ description: "Admin role required" })
   // ---

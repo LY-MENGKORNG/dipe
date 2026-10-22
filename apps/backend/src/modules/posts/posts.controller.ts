@@ -4,10 +4,10 @@ import {
   ApiBearerAuth,
   ApiUnauthorizedResponse,
   ApiOperation,
-  ApiOkResponse,
   ApiNotFoundResponse,
   ApiForbiddenResponse,
 } from "@nestjs/swagger";
+import { ZodResponse } from "nestjs-zod";
 import { Roles } from "@common/decorators";
 import { PostsService } from "./posts.service";
 import {
@@ -28,7 +28,7 @@ export class PostsController {
 
   // docs
   @ApiOperation({ summary: "List posts, optionally filtered by tag name" })
-  @ApiOkResponse({ type: PostListResponseDto })
+  @ZodResponse({ status: 200, type: PostListResponseDto })
   // ---
   @Get()
   getPosts(@Query() query: ListPostQuery) {
@@ -37,7 +37,7 @@ export class PostsController {
 
   // docs
   @ApiOperation({ summary: "Replace the tags of a post (admin)" })
-  @ApiOkResponse({ type: PostWithRelationsResponseDto })
+  @ZodResponse({ status: 200, type: PostWithRelationsResponseDto })
   @ApiNotFoundResponse({ description: "No post with this id, or an unknown tag id" })
   @ApiForbiddenResponse({ description: "Admin role required" })
   // ---

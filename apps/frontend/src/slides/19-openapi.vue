@@ -9,7 +9,10 @@ export const meta: SlideMeta = {
     'Nest builds the document from code: controllers and routes come for free; DTO schemas come from nestjs-zod; descriptions and responses from @Api* decorators.',
     'This repo already has it: DocumentBuilder in docs.config.ts with a bearer scheme, rendered by Scalar at GET /docs.',
     'With nestjs-zod, run `cleanupOpenApiDoc()` on the document so Zod schemas render cleanly, and register `ZodValidationPipe` globally — otherwise the schema is documented but NOT enforced.',
-    'Document responses, not just requests: @ApiOkResponse, @ApiNotFoundResponse, @ApiUnauthorizedResponse. Front-end devs and AI agents read those.',
+    'Document responses, not just requests. @ZodResponse does it in one decorator: it documents the response AND strips the return value down to the schema (ZodSerializerInterceptor). Errors still use @ApiNotFoundResponse, @ApiUnauthorizedResponse.',
+    'Why strip? A Prisma row can carry passwordHash. The response schema is an allow-list: anything not in it never leaves the server.',
+    'Dates: Prisma returns Date, JSON wants a string. The isoDate codec encodes Date → ISO string on the way out, and the docs still say string/date-time.',
+    'If a response does not match its schema, the client gets a plain 500 and SerializationExceptionFilter logs the route plus the exact Zod issues. Demo: change name to z.number() in users.schema.ts and call GET /api/users/1.',
     'Demo: open /docs, click Authorize, paste the token from /auth/login, call GET /api/users — that is testing endpoints through the UI.',
   ],
 }
@@ -22,7 +25,7 @@ import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs'
 import CodeSnippet from '@/components/deck/CodeSnippet.vue'
 import SlideLayout from '@/components/deck/SlideLayout.vue'
 
-const flow = ['Zod DTOs', '@Api* decorators', 'DocumentBuilder', 'openapi.json', 'Scalar at /docs']
+const flow = ['Zod DTOs', '@ZodResponse + @Api*', 'DocumentBuilder', 'openapi.json', 'Scalar at /docs']
 
 const tabs = [
   {
@@ -73,7 +76,7 @@ const tabs = [
     value: 'controller',
     label: 'Controller',
     title: 'users.controller.ts',
-    highlight: [2, 7, 8, 9],
+    highlight: [7, 8],
     code: `
       @ApiTags("Users")
       @ApiBearerAuth("bearer")
@@ -81,10 +84,41 @@ const tabs = [
       export class UsersController {
         @Get(":id")
         @ApiOperation({ summary: "Get one user" })
-        @ApiOkResponse({ type: UserResponseDto })
+        // documents the 200 AND strips the result down to the schema
+        @ZodResponse({ status: 200, type: UserResponseDto })
         @ApiNotFoundResponse({ description: "No user with this id" })
         findOne(@Param("id", ParseIntPipe) id: number) {
           return this.usersService.findOne(id);
+        }
+      }
+    `,
+  },
+  {
+    value: 'serializer',
+    label: 'Response guard',
+    title: 'helpers/schema.ts · users.dto.ts · serialization-exception.filter.ts',
+    highlight: [2, 7, 12, 16],
+    code: `
+      // Prisma gives Date, JSON needs string: encode on the way out
+      export const isoDate = z.codec(z.iso.datetime(), z.date(), {
+        decode: (iso) => new Date(iso),
+        encode: (date) => date.toISOString(),
+      });
+
+      export class UserResponseDto extends createZodDto(userResponseSchema, { codec: true }) {}
+
+      // app.module.ts — enforce @ZodResponse, log when a response breaks its schema
+      providers: [
+        { provide: APP_INTERCEPTOR, useClass: ZodSerializerInterceptor },
+        { provide: APP_FILTER, useClass: SerializationExceptionFilter },
+      ]
+
+      @Catch(ZodSerializationException)
+      export class SerializationExceptionFilter extends BaseExceptionFilter {
+        catch(exception: ZodSerializationException, host: ArgumentsHost) {
+          const request = host.switchToHttp().getRequest<FastifyRequest>();
+          this.logger.error(\`\${request.method} \${request.url} broke its schema\`, exception.stack);
+          super.catch(exception, host);
         }
       }
     `,

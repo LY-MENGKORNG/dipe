@@ -14,3 +14,8 @@ export function omit<T extends object, K extends keyof T>(obj: T, keys: K[]): Om
 
   return result as Omit<T, K>;
 }
+
+export const isoDate = z.codec(z.iso.datetime(), z.date(), {
+  decode: (iso) => new Date(iso),
+  encode: (date) => date.toISOString(),
+});
