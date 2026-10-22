@@ -1,17 +1,14 @@
 model Post {
-  // fields
   id          Int      @id @default(autoincrement())
   title       String
   description String?
   createdAt   DateTime @default(now()) @map("created_at")
   updatedAt   DateTime @updatedAt @map("updated_at")
-  userId      Int      @map("user_id")
+  authorId    Int      @map("authorId")
 
-  // references
-  poster User      @relation("post_poster", fields: [userId], references: [id])
+  author User      @relation(fields: [authorId], references: [id])
   tags   PostTag[]
 
-  // indexes/constrants
-  @@index([userId])
+  @@index([authorId])
   @@map("post")
 }

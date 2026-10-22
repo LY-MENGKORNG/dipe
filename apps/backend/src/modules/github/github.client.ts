@@ -28,3 +28,25 @@ export class GithubClient {
     return this.http.get(`/users/${encodeURIComponent(username)}`).json(githubUserSchema);
   }
 }
+
+/**
+ * @NOTE: Common HTTP Headers
+ *
+ * These headers are widely used to control communication and provide additional information
+ * during HTTP requests and responses.
+ *
+ * |++++++++++++++++++|+++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++|
+ * |  Headers         | Purpose                                                       |
+ * |++++++++++++++++++|+++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++|
+ * |  User-Agent      | Identifies the client software making the request.            |
+ * |  Accept	        | Indicates the response formats the client can handle.         |
+ * |  Authorization   |	Carries authentication credentials or tokens.                 |
+ * |  Content-Type    | Specifies the type of data being sent or received.            |
+ * |  Host	          | Specifies the server or domain being requested.               |
+ * |  Cache-Control	  | Defines caching rules for requests and responses.             |
+ * |  Cookie	        | Sends stored cookie information to the server.                |
+ * |  Set-Cookie	    | Sends cookies from the server to the client.                  |
+ * |  Location        |	Specifies a URL for redirection or a newly created resource.  |
+ * |  Content-Length  |	Indicates the size of the message body in bytes.              |
+ * +++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++|
+ */

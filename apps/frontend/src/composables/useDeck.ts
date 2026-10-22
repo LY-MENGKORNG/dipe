@@ -1,5 +1,5 @@
 import { computed, ref, watch } from "vue";
-import { useEventListener, useFullscreen } from "@vueuse/core";
+import { useColorMode, useEventListener, useFullscreen } from "@vueuse/core";
 import { slides } from "@/slides";
 
 export type Direction = "next" | "prev";
@@ -53,6 +53,7 @@ export function useDeck() {
 export function useDeckKeyboard() {
   const deck = useDeck();
   const { toggle: toggleFullscreen } = useFullscreen();
+  const mode = useColorMode()
 
   useEventListener(window, "hashchange", () => deck.go(readHash()));
 
@@ -66,10 +67,12 @@ export function useDeckKeyboard() {
       case "ArrowRight":
       case "PageDown":
       case " ":
+      case "l":
         deck.next();
         break;
       case "ArrowLeft":
       case "PageUp":
+      case "h":
         deck.prev();
         break;
       case "Home":
@@ -86,6 +89,9 @@ export function useDeckKeyboard() {
         break;
       case "f":
         void toggleFullscreen();
+        break;
+      case "d":
+        mode.value = mode.value === "dark" ? "light" : "dark"
         break;
       default:
         return;

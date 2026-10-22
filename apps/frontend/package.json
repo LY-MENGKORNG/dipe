@@ -15,6 +15,7 @@
   "dependencies": {
     "@lucide/vue": "^1.59.0",
     "@repo/utils": "workspace:*",
+    "@repo/http": "workspace:*",
     "@tailwindcss/vite": "^4.3.3",
     "@vueuse/core": "^15.0.0",
     "class-variance-authority": "^0.7.1",

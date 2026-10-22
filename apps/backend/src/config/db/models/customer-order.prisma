@@ -1,0 +1,12 @@
+model CustomerOrder {
+  customerId  Int     @map("customer_id")
+  orderId     Int     @map("order_id")
+  totalAmount Decimal @map("total_amount")
+
+  customer User  @relation(fields: [customerId], references: [id], onDelete: Cascade)
+  order    Order @relation(fields: [orderId], references: [id], onDelete: Cascade)
+
+  @@id([customerId, orderId])
+  @@index([orderId])
+  @@map("customer_order")
+}
