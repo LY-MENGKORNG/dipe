@@ -1,7 +1,7 @@
 import { beforeAll, beforeEach, describe, expect, it, mock } from "bun:test";
 import { UnauthorizedException } from "@nestjs/common";
-import { ConfigService } from "@nestjs/config";
 import { JwtService } from "@nestjs/jwt";
+import { env } from "@repo/env";
 import { Test } from "@nestjs/testing";
 import { UserRepository } from "@modules/users/users.repository";
 import { AuthService } from "./auth.service";
@@ -25,7 +25,6 @@ describe("AuthService", () => {
         AuthService,
         { provide: UserRepository, useValue: repository },
         { provide: JwtService, useValue: jwt },
-        { provide: ConfigService, useValue: { get: () => "1h" } },
       ],
     }).compile();
 
@@ -46,7 +45,7 @@ describe("AuthService", () => {
     expect(result).toEqual({
       accessToken: "signed.jwt.token",
       tokenType: "Bearer",
-      expiresIn: "1h",
+      expiresIn: env.JWT_EXPIRES_IN,
     });
     expect(jwt.signAsync).toHaveBeenCalledWith({ sub: 7, email: "a@dipe.dev", role: "admin" });
   });

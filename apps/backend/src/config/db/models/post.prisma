@@ -4,7 +4,7 @@ model Post {
   description String?
   createdAt   DateTime @default(now()) @map("created_at")
   updatedAt   DateTime @updatedAt @map("updated_at")
-  authorId    Int      @map("authorId")
+  authorId    Int      @map("author_id")
 
   author User      @relation(fields: [authorId], references: [id])
   tags   PostTag[]

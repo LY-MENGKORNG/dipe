@@ -24,6 +24,8 @@ if (isError(app)) {
 
 // Enabling & register services
 app.enableShutdownHooks();
+app.enableCsrfProtection({})
+app.useSecurityHeaders({})
 app.useWebSocketAdapter(new WsAdapter(app));
 app.setGlobalPrefix("/api");
 

@@ -23,7 +23,7 @@ export class AuthService {
     return {
       accessToken: await this.jwt.signAsync(payload),
       tokenType: "Bearer" as const,
-      expiresIn: env.JWT_EXPIRES_IN, // this.config.get("JWT_EXPIRES_IN", { infer: true }),
+      expiresIn: env.JWT_EXPIRES_IN,
     };
   }
 }
