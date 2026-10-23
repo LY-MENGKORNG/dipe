@@ -24,7 +24,7 @@ import SlideLayout from '@/components/deck/SlideLayout.vue'
 
 const steps = [
   { n: 1, title: 'Model', cmd: 'db/models/*.prisma', desc: 'Describe tables as models' },
-  { n: 2, title: 'Migrate', cmd: 'bun run db:migrate:dev', desc: 'Diff → SQL file → apply' },
+  { n: 2, title: 'Migrate', cmd: 'bun run db:migration:apply', desc: 'Diff → SQL file → apply' },
   { n: 3, title: 'Generate', cmd: 'bun run db:generate', desc: 'Typed client in generated/' },
   { n: 4, title: 'Query', cmd: 'db.user.findMany()', desc: 'Autocomplete + type safety' },
 ]

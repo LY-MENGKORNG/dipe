@@ -8,7 +8,7 @@ export const postResponseSchema = z.object({
   createdAt: isoDate,
   updatedAt: isoDate,
   description: z.string().nullable(),
-  userId: z.number().int().positive(),
+  authorId: z.number().int().positive(),
 });
 
 export const listPostQuerySchema = z.object({
@@ -19,7 +19,7 @@ export const replacePostTagsSchema = z.object({
   tagIds: tagFields.id.array().max(20),
 });
 
-export const postWithRelationsSchema = postResponseSchema.omit({ userId: true }).extend({
+export const postWithRelationsSchema = postResponseSchema.omit({ authorId: true }).extend({
   author: z.object({
     id: z.number().int().positive(),
     name: z.string(),

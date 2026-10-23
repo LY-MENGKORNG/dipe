@@ -6,9 +6,9 @@ import { postSeed } from "./post.seed";
 import { orderSeed } from "./order.seed";
 
 await db.$transaction(async (tx) => {
-  await userSeed(tx);
+  const customers = await userSeed(tx);
   await postSeed(tx);
-  await orderSeed(tx);
+  await orderSeed(tx, customers);
 });
 
 await db.$disconnect();

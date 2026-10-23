@@ -1,6 +1,5 @@
 import { type PrismaTx } from "@common/database";
-import { type Order } from "../generated/client";
-import { users } from "./user.seed";
+import { type Order, type User } from "../generated/client";
 
 export const orders: Order[] = [
   {
@@ -21,22 +20,26 @@ export const orders: Order[] = [
   },
 ];
 
-export async function orderSeed(tx: PrismaTx) {
+export async function orderSeed(tx: PrismaTx, customers: User[]) {
   for (const order of orders) {
-    const ord = await tx.order.upsert({
-      where: order,
-      update: order,
+    await tx.order.upsert({
+      where: { id: order.id },
+      update: {},
       create: order,
     });
 
-    for (const user of users) {
-      await tx.customerOrder.create({
-        data: {
-          customerId: user.id,
-          orderId: ord.id,
+    for (const customer of customers) {
+      await tx.customerOrder.upsert({
+        where: { customerId_orderId: { customerId: customer.id, orderId: order.id } },
+        update: {},
+        create: {
+          customerId: customer.id,
+          orderId: order.id,
           totalAmount: Math.random(),
         },
       });
     }
   }
+
+  await tx.$executeRaw`SELECT setval(pg_get_serial_sequence('"order"', 'id'), (SELECT MAX(id) FROM "order"))`;
 }

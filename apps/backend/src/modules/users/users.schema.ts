@@ -37,7 +37,7 @@ export const userResponseSchema = z.object({
 });
 
 export const userPostsResponseSchema = userResponseSchema.extend({
-  posts: postResponseSchema.omit({ userId: true }).array(),
+  posts: postResponseSchema.omit({ authorId: true }).array(),
 });
 
 export const userListResponseSchema = z.object({
