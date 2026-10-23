@@ -1,17 +1,17 @@
 import { Injectable, UnauthorizedException } from "@nestjs/common";
-import { ConfigService } from "@nestjs/config";
 import { JwtService } from "@nestjs/jwt";
-import type { Env } from "@repo/env";
+import { env } from "@repo/env";
 import type { AuthUser } from "@common/types/auth";
 import { UserRepository } from "@modules/users/users.repository";
 import type { LoginDto } from "./dto/login.dto";
+import { EmailProducer } from "@modules/notifications/email.producer";
 
 @Injectable()
 export class AuthService {
   constructor(
     private readonly users: UserRepository,
     private readonly jwt: JwtService,
-    private readonly config: ConfigService<Env, true>,
+    private readonly email: EmailProducer,
   ) {}
 
   async login({ email, password }: LoginDto) {
@@ -22,10 +22,12 @@ export class AuthService {
 
     const payload: AuthUser = { sub: user.id, email: user.email, role: user.role };
 
+    await this.email.sendLoggedInInfo({ name: user.name, email: user.email, userId: user.id })
+
     return {
       accessToken: await this.jwt.signAsync(payload),
       tokenType: "Bearer" as const,
-      expiresIn: this.config.get("JWT_EXPIRES_IN", { infer: true }),
+      expiresIn: env.JWT_EXPIRES_IN,
     };
   }
 }

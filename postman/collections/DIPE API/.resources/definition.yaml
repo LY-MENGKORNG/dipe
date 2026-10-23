@@ -6,12 +6,15 @@ description: |-
   the other folders reuse them. Requests use the admin token by default (collection auth);
   requests that demonstrate 401/403 override it.
 
-  Prerequisites: Postgres + Redis running, `bun run db:migrate:dev && bun run db:seed`, API on `base_url`.
+  Prerequisites: Postgres + Redis running, `bun run db:migration:apply && bun run db:seed`, API on `base_url`.
 variables:
-  base_url: ""
-  admin_email: ""
+  base_url: http://localhost:3000/api
+  admin_email: admin@dipe.dev
   admin_token: ""
-  admin_password: ""
+  admin_password: Admin@12345
+  employee_email: employee@dipe.dev
+  employee_password: Employee@12345
+  employee_token: ""
 auth:
   - id: 2d7724bd-b1d9-4e9e-a4db-162470ab8ca1
     type: bearer

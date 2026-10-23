@@ -27,4 +27,22 @@ export class EmailProducer {
     this.logger.debug(`Enqueued welcome email for user #${data.userId}`);
     return result;
   }
+
+  async sendLoggedInInfo(data: WelcomeEmailData) {
+    const result = await safeTry(
+      this.queue.add(EmailJob.Login, data, {
+        attempts: 5,
+        backoff: { type: "exponential", delay: 1_000 },
+        removeOnComplete: { age: 3_600, count: 1_000 },
+        removeOnFail: { age: 24 * 3_600 },
+      }),
+    );
+
+    if (isError(result)) {
+      this.logger.error(`Could not enqueue welcome email for user #${data.userId}`, result);
+      return null;
+    }
+    this.logger.debug(`Enqueued welcome email for user #${data.userId}`);
+    return result;
+  }
 }

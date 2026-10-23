@@ -2,14 +2,18 @@ import { BullModule } from "@nestjs/bullmq";
 import { join } from "node:path";
 import { MiddlewareConsumer, Module, NestModule } from "@nestjs/common";
 import { ConfigModule } from "@nestjs/config";
-import { APP_FILTER, APP_GUARD, APP_PIPE } from "@nestjs/core";
+import { APP_FILTER, APP_GUARD, APP_INTERCEPTOR, APP_PIPE } from "@nestjs/core";
 import { ThrottlerGuard, ThrottlerModule } from "@nestjs/throttler";
 import { MailerModule } from "@nestjs-modules/mailer";
 import { HandlebarsAdapter } from "@nestjs-modules/mailer/dist/adapters/handlebars.adapter";
-import { ZodValidationPipe } from "nestjs-zod";
+import { ZodValidationPipe, ZodSerializerInterceptor } from "nestjs-zod";
 import { env, envSchema } from "@repo/env";
 import { AuthGuard, RolesGuard } from "@common/guards";
-import { PrismaExceptionFilter, UpstreamExceptionFilter } from "@common/filters";
+import {
+  SerializationExceptionFilter,
+  PrismaExceptionFilter,
+  UpstreamExceptionFilter,
+} from "@common/filters";
 import { AuthModule } from "@modules/auth/auth.module";
 import { DBModule } from "@modules/db.module";
 import { GithubModule } from "@modules/github/github.module";
@@ -20,6 +24,7 @@ import { PostsModule } from "./posts/posts.module";
 import { TagsModule } from "./tags/tags.module";
 import { AuthMiddleware } from "./auth/auth.middleware";
 import { AuthController } from "./auth/auth.controller";
+import { WorkspacesModule } from './workspaces/workspaces.module';
 
 @Module({
   imports: [
@@ -67,14 +72,17 @@ import { AuthController } from "./auth/auth.controller";
     NotificationsModule,
     PostsModule,
     TagsModule,
+    WorkspacesModule,
   ],
   providers: [
     { provide: APP_GUARD, useClass: ThrottlerGuard }, // applies it globally.
     { provide: APP_GUARD, useClass: AuthGuard },
     { provide: APP_GUARD, useClass: RolesGuard },
     { provide: APP_PIPE, useClass: ZodValidationPipe },
+    { provide: APP_INTERCEPTOR, useClass: ZodSerializerInterceptor },
     { provide: APP_FILTER, useClass: PrismaExceptionFilter },
     { provide: APP_FILTER, useClass: UpstreamExceptionFilter },
+    { provide: APP_FILTER, useClass: SerializationExceptionFilter },
   ],
 })
 export class AppModule implements NestModule {

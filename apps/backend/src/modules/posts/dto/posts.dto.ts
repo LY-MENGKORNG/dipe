@@ -8,11 +8,13 @@ import {
   replacePostTagsSchema,
 } from "../schema/posts.schema";
 
-export class PostResponseDto extends createZodDto(postResponseSchema) {}
+export class PostResponseDto extends createZodDto(postResponseSchema, { codec: true }) {}
 
-export class PostWithRelationsResponseDto extends createZodDto(postWithRelationsSchema) {}
+export class PostWithRelationsResponseDto extends createZodDto(postWithRelationsSchema, {
+  codec: true,
+}) {}
 
-export class PostListResponseDto extends createZodDto(postListResponseSchema) {}
+export class PostListResponseDto extends createZodDto(postListResponseSchema, { codec: true }) {}
 
 export class ListPostQuery extends createZodDto(listPostQuerySchema) {}
 

@@ -5,4 +5,6 @@ export type Mutable<T> = {
 export type ObjectEntries<T> =
 	T extends ArrayLike<infer U> ? Array<[string, U]> : Array<{ [K in keyof T]: [K, T[K]] }[keyof T]>
 
-export type * from "../../../apps/backend/src/config/db/generated/browser"
+import type { User, Post, PostTag, Order, OrderStatus, CustomerOrder } from "../../../apps/backend/src/config/db/generated/browser"
+
+export type PublicUser = Omit<User, "passwordHash">

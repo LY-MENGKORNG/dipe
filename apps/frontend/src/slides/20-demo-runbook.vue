@@ -22,7 +22,7 @@ import SlideLayout from '@/components/deck/SlideLayout.vue'
 
 const steps = [
   { title: 'Check Postgres & Redis are up', cmd: 'pg_isready -h localhost && redis-cli ping', proves: 'setup' },
-  { title: 'Migrate & seed demo users', cmd: 'bun run db:migrate:dev && bun run db:seed', proves: 'Prisma' },
+  { title: 'Migrate & seed demo users', cmd: 'bun run db:migration:apply && bun run db:seed', proves: 'Prisma' },
   { title: 'Run the API', cmd: 'bun run dev   # → http://localhost:3000/api', proves: 'Nest' },
   { title: 'Open the docs', cmd: 'open http://localhost:3000/docs', proves: 'OpenAPI' },
   { title: 'Call a protected route anonymously', cmd: 'curl -i localhost:3000/api/users   # → 401', proves: 'Security' },

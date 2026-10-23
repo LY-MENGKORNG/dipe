@@ -4,6 +4,6 @@ import { createTagSchema, tagListResponseSchema, tagResponseSchema } from "../sc
 
 export class CreateTagDto extends createZodDto(createTagSchema) {}
 
-export class TagResponseDto extends createZodDto(tagResponseSchema) {}
+export class TagResponseDto extends createZodDto(tagResponseSchema, { codec: true }) {}
 
-export class TagListResponseDto extends createZodDto(tagListResponseSchema) {}
+export class TagListResponseDto extends createZodDto(tagListResponseSchema, { codec: true }) {}

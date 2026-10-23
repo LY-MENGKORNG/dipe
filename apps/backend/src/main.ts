@@ -24,6 +24,10 @@ if (isError(app)) {
 
 // Enabling & register services
 app.enableShutdownHooks();
+if (env.NODE_ENV === "production") {
+  app.enableCsrfProtection({ trustedOrigins: env.ALLOW_ORIGINS })
+  app.useSecurityHeaders()
+}
 app.useWebSocketAdapter(new WsAdapter(app));
 app.setGlobalPrefix("/api");
 
