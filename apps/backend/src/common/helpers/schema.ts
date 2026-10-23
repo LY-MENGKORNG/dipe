@@ -5,6 +5,12 @@ export const commonSchema = {
   offset: z.coerce.number().int().min(0).default(0),
 };
 
+/**
+ * Remove key(s) from an object
+ * @param {T} obj
+ * @param {K[]} keys
+ * @returns {Omit<T, K>}
+ */
 export function omit<T extends object, K extends keyof T>(obj: T, keys: K[]): Omit<T, K> {
   const result = { ...obj };
 
