@@ -24,6 +24,7 @@ import { PostsModule } from "./posts/posts.module";
 import { TagsModule } from "./tags/tags.module";
 import { AuthMiddleware } from "./auth/auth.middleware";
 import { AuthController } from "./auth/auth.controller";
+import { WorkspacesModule } from './workspaces/workspaces.module';
 
 @Module({
   imports: [
@@ -71,6 +72,7 @@ import { AuthController } from "./auth/auth.controller";
     NotificationsModule,
     PostsModule,
     TagsModule,
+    WorkspacesModule,
   ],
   providers: [
     { provide: APP_GUARD, useClass: ThrottlerGuard }, // applies it globally.

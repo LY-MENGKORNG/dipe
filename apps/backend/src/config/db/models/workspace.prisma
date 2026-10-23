@@ -1,0 +1,19 @@
+model Workspace {
+  id   Int    @id @default(autoincrement())
+  name String @unique
+  slug String
+
+  projects Project[]
+
+  @@map("workspace")
+}
+
+model Project {
+  id Int @id @default(autoincrement())
+  workspaceId Int @map("workspace_id")
+
+  workspace Workspace @relation(fields: [workspaceId], references: [id], onDelete: Cascade)
+
+  @@index([workspaceId])
+  @@map("project")
+}

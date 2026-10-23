@@ -5,6 +5,7 @@ import type { Env } from "@repo/env";
 import { UsersModule } from "@modules/users/users.module";
 import { AuthController } from "./auth.controller";
 import { AuthService } from "./auth.service";
+import { NotificationsModule } from "@modules/notifications/notifications.module";
 
 @Global()
 @Module({
@@ -21,6 +22,7 @@ import { AuthService } from "./auth.service";
         },
       }),
     }),
+    NotificationsModule,
   ],
   controllers: [AuthController],
   providers: [AuthService],
