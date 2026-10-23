@@ -1,5 +1,5 @@
 /**
- * INFO: End-to-end (E2E) testing is a software testing methodology that validates an application’s complete workflow
+ * @NOTE: End-to-end (E2E) testing is a software testing methodology that validates an application’s complete workflow
  * from start to finish, simulating real-world user scenarios to ensure all integrated components function correctly.
  */
 
@@ -156,7 +156,7 @@ describe("DIPE API (e2e)", () => {
 
   describe("tags", () => {
     it("links posts and tags in both directions", async () => {
-      const post = await db.post.create({ data: { title: `E2E Post ${suffix}`, userId: createdIds[0]! } });
+      const post = await db.post.create({ data: { title: `E2E Post ${suffix}`, authorId: createdIds[0]! } });
       const tagIds: number[] = [];
 
       try {

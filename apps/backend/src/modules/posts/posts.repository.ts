@@ -3,9 +3,9 @@ import { Injectable } from "@nestjs/common";
 import type { Prisma } from "@config/db/generated/client";
 
 const postWithRelations = {
-  omit: { userId: true },
+  omit: { authorId: true },
   include: {
-    poster: {
+    author: {
       omit: {
         passwordHash: true,
         createdAt: true,

@@ -12,7 +12,6 @@
     "apps/*"
   ],
   "scripts": {
-    "lint": "bun --bun lint",
     "test:api": "postman collection run 'postman/collections/DIPE API' -e postman/environments/dipe-local.yaml"
   },
   "devDependencies": {

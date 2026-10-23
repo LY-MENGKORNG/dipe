@@ -11,4 +11,4 @@ await db.$transaction(async (tx) => {
   await orderSeed(tx);
 });
 
-void (await db.$disconnect());
+await db.$disconnect();

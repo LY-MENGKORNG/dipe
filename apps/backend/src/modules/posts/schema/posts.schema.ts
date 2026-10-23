@@ -20,7 +20,7 @@ export const replacePostTagsSchema = z.object({
 });
 
 export const postWithRelationsSchema = postResponseSchema.omit({ userId: true }).extend({
-  poster: z.object({
+  author: z.object({
     id: z.number().int().positive(),
     name: z.string(),
     email: z.email(),
