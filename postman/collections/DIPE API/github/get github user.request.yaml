@@ -1,6 +1,6 @@
 $kind: http-request
 method: GET
-url: '{{base_url}}/github/users/:username'
+url: "{{base_url}}/github/users/:username"
 order: 1000
 pathVariables:
   - key: username
@@ -9,7 +9,7 @@ auth:
   type: bearer
   credentials:
     - key: token
-      value: '{{employee_token}}'
+      value: "{{employee_token}}"
 scripts:
   - type: afterResponse
     language: text/javascript
@@ -20,4 +20,4 @@ scripts:
         pm.expect(body.login).to.equal("octocat");
         pm.expect(body.public_repos).to.be.a("number");
       });
-examples: './.resources/get github user.resources/examples'
+examples: "./.resources/get github user.resources/examples"

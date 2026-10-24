@@ -1,10 +1,6 @@
-import {
-  type stop,
-  type RetryMarker,
-  type beforeRetryOptionKeys,
-} from '../core/constants.js'
-import type { HttpRequest, HttpResponse } from '../client.js'
-import type { InitOptions, NormalizedOptions, Options } from './options.js'
+import { type stop, type RetryMarker, type beforeRetryOptionKeys } from "../core/constants.js";
+import type { HttpRequest, HttpResponse } from "../client.js";
+import type { InitOptions, NormalizedOptions, Options } from "./options.js";
 
 /**
 This hook enables you to modify the options before they are used to construct the request. The hook function receives the mutable options object and can modify it in place. You could, for example, modify `searchParams`, `headers`, or `json` here. The `headers` option starts as a plain object with lowercase names, where a header removed with `undefined` keeps an `undefined` value.
@@ -31,32 +27,32 @@ const response = await api.get('https://example.com/api/users');
 // URL: https://example.com/api/users?apiKey=123
 ```
 */
-export type InitHook = (options: InitOptions) => void
+export type InitHook = (options: InitOptions) => void;
 
 export type BeforeRequestState = {
-  request: HttpRequest
-  options: Readonly<NormalizedOptions>
+  request: HttpRequest;
+  options: Readonly<NormalizedOptions>;
 
   /**
 	The number of retries attempted. Always `0`, since `beforeRequest` hooks run once before retry handling begins.
 	*/
-  retryCount: 0
-}
+  retryCount: 0;
+};
 
 export type BeforeRequestHook = (
   state: BeforeRequestState,
-) => Request | Response | void | Promise<Request | Response | void>
+) => Request | Response | void | Promise<Request | Response | void>;
 
 export type BeforeRetryState = {
-  request: HttpRequest
-  options: Readonly<NormalizedOptions>
-  error: Error
+  request: HttpRequest;
+  options: Readonly<NormalizedOptions>;
+  error: Error;
 
   /**
 	The number of retries attempted. Always `>= 1`, since this hook is only called during retries, not on the initial request.
 	*/
-  retryCount: number
-}
+  retryCount: number;
+};
 
 /**
 The value a `beforeRetry` hook can return to change options for this retry and the ones after it.
@@ -77,8 +73,8 @@ await http.put(uploadUrl, {
 ```
 */
 export type BeforeRetryUpdate = {
-  options: Pick<Options, (typeof beforeRetryOptionKeys)[number]>
-}
+  options: Pick<Options, (typeof beforeRetryOptionKeys)[number]>;
+};
 
 export type BeforeRetryHook = (
   state: BeforeRetryState,
@@ -88,44 +84,42 @@ export type BeforeRetryHook = (
   | BeforeRetryUpdate
   | typeof stop
   | void
-  | Promise<Request | Response | BeforeRetryUpdate | typeof stop | void>
+  | Promise<Request | Response | BeforeRetryUpdate | typeof stop | void>;
 
 export type BeforeErrorState = {
-  request: HttpRequest
-  options: Readonly<NormalizedOptions>
+  request: HttpRequest;
+  options: Readonly<NormalizedOptions>;
 
   // `Error` (not `HttpClientError`) because this receives all errors, including non-Ky ones.
-  error: Error
+  error: Error;
 
   /**
 	The number of retries attempted. `0` for the initial request, increments with each retry.
 
 	This allows you to distinguish between the initial request and retries, which is useful when you need different error handling based on retry attempts (e.g., showing different error messages on the final attempt).
 	*/
-  retryCount: number
-}
+  retryCount: number;
+};
 
 // Returns `Error` to allow replacing Http errors with custom non-Ky error types.
-export type BeforeErrorHook = (
-  state: BeforeErrorState,
-) => Error | Promise<Error>
+export type BeforeErrorHook = (state: BeforeErrorState) => Error | Promise<Error>;
 
 export type AfterResponseState = {
-  request: HttpRequest
-  options: Readonly<NormalizedOptions>
-  response: HttpResponse
+  request: HttpRequest;
+  options: Readonly<NormalizedOptions>;
+  response: HttpResponse;
 
   /**
 	The number of retries attempted. `0` for the initial request, increments with each retry.
 
 	This allows you to distinguish between the initial request and retries, which is useful when you need different behavior for retries (e.g., showing a notification only on the final retry).
 	*/
-  retryCount: number
-}
+  retryCount: number;
+};
 
 export type AfterResponseHook = (
   state: AfterResponseState,
-) => Response | RetryMarker | void | Promise<Response | RetryMarker | void>
+) => Response | RetryMarker | void | Promise<Response | RetryMarker | void>;
 
 export type Hooks = {
   /**
@@ -157,7 +151,7 @@ export type Hooks = {
 
 	@default []
 	*/
-  init?: readonly InitHook[] | undefined
+  init?: readonly InitHook[] | undefined;
 
   /**
 	This hook enables you to modify the request right before it is sent. Http will make no further changes to the request after this. The hook function receives a state object with the normalized request, options, and retry count. You could, for example, modify `request.headers` here.
@@ -208,7 +202,7 @@ export type Hooks = {
 
 	@default []
 	*/
-  beforeRequest?: readonly BeforeRequestHook[] | undefined
+  beforeRequest?: readonly BeforeRequestHook[] | undefined;
 
   /**
 	This hook enables you to modify the request right before retry. Http will make no further changes to the request after this. The hook function receives a state object with the normalized request, options, an error instance, and retry count. You could, for example, modify `request.headers` here.
@@ -316,7 +310,7 @@ export type Hooks = {
 
 	@default []
 	*/
-  beforeRetry?: readonly BeforeRetryHook[] | undefined
+  beforeRetry?: readonly BeforeRetryHook[] | undefined;
 
   /**
 	This hook enables you to modify any error right before it is thrown. The hook function receives a state object with the current request, the normalized Http options, the error, and retry count, and should return an `Error` instance.
@@ -360,7 +354,7 @@ export type Hooks = {
 	});
 	```
 	*/
-  beforeError?: readonly BeforeErrorHook[] | undefined
+  beforeError?: readonly BeforeErrorHook[] | undefined;
 
   /**
 	This hook enables you to read and optionally modify the response. The hook function receives a state object with the normalized request, options, a clone of the response, and retry count. The return value of the hook function will be used by Http as the response object if it's an instance of [`Response`](https://developer.mozilla.org/en-US/docs/Web/API/Response).
@@ -433,12 +427,12 @@ export type Hooks = {
 	});
 	```
 	*/
-  afterResponse?: readonly AfterResponseHook[] | undefined
-}
+  afterResponse?: readonly AfterResponseHook[] | undefined;
+};
 
 /**
 Hooks after normalization: every hook type is present as an array.
 */
 export type NormalizedHooks = {
-  [Key in keyof Hooks]-?: Array<NonNullable<Hooks[Key]>[number]>
-}
+  [Key in keyof Hooks]-?: Array<NonNullable<Hooks[Key]>[number]>;
+};

@@ -12,15 +12,16 @@ still use a changed interface.
 
 1. Choose the source by the question:
 
-   | Need | Use |
-   | --- | --- |
-   | Public provider endpoints and integration details | Orbit search, then integrate |
+   | Need                                                             | Use                             |
+   | ---------------------------------------------------------------- | ------------------------------- |
+   | Public provider endpoints and integration details                | Orbit search, then integrate    |
    | A concrete Postman collection, request, spec, mock, or workspace | `postman search <type> <query>` |
-   | Consumers, ownership, dependencies, or likely change impact | `postman context-graph ask` |
+   | Consumers, ownership, dependencies, or likely change impact      | `postman context-graph ask`     |
 
    These sources answer different questions. A miss in one does not establish
    absence in the others; combine entity search and relationship context when
    both the resource and its impact matter.
+
 2. For public APIs, Orbit narrows discovery to task-relevant endpoints and
    returns integration guidance instead of requiring a whole vendor spec in
    context. Use it even when the provider is chosen: endpoint details and

@@ -1,7 +1,6 @@
-import { ROLES } from "@common/constants/role";
-import { commonSchema, isoDate, omit } from "@common/helpers/schema";
-import { postResponseSchema } from "@modules/posts/schema/posts.schema";
-import { z } from "zod/v4";
+import { ROLES } from "@common/constants/role"
+import { commonSchema, isoDate, omit } from "@common/helpers/schema"
+import { z } from "zod/v4"
 
 export const userFields = {
   id: z.number().int().min(1),
@@ -10,7 +9,7 @@ export const userFields = {
   password: z.string().min(8).max(128),
   role: z.enum(ROLES),
   isActive: z.boolean(),
-} as const;
+} as const
 
 const userFieldsNoId = omit(userFields, ["id"])
 
@@ -18,15 +17,15 @@ export const createUserSchema = z.object({
   ...userFieldsNoId,
   role: userFields.role.default("employee"),
   isActive: userFields.isActive.default(true),
-});
+})
 
-export const updateUserSchema = z.object(userFieldsNoId).partial();
+export const updateUserSchema = z.object(userFieldsNoId).partial()
 
 export const listUserQuerySchema = z.object({
   q: z.string().trim().min(1).optional(),
   role: z.enum(ROLES).optional(),
   ...commonSchema,
-});
+})
 
 export const userResponseSchema = z.object({
   id: userFields.id,
@@ -36,14 +35,10 @@ export const userResponseSchema = z.object({
   isActive: z.boolean(),
   createdAt: isoDate,
   updatedAt: isoDate,
-});
-
-export const userPostsResponseSchema = userResponseSchema.extend({
-  posts: postResponseSchema.omit({ authorId: true }).array(),
-});
+})
 
 export const userListResponseSchema = z.object({
   data: userResponseSchema.array(),
   total: z.int().nonnegative(),
   ...commonSchema,
-});
+})

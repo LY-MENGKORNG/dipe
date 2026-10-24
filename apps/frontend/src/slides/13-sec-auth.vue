@@ -1,27 +1,33 @@
 <script lang="ts">
-import type { SlideMeta } from '.'
+import type { SlideMeta } from "."
 
 export const meta: SlideMeta = {
-  title: 'Authentication vs authorization',
-  section: 'Security',
+  title: "Authentication vs authorization",
+  section: "Security",
   notes: [
-    'Authentication (authN) = who are you? Fails with 401 Unauthorized (the name is historical — it really means unauthenticated).',
-    'Authorization (authZ) = are you allowed to do this? Fails with 403 Forbidden.',
-    'Flow: POST /auth/login checks the password hash, signs a short-lived JWT containing the user id and role. The client sends it as `Authorization: Bearer <token>`.',
-    'AuthGuard verifies the signature + expiry and attaches the user to the request. RolesGuard reads the @Roles() metadata and compares with user.role (our Role enum: employee, staff, admin).',
-    'Register AuthGuard globally (APP_GUARD) so endpoints are protected by default; opt out with @Public(). Secure by default beats remembering to add a decorator.',
-    'The repo has an empty users.guard.ts that returns true — this is where it gets real.',
+    "Authentication (authN) = who are you? Fails with 401 Unauthorized (the name is historical — it really means unauthenticated).",
+    "Authorization (authZ) = are you allowed to do this? Fails with 403 Forbidden.",
+    "Flow: POST /auth/login checks the password hash, signs a short-lived JWT containing the user id and role. The client sends it as `Authorization: Bearer <token>`.",
+    "AuthGuard verifies the signature + expiry and attaches the user to the request. RolesGuard reads the @Roles() metadata and compares with user.role (our Role enum: employee, staff, admin).",
+    "Register AuthGuard globally (APP_GUARD) so endpoints are protected by default; opt out with @Public(). Secure by default beats remembering to add a decorator.",
+    "The repo has an empty users.guard.ts that returns true — this is where it gets real.",
   ],
-  ask: 'A logged-in employee calls DELETE /users/5. 401 or 403?',
+  ask: "A logged-in employee calls DELETE /users/5. 401 or 403?",
 }
 </script>
 
 <script setup lang="ts">
-import { Badge } from '@/components/ui/badge'
-import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card'
-import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs'
-import CodeSnippet from '@/components/deck/CodeSnippet.vue'
-import SlideLayout from '@/components/deck/SlideLayout.vue'
+import { Badge } from "@/components/ui/badge"
+import {
+  Card,
+  CardContent,
+  CardDescription,
+  CardHeader,
+  CardTitle,
+} from "@/components/ui/card"
+import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs"
+import CodeSnippet from "@/components/deck/CodeSnippet.vue"
+import SlideLayout from "@/components/deck/SlideLayout.vue"
 
 const authGuard = `
   @Injectable()
@@ -96,7 +102,10 @@ const usage = `
             <CardTitle class="flex items-center justify-between">
               Authentication <Badge variant="destructive">401</Badge>
             </CardTitle>
-            <CardDescription>Proves identity — password → signed JWT → Bearer header.</CardDescription>
+            <CardDescription
+              >Proves identity — password → signed JWT → Bearer
+              header.</CardDescription
+            >
           </CardHeader>
           <CardContent class="font-mono text-xs text-muted-foreground">
             Authorization: Bearer eyJhbGciOi…
@@ -107,7 +116,9 @@ const usage = `
             <CardTitle class="flex items-center justify-between">
               Authorization <Badge variant="destructive">403</Badge>
             </CardTitle>
-            <CardDescription>Checks permission — role, ownership, plan.</CardDescription>
+            <CardDescription
+              >Checks permission — role, ownership, plan.</CardDescription
+            >
           </CardHeader>
           <CardContent class="font-mono text-xs text-muted-foreground">
             @Roles(["admin"]) · user.role = "employee" → ✗
@@ -117,24 +128,33 @@ const usage = `
 
       <Tabs default-value="auth" class="min-w-0">
         <TabsList>
-          <TabsTrigger value="auth">
-            AuthGuard
-          </TabsTrigger>
-          <TabsTrigger value="roles">
-            RolesGuard
-          </TabsTrigger>
-          <TabsTrigger value="usage">
-            Usage
-          </TabsTrigger>
+          <TabsTrigger value="auth"> AuthGuard </TabsTrigger>
+          <TabsTrigger value="roles"> RolesGuard </TabsTrigger>
+          <TabsTrigger value="usage"> Usage </TabsTrigger>
         </TabsList>
         <TabsContent value="auth">
-          <CodeSnippet :code="authGuard" title="auth.guard.ts" size="sm" :highlight="[12, 13, 16]" />
+          <CodeSnippet
+            :code="authGuard"
+            title="auth.guard.ts"
+            size="sm"
+            :highlight="[12, 13, 16]"
+          />
         </TabsContent>
         <TabsContent value="roles">
-          <CodeSnippet :code="rolesGuard" title="roles.guard.ts" size="sm" :highlight="[1, 8, 11]" />
+          <CodeSnippet
+            :code="rolesGuard"
+            title="roles.guard.ts"
+            size="sm"
+            :highlight="[1, 8, 11]"
+          />
         </TabsContent>
         <TabsContent value="usage">
-          <CodeSnippet :code="usage" title="wiring" size="sm" :highlight="[3, 4, 8, 12]" />
+          <CodeSnippet
+            :code="usage"
+            title="wiring"
+            size="sm"
+            :highlight="[3, 4, 8, 12]"
+          />
         </TabsContent>
       </Tabs>
     </div>

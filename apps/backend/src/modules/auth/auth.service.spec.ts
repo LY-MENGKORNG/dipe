@@ -1,24 +1,24 @@
-import { beforeAll, beforeEach, describe, expect, it, mock } from "bun:test";
-import { UnauthorizedException } from "@nestjs/common";
-import { JwtService } from "@nestjs/jwt";
-import { env } from "@repo/env";
-import { Test } from "@nestjs/testing";
-import { UserRepository } from "@modules/users/users.repository";
-import { AuthService } from "./auth.service";
+import { beforeAll, beforeEach, describe, expect, it, mock } from "bun:test"
+import { UnauthorizedException } from "@nestjs/common"
+import { JwtService } from "@nestjs/jwt"
+import { env } from "@repo/env"
+import { Test } from "@nestjs/testing"
+import { UserRepository } from "@modules/users/users.repository"
+import { AuthService } from "./auth.service"
 
 describe("AuthService", () => {
-  let service: AuthService;
-  let passwordHash: string;
-  const repository = { findByEmailWithSecret: mock() };
-  const jwt = { signAsync: mock().mockResolvedValue("signed.jwt.token") };
+  let service: AuthService
+  let passwordHash: string
+  const repository = { findByEmailWithSecret: mock() }
+  const jwt = { signAsync: mock().mockResolvedValue("signed.jwt.token") }
 
   beforeAll(async () => {
-    passwordHash = await Bun.password.hash("Password1");
-  });
+    passwordHash = await Bun.password.hash("Password1")
+  })
 
   beforeEach(async () => {
-    repository.findByEmailWithSecret.mockReset();
-    jwt.signAsync.mockClear();
+    repository.findByEmailWithSecret.mockReset()
+    jwt.signAsync.mockClear()
 
     const module = await Test.createTestingModule({
       providers: [
@@ -26,10 +26,10 @@ describe("AuthService", () => {
         { provide: UserRepository, useValue: repository },
         { provide: JwtService, useValue: jwt },
       ],
-    }).compile();
+    }).compile()
 
-    service = module.get(AuthService);
-  });
+    service = module.get(AuthService)
+  })
 
   it("issues a token for valid credentials", async () => {
     repository.findByEmailWithSecret.mockResolvedValue({
@@ -38,46 +38,61 @@ describe("AuthService", () => {
       role: "admin",
       isActive: true,
       passwordHash,
-    });
+    })
 
-    const result = await service.login({ email: "a@dipe.dev", password: "Password1" });
+    const result = await service.login({
+      email: "a@dipe.dev",
+      password: "Password1",
+    })
 
     expect(result).toEqual({
       accessToken: "signed.jwt.token",
       tokenType: "Bearer",
       expiresIn: env.JWT_EXPIRES_IN,
-    });
-    expect(jwt.signAsync).toHaveBeenCalledWith({ sub: 7, email: "a@dipe.dev", role: "admin" });
-  });
+    })
+    expect(jwt.signAsync).toHaveBeenCalledWith({
+      sub: 7,
+      email: "a@dipe.dev",
+      role: "admin",
+    })
+  })
 
   it("rejects a wrong password", async () => {
-    repository.findByEmailWithSecret.mockResolvedValue({ id: 7, isActive: true, passwordHash });
+    repository.findByEmailWithSecret.mockResolvedValue({
+      id: 7,
+      isActive: true,
+      passwordHash,
+    })
 
     const error = await service
       .login({ email: "a@dipe.dev", password: "nope" })
-      .catch((e: unknown) => e);
+      .catch((e: unknown) => e)
 
-    expect(error).toBeInstanceOf(UnauthorizedException);
-    expect(jwt.signAsync).not.toHaveBeenCalled();
-  });
+    expect(error).toBeInstanceOf(UnauthorizedException)
+    expect(jwt.signAsync).not.toHaveBeenCalled()
+  })
 
   it("rejects an unknown email", async () => {
-    repository.findByEmailWithSecret.mockResolvedValue(null);
+    repository.findByEmailWithSecret.mockResolvedValue(null)
 
     const error = await service
       .login({ email: "x@dipe.dev", password: "Password1" })
-      .catch((e: unknown) => e);
+      .catch((e: unknown) => e)
 
-    expect(error).toBeInstanceOf(UnauthorizedException);
-  });
+    expect(error).toBeInstanceOf(UnauthorizedException)
+  })
 
   it("rejects a deactivated user", async () => {
-    repository.findByEmailWithSecret.mockResolvedValue({ id: 7, isActive: false, passwordHash });
+    repository.findByEmailWithSecret.mockResolvedValue({
+      id: 7,
+      isActive: false,
+      passwordHash,
+    })
 
     const error = await service
       .login({ email: "a@dipe.dev", password: "Password1" })
-      .catch((e: unknown) => e);
+      .catch((e: unknown) => e)
 
-    expect(error).toBeInstanceOf(UnauthorizedException);
-  });
-});
+    expect(error).toBeInstanceOf(UnauthorizedException)
+  })
+})

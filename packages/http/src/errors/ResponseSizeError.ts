@@ -1,5 +1,5 @@
-import type { HttpRequest } from '../types/request.js'
-import { HttpClientError } from './HttpClientError.js'
+import type { HttpRequest } from "../types/request.js";
+import { HttpClientError } from "./HttpClientError.js";
 
 /**
 Error thrown when the response body exceeds `maxResponseSize`. It has a `request` property with the `Request` object and a `maxResponseSize` property with the configured limit in bytes.
@@ -18,15 +18,13 @@ try {
 ```
 */
 export class ResponseSizeError extends HttpClientError {
-  override name = 'ResponseSizeError'
-  request: HttpRequest
-  maxResponseSize: number
+  override name = "ResponseSizeError";
+  request: HttpRequest;
+  maxResponseSize: number;
 
   constructor(request: Request, maxResponseSize: number) {
-    super(
-      `Response body exceeded ${maxResponseSize} bytes: ${request.method} ${request.url}`,
-    )
-    this.request = request
-    this.maxResponseSize = maxResponseSize
+    super(`Response body exceeded ${maxResponseSize} bytes: ${request.method} ${request.url}`);
+    this.request = request;
+    this.maxResponseSize = maxResponseSize;
   }
 }

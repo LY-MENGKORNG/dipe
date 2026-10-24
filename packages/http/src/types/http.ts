@@ -1,6 +1,6 @@
-import { type stop, type retry } from '../core/constants.js'
-import type { Input, Options } from './options.js'
-import type { ResponsePromise } from './ResponsePromise.js'
+import { type stop, type retry } from "../core/constants.js";
+import type { Input, Options } from "./options.js";
+import type { ResponsePromise } from "./ResponsePromise.js";
 
 export type HttpInstance = {
   /**
@@ -21,7 +21,7 @@ export type HttpInstance = {
 	//=> `{data: '🦄'}`
 	```
 	*/
-  <T>(url: Input, options?: Options): ResponsePromise<T>
+  <T>(url: Input, options?: Options): ResponsePromise<T>;
 
   /**
 	Fetch the given `url` using the option `{method: 'get'}`.
@@ -29,7 +29,7 @@ export type HttpInstance = {
 	@param url - `Request` object, `URL` object, or URL string.
 	@returns A promise with `Body` methods added.
 	*/
-  get: <T>(url: Input, options?: Options) => ResponsePromise<T>
+  get: <T>(url: Input, options?: Options) => ResponsePromise<T>;
 
   /**
 	Fetch the given `url` using the option `{method: 'post'}`.
@@ -37,7 +37,7 @@ export type HttpInstance = {
 	@param url - `Request` object, `URL` object, or URL string.
 	@returns A promise with `Body` methods added.
 	*/
-  post: <T>(url: Input, options?: Options) => ResponsePromise<T>
+  post: <T>(url: Input, options?: Options) => ResponsePromise<T>;
 
   /**
 	Fetch the given `url` using the option `{method: 'put'}`.
@@ -45,7 +45,7 @@ export type HttpInstance = {
 	@param url - `Request` object, `URL` object, or URL string.
 	@returns A promise with `Body` methods added.
 	*/
-  put: <T>(url: Input, options?: Options) => ResponsePromise<T>
+  put: <T>(url: Input, options?: Options) => ResponsePromise<T>;
 
   /**
 	Fetch the given `url` using the option `{method: 'delete'}`.
@@ -53,7 +53,7 @@ export type HttpInstance = {
 	@param url - `Request` object, `URL` object, or URL string.
 	@returns A promise with `Body` methods added.
 	*/
-  delete: <T>(url: Input, options?: Options) => ResponsePromise<T>
+  delete: <T>(url: Input, options?: Options) => ResponsePromise<T>;
 
   /**
 	Fetch the given `url` using the option `{method: 'patch'}`.
@@ -61,7 +61,7 @@ export type HttpInstance = {
 	@param url - `Request` object, `URL` object, or URL string.
 	@returns A promise with `Body` methods added.
 	*/
-  patch: <T>(url: Input, options?: Options) => ResponsePromise<T>
+  patch: <T>(url: Input, options?: Options) => ResponsePromise<T>;
 
   /**
 	Fetch the given `url` using the option `{method: 'head'}`.
@@ -69,7 +69,7 @@ export type HttpInstance = {
 	@param url - `Request` object, `URL` object, or URL string.
 	@returns A promise with `Body` methods added.
 	*/
-  head: (url: Input, options?: Options) => ResponsePromise
+  head: (url: Input, options?: Options) => ResponsePromise;
 
   /**
 	Fetch the given `url` using the option `{method: 'query'}`.
@@ -77,14 +77,14 @@ export type HttpInstance = {
 	@param url - `Request` object, `URL` object, or URL string.
 	@returns A promise with `Body` methods added.
 	*/
-  query: <T>(url: Input, options?: Options) => ResponsePromise<T>
+  query: <T>(url: Input, options?: Options) => ResponsePromise<T>;
 
   /**
 	Create a new Http instance with complete new defaults, without inheriting from any parent instance.
 
 	@returns A new Http instance.
 	*/
-  create: (defaultOptions?: Options) => HttpInstance
+  create: (defaultOptions?: Options) => HttpInstance;
 
   /**
 	Create a new Http instance with some defaults overridden with your own.
@@ -120,9 +120,7 @@ export type HttpInstance = {
 
 	@returns A new Http instance.
 	*/
-  extend: (
-    defaultOptions: Options | ((parentOptions: Options) => Options),
-  ) => HttpInstance
+  extend: (defaultOptions: Options | ((parentOptions: Options) => Options)) => HttpInstance;
 
   /**
 	A `Symbol` that can be returned by a `beforeRetry` hook to stop the retry. This will also short circuit the remaining `beforeRetry` hooks.
@@ -152,7 +150,7 @@ export type HttpInstance = {
 	// Using `.text()` or other body methods is not supported, because there is no response to parse.
 	```
 	*/
-  readonly stop: typeof stop
+  readonly stop: typeof stop;
 
   /**
 	Force a retry from an `afterResponse` hook.
@@ -203,5 +201,5 @@ export type HttpInstance = {
 	const response = await api.get('https://example.com/api');
 	```
 	*/
-  readonly retry: typeof retry
-}
+  readonly retry: typeof retry;
+};

@@ -1,49 +1,48 @@
-type Unsafe<T> = SyncFn<T> | AsyncFn<T> | PromiseLike<T>;
-type SyncFn<T> = () => T;
-type AsyncFn<T> = () => Promise<T>;
+type Unsafe<T> = SyncFn<T> | AsyncFn<T> | PromiseLike<T>
+type SyncFn<T> = () => T
+type AsyncFn<T> = () => Promise<T>
 
 type SafeResult<R, E = Error> = [R] extends [never]
   ? E
   : R extends PromiseLike<infer U>
     ? Promise<U | E>
-    : R | E;
+    : R | E
 
 /** Promises are not the only thenables: a query builder can return one too. */
 function isThenable(value: unknown): value is PromiseLike<unknown> {
   return (
     typeof (value as PromiseLike<unknown> | null | undefined)?.then ===
-    'function'
-  );
+    "function"
+  )
 }
 
-export function safeTry<T, E = Error>(unsafe: PromiseLike<T>): Promise<T | E>;
-export function safeTry<R, E = Error>(unsafe: SyncFn<R>): SafeResult<R, E>;
+export function safeTry<T, E = Error>(unsafe: PromiseLike<T>): Promise<T | E>
+export function safeTry<R, E = Error>(unsafe: SyncFn<R>): SafeResult<R, E>
 export function safeTry<T, E = Error>(unsafe: Unsafe<T>): unknown {
   // Already a promise (or a thenable), so only attach the catch.
   if (isThenable(unsafe)) {
-    return Promise.resolve(unsafe).catch((e) => toError(e) as E);
+    return Promise.resolve(unsafe).catch((e) => toError(e) as E)
   }
 
   try {
-    const value = unsafe();
+    const value = unsafe()
 
     // Covers both `async` functions and plain functions.
     if (isThenable(value)) {
-      return Promise.resolve(value).catch((e) => toError(e) as E);
+      return Promise.resolve(value).catch((e) => toError(e) as E)
     }
-    return value;
+    return value
   } catch (e) {
     // try-catch for unsafe synchronous functions.
-    return toError(e) as E;
+    return toError(e) as E
   }
 }
 
 export function isError<T>(result: T): result is Extract<T, Error> {
-  return result instanceof Error;
+  return result instanceof Error
 }
 
 /** `throw` accepts any value, but this module's contract is `Error`. */
 function toError(e: unknown): Error {
-  // @ts-ignore
-  return e instanceof Error ? e : new Error(String(e), { cause: e });
+  return e instanceof Error ? e : new Error(String(e), { cause: e })
 }

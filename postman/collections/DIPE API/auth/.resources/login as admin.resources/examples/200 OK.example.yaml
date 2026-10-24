@@ -1,10 +1,10 @@
 $kind: http-example
 request:
-  url: '{{base_url}}/auth/login'
+  url: "{{base_url}}/auth/login"
   method: POST
   headers:
-    - key: 'Content-Type'
-      value: 'application/json'
+    - key: "Content-Type"
+      value: "application/json"
   body:
     type: json
     content: |-
@@ -17,7 +17,7 @@ response:
   statusText: OK
   headers:
     Content-Type: application/json; charset=utf-8
-    X-RateLimit-Limit: '5'
+    X-RateLimit-Limit: "5"
   body:
     type: json
     content: |-

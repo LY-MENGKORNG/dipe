@@ -3,25 +3,22 @@ Returns a `Response` object with `Body` methods added for convenience. So you ca
 
 Invalid options, an invalid `input`, and an error thrown by an `init` hook reject the returned promise instead of throwing, the same way `fetch()` reports them. They are not passed to `beforeError` hooks, because no request was made.
 */
-import { type HttpResponse } from './response.js'
-import type {
-  StandardSchemaV1,
-  StandardSchemaV1InferOutput,
-} from './standard-schema.js'
+import { type HttpResponse } from "./response.js";
+import type { StandardSchemaV1, StandardSchemaV1InferOutput } from "./standard-schema.js";
 
 export type ResponsePromise<T = unknown> = {
-  arrayBuffer: () => Promise<ArrayBuffer>
+  arrayBuffer: () => Promise<ArrayBuffer>;
 
-  blob: () => Promise<Blob>
+  blob: () => Promise<Blob>;
 
-  formData: () => Promise<FormData>
+  formData: () => Promise<FormData>;
 
   /**
 	Get the response body as raw bytes.
 
 	Note: This shortcut is only available when the runtime supports `Response.prototype.bytes()`.
 	*/
-  bytes: () => Promise<Uint8Array<ArrayBuffer>>
+  bytes: () => Promise<Uint8Array<ArrayBuffer>>;
 
   // TODO: Use `json<T extends JSONValue>(): Promise<T>;` when it's fixed in TS.
   // See https://github.com/microsoft/TypeScript/issues/15300 and https://github.com/sindresorhus/ky/pull/80
@@ -49,7 +46,7 @@ export type ResponsePromise<T = unknown> = {
 		const result2 = await http<Result>(…).json();
 		```
 		*/
-    <JsonType = T>(schema?: undefined): Promise<JsonType>
+    <JsonType = T>(schema?: undefined): Promise<JsonType>;
 
     /**
 		Get the response body as JSON and validate it with a Standard Schema.
@@ -67,10 +64,8 @@ export type ResponsePromise<T = unknown> = {
 		const user = await http('/api/user').json(userSchema);
 		```
 		*/
-    <Schema extends StandardSchemaV1>(
-      schema: Schema,
-    ): Promise<StandardSchemaV1InferOutput<Schema>>
-  }
+    <Schema extends StandardSchemaV1>(schema: Schema): Promise<StandardSchemaV1InferOutput<Schema>>;
+  };
 
-  text: () => Promise<string>
-} & Promise<HttpResponse<T>>
+  text: () => Promise<string>;
+} & Promise<HttpResponse<T>>;

@@ -51,15 +51,15 @@ The owning workspace represents this repository's service; another service's
 resource is a dependency. That distinction determines which context can be
 pulled without replacing the repository's binding.
 
-| State and intended outcome | Operation |
-| --- | --- |
-| Existing local layout meets the task | Reuse its files and bindings |
-| This service has a workspace; work on it locally | `postman workspace pull <workspace-id>` |
-| Only record this service's Git binding | `postman workspace connect-git <workspace-id> [path]` |
-| Another service's collection, environment, or mock is needed | Use **api-discovery**'s dependency workflow |
-| New project with no existing workspace | `postman init --json`; add `--visibility personal` or `--visibility team` when creating a workspace is intended |
-| Bound workspace is authoritative | `postman workspace pull` |
-| Validated local changes should be published | Preview with `postman workspace diff --push-strategy default`, then `postman workspace push` |
+| State and intended outcome                                   | Operation                                                                                                       |
+| ------------------------------------------------------------ | --------------------------------------------------------------------------------------------------------------- |
+| Existing local layout meets the task                         | Reuse its files and bindings                                                                                    |
+| This service has a workspace; work on it locally             | `postman workspace pull <workspace-id>`                                                                         |
+| Only record this service's Git binding                       | `postman workspace connect-git <workspace-id> [path]`                                                           |
+| Another service's collection, environment, or mock is needed | Use **api-discovery**'s dependency workflow                                                                     |
+| New project with no existing workspace                       | `postman init --json`; add `--visibility personal` or `--visibility team` when creating a workspace is intended |
+| Bound workspace is authoritative                             | `postman workspace pull`                                                                                        |
+| Validated local changes should be published                  | Preview with `postman workspace diff --push-strategy default`, then `postman workspace push`                    |
 
 Inspect local changes before pulling so an import does not discard work.
 Creating a second workspace does not connect an existing one, and pushing to a

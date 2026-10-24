@@ -1,10 +1,10 @@
 $kind: http-request
 method: GET
-url: '{{base_url}}/tags/:id/posts'
+url: "{{base_url}}/tags/:id/posts"
 order: 9000
 pathVariables:
   - key: id
-    value: '{{tag_id}}'
+    value: "{{tag_id}}"
 scripts:
   - type: afterResponse
     language: text/javascript

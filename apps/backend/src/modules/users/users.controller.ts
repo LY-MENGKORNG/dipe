@@ -8,9 +8,8 @@ import {
   Patch,
   Post,
   Query,
-} from "@nestjs/common";
+} from "@nestjs/common"
 import {
-  ApiBadRequestResponse,
   ApiBearerAuth,
   ApiConflictResponse,
   ApiForbiddenResponse,
@@ -18,18 +17,17 @@ import {
   ApiOperation,
   ApiTags,
   ApiUnauthorizedResponse,
-} from "@nestjs/swagger";
-import { ZodResponse } from "nestjs-zod";
-import { Roles } from "@common/decorators";
-import { CreateUserDto } from "./dto/create-user.dto";
-import { UpdateUserDto } from "./dto/update-user.dto";
-import { UsersService } from "./users.service";
+} from "@nestjs/swagger"
+import { ZodResponse } from "nestjs-zod"
+import { Roles } from "@common/decorators"
+import { CreateUserDto } from "./dto/create-user.dto"
+import { UpdateUserDto } from "./dto/update-user.dto"
+import { UsersService } from "./users.service"
 import {
   ListUserQuery,
   UserListResponseDto,
-  UserPostsResponseDto,
   UserResponseDto,
-} from "./dto/user.dto";
+} from "./dto/user.dto"
 
 // docs
 @ApiTags("Users")
@@ -49,7 +47,7 @@ export class UsersController {
   @Post()
   @Roles(["admin"])
   create(@Body() dto: CreateUserDto) {
-    return this.usersService.create(dto);
+    return this.usersService.create(dto)
   }
 
   // docs
@@ -58,7 +56,7 @@ export class UsersController {
   // ---
   @Get()
   findAll(@Query() query: ListUserQuery) {
-    return this.usersService.findAll(query);
+    return this.usersService.findAll(query)
   }
 
   // docs
@@ -68,17 +66,7 @@ export class UsersController {
   // ---
   @Get(":id")
   findOne(@Param("id", ParseIntPipe) id: number) {
-    return this.usersService.findOne(id);
-  }
-
-  // docs
-  @ApiOperation({ summary: "Get one user with posts" })
-  @ZodResponse({ status: 200, type: UserPostsResponseDto })
-  @ApiNotFoundResponse({ description: "No user with this id" })
-  // ---
-  @Get(":id/posts")
-  findOneWithPosts(@Param("id", ParseIntPipe) id: number) {
-    return this.usersService.findOneWithPosts(id);
+    return this.usersService.findOne(id)
   }
 
   // docs
@@ -90,7 +78,7 @@ export class UsersController {
   @Patch(":id")
   @Roles(["admin"])
   update(@Param("id", ParseIntPipe) id: number, @Body() dto: UpdateUserDto) {
-    return this.usersService.update(id, dto);
+    return this.usersService.update(id, dto)
   }
 
   // docs
@@ -103,6 +91,6 @@ export class UsersController {
   @Delete(":id")
   @Roles(["admin"])
   remove(@Param("id", ParseIntPipe) id: number) {
-    return this.usersService.remove(id);
+    return this.usersService.remove(id)
   }
 }

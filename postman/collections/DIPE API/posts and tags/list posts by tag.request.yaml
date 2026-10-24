@@ -1,10 +1,10 @@
 $kind: http-request
 method: GET
-url: '{{base_url}}/posts?tag={{tag_name}}'
+url: "{{base_url}}/posts?tag={{tag_name}}"
 order: 8000
 queryParams:
   - key: tag
-    value: '{{tag_name}}'
+    value: "{{tag_name}}"
 scripts:
   - type: afterResponse
     language: text/javascript

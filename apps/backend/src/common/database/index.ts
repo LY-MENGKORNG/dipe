@@ -1,2 +1,2 @@
-export * from "./base.repository";
-export * from "./transaction.host";
+export * from "./base.repository"
+export * from "./transaction.host"

@@ -1,5 +1,5 @@
-import { createZodDto } from "nestjs-zod";
-import { loginSchema, tokenResponseSchema } from "../auth.schema";
+import { createZodDto } from "nestjs-zod"
+import { loginSchema, tokenResponseSchema } from "../auth.schema"
 
 export class LoginDto extends createZodDto(loginSchema) {}
 

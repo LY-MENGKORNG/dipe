@@ -1,15 +1,15 @@
 $kind: http-request
 method: PUT
-url: '{{base_url}}/posts/:id/tags'
+url: "{{base_url}}/posts/:id/tags"
 order: 6000
 pathVariables:
   - key: id
-    value: '{{post_id}}'
+    value: "{{post_id}}"
 auth:
   type: bearer
   credentials:
     - key: token
-      value: '{{employee_token}}'
+      value: "{{employee_token}}"
 headers:
   - key: Content-Type
     value: application/json

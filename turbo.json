@@ -23,10 +23,13 @@
     "//#lint": {
       "cache": false
     },
+    "//#test": {
+      "cache": false
+    },
     "//#lint:check": {},
     "//#fmt": {
       "cache": false
     },
-    "//#fmt:check": {},
+    "//#fmt:check": {}
   }
 }

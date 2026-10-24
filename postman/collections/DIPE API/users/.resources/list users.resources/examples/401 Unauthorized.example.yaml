@@ -1,17 +1,17 @@
 $kind: http-example
 request:
-  url: '{{base_url}}/users?limit=5&offset=0'
+  url: "{{base_url}}/users?limit=5&offset=0"
   method: GET
   queryParams:
-    - key: 'limit'
-      value: '5'
-    - key: 'offset'
-      value: '0'
-    - key: 'q'
-      value: ''
+    - key: "limit"
+      value: "5"
+    - key: "offset"
+      value: "0"
+    - key: "q"
+      value: ""
       disabled: true
-    - key: 'role'
-      value: 'admin'
+    - key: "role"
+      value: "admin"
       disabled: true
 response:
   statusCode: 401

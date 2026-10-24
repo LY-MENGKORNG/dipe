@@ -1,25 +1,25 @@
-import type { HttpMethod } from './options.js'
+import type { HttpMethod } from "./options.js";
 
 export type MutableRetryOptions = Omit<
   RetryOptions,
-  'methods' | 'statusCodes' | 'afterStatusCodes'
+  "methods" | "statusCodes" | "afterStatusCodes"
 > & {
-  methods?: HttpMethod[] | undefined
-  statusCodes?: number[] | undefined
-  afterStatusCodes?: number[] | undefined
-}
+  methods?: HttpMethod[] | undefined;
+  statusCodes?: number[] | undefined;
+  afterStatusCodes?: number[] | undefined;
+};
 
 export type ShouldRetryState = {
   /**
 	The error that caused the request to fail.
 	*/
-  error: Error
+  error: Error;
 
   /**
 	The number of retries attempted. Starts at 1 for the first retry.
 	*/
-  retryCount: number
-}
+  retryCount: number;
+};
 
 export type RetryOptions = {
   /**
@@ -28,14 +28,14 @@ export type RetryOptions = {
 
 	@default 2
 	*/
-  limit?: number | undefined
+  limit?: number | undefined;
 
   /**
 	The HTTP methods allowed to retry.
 
 	@default ['get', 'put', 'head', 'delete', 'options', 'trace', 'query']
 	*/
-  methods?: readonly HttpMethod[] | undefined
+  methods?: readonly HttpMethod[] | undefined;
 
   /**
 	The HTTP status codes allowed to retry.
@@ -44,21 +44,21 @@ export type RetryOptions = {
 
 	@default [408, 413, 429, 500, 502, 503, 504]
 	*/
-  statusCodes?: readonly number[] | undefined
+  statusCodes?: readonly number[] | undefined;
 
   /**
 	The retriable HTTP status codes that should respect retry timing headers. These status codes must also be included in `statusCodes`, unless `shouldRetry` returns `true`.
 
 	@default [413, 429, 503]
 	*/
-  afterStatusCodes?: readonly number[] | undefined
+  afterStatusCodes?: readonly number[] | undefined;
 
   /**
 	If the retry delay from a retry timing header is greater than `maxRetryAfter`, Http will use `maxRetryAfter`.
 
 	@default Infinity
 	*/
-  maxRetryAfter?: number | undefined
+  maxRetryAfter?: number | undefined;
 
   /**
 	The upper limit of the delay per retry in milliseconds, for the delay calculated by `retry.delay`.
@@ -75,7 +75,7 @@ export type RetryOptions = {
 
 	@default Infinity
 	*/
-  backoffLimit?: number | undefined
+  backoffLimit?: number | undefined;
 
   /**
 	A function to calculate the delay in milliseconds between retries given `attemptCount` (starts from 1).
@@ -84,7 +84,7 @@ export type RetryOptions = {
 
 	@default attemptCount => 0.3 * (2 ** (attemptCount - 1)) * 1000
 	*/
-  delay?: ((attemptCount: number) => number) | undefined
+  delay?: ((attemptCount: number) => number) | undefined;
 
   /**
 	Add random jitter to retry delays to prevent thundering herd problems.
@@ -119,7 +119,7 @@ export type RetryOptions = {
 	}).json();
 	```
 	*/
-  jitter?: boolean | ((delay: number) => number) | undefined
+  jitter?: boolean | ((delay: number) => number) | undefined;
 
   /**
 	Whether to retry when the request times out before a response is returned. Timeouts while reading a response body through Http shortcut methods are not retried because the response has already been received.
@@ -138,7 +138,7 @@ export type RetryOptions = {
 	}).json();
 	```
 	*/
-  retryOnTimeout?: boolean | undefined
+  retryOnTimeout?: boolean | undefined;
 
   /**
 	A function to determine whether a retry should be attempted.
@@ -188,7 +188,5 @@ export type RetryOptions = {
 	}).json();
 	```
 	*/
-  shouldRetry?:
-    | ((state: ShouldRetryState) => boolean | void | Promise<boolean | void>)
-    | undefined
-}
+  shouldRetry?: ((state: ShouldRetryState) => boolean | void | Promise<boolean | void>) | undefined;
+};

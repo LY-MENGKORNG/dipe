@@ -1,7 +1,7 @@
-import { Injectable } from "@nestjs/common";
-import { BaseRepository } from "@common/database";
-import type { Prisma } from "@config/db/generated/client";
-import { ListUserQuery } from "./dto/user.dto";
+import { Injectable } from "@nestjs/common"
+import { BaseRepository } from "@common/database"
+import type { Prisma } from "@config/db/generated/client"
+import { ListUserQuery } from "./dto/user.dto"
 
 export const publicUser = {
   id: true,
@@ -11,9 +11,9 @@ export const publicUser = {
   isActive: true,
   createdAt: true,
   updatedAt: true,
-} as const satisfies Prisma.UserSelect;
+} as const satisfies Prisma.UserSelect
 
-export type PublicUser = Prisma.UserGetPayload<{ select: typeof publicUser }>;
+export type PublicUser = Prisma.UserGetPayload<{ select: typeof publicUser }>
 
 @Injectable()
 export class UserRepository extends BaseRepository {
@@ -26,7 +26,7 @@ export class UserRepository extends BaseRepository {
           { email: { contains: q, mode: "insensitive" } },
         ],
       }),
-    };
+    }
 
     const [data, total] = await this.transaction(() =>
       Promise.all([
@@ -39,13 +39,13 @@ export class UserRepository extends BaseRepository {
         }),
         this.db.user.count({ where }),
       ]),
-    );
+    )
 
-    return { data, total, limit, offset };
+    return { data, total, limit, offset }
   }
 
   findById(id: number) {
-    return this.db.user.findUnique({ where: { id }, select: publicUser });
+    return this.db.user.findUnique({ where: { id }, select: publicUser })
   }
   findByIdWithPosts(id: number) {
     return this.db.user.findUnique({
@@ -56,22 +56,22 @@ export class UserRepository extends BaseRepository {
           omit: { authorId: true },
         },
       },
-    });
+    })
   }
 
   findByEmailWithSecret(email: string) {
-    return this.db.user.findUnique({ where: { email } });
+    return this.db.user.findUnique({ where: { email } })
   }
 
   create(data: Prisma.UserCreateInput) {
-    return this.db.user.create({ data, select: publicUser });
+    return this.db.user.create({ data, select: publicUser })
   }
 
   update(id: number, data: Prisma.UserUpdateInput) {
-    return this.db.user.update({ where: { id }, data, select: publicUser });
+    return this.db.user.update({ where: { id }, data, select: publicUser })
   }
 
   delete(id: number) {
-    return this.db.user.delete({ where: { id }, select: publicUser });
+    return this.db.user.delete({ where: { id }, select: publicUser })
   }
 }

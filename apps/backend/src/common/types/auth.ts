@@ -1,10 +1,10 @@
-import type { Role } from "@config/db/generated/enums";
-import type { FastifyRequest } from "fastify";
+import type { Role } from "@config/db/generated/enums"
+import type { FastifyRequest } from "fastify"
 
 export interface AuthUser {
-  sub: number;
-  email: string;
-  role: Role;
+  sub: number
+  email: string
+  role: Role
 }
 
-export type AuthRequest = FastifyRequest & { user?: AuthUser };
+export type AuthRequest = FastifyRequest & { user?: AuthUser }

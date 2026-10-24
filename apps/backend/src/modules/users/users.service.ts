@@ -1,9 +1,9 @@
-import { Injectable, NotFoundException } from "@nestjs/common";
-import { EmailProducer } from "@modules/notifications/email.producer";
-import type { CreateUserDto } from "./dto/create-user.dto";
-import type { UpdateUserDto } from "./dto/update-user.dto";
-import { UserRepository } from "./users.repository";
-import { ListUserQuery } from "./dto/user.dto";
+import { Injectable, NotFoundException } from "@nestjs/common"
+import { EmailProducer } from "@modules/notifications/email.producer"
+import type { CreateUserDto } from "./dto/create-user.dto"
+import type { UpdateUserDto } from "./dto/update-user.dto"
+import { UserRepository } from "./users.repository"
+import { ListUserQuery } from "./dto/user.dto"
 
 @Injectable()
 export class UsersService {
@@ -16,37 +16,41 @@ export class UsersService {
     const user = await this.repository.create({
       ...data,
       passwordHash: await Bun.password.hash(password),
-    });
+    })
 
-    await this.email.sendWelcome({ userId: user.id, email: user.email, name: user.name });
+    await this.email.sendWelcome({
+      userId: user.id,
+      email: user.email,
+      name: user.name,
+    })
 
-    return user;
+    return user
   }
 
   findAll(query: ListUserQuery) {
-    return this.repository.findMany(query);
+    return this.repository.findMany(query)
   }
 
   async findOne(id: number) {
-    const user = await this.repository.findById(id);
-    if (!user) throw new NotFoundException(`User #${id} not found`);
-    return user;
+    const user = await this.repository.findById(id)
+    if (!user) throw new NotFoundException(`User #${id} not found`)
+    return user
   }
 
   async findOneWithPosts(id: number) {
-    const userWithPosts = await this.repository.findByIdWithPosts(id);
-    if (!userWithPosts) throw new NotFoundException(`User #${id} not found`);
-    return userWithPosts;
+    const userWithPosts = await this.repository.findByIdWithPosts(id)
+    if (!userWithPosts) throw new NotFoundException(`User #${id} not found`)
+    return userWithPosts
   }
 
   async update(id: number, { password, ...data }: UpdateUserDto) {
     return this.repository.update(id, {
       ...data,
       ...(password && { password_hash: await Bun.password.hash(password) }),
-    });
+    })
   }
 
   remove(id: number) {
-    return this.repository.delete(id);
+    return this.repository.delete(id)
   }
 }

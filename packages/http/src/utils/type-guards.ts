@@ -1,15 +1,14 @@
-import type { HttpClientError } from '../errors/HttpClientError.js'
-import { HTTPError } from '../errors/HTTPError.js'
-import { NetworkError } from '../errors/NetworkError.js'
-import { ResponseSizeError } from '../errors/ResponseSizeError.js'
-import { TimeoutError } from '../errors/TimeoutError.js'
-import { ForceRetryError } from '../errors/ForceRetryError.js'
+import type { HttpClientError } from "../errors/HttpClientError.js";
+import { HTTPError } from "../errors/HTTPError.js";
+import { NetworkError } from "../errors/NetworkError.js";
+import { ResponseSizeError } from "../errors/ResponseSizeError.js";
+import { TimeoutError } from "../errors/TimeoutError.js";
+import { ForceRetryError } from "../errors/ForceRetryError.js";
 
 // Handles cross-realm cases (e.g., iframes, different JS contexts) where `instanceof` fails.
 const isErrorType = (error: unknown, cls: { name: string }): boolean =>
   error instanceof (cls as any) ||
-  ((error as any)?.isHttpClientError === true &&
-    (error as any)?.name === cls.name)
+  ((error as any)?.isHttpClientError === true && (error as any)?.name === cls.name);
 
 /**
 Type guard to check if an error is a `HttpClientError`.
@@ -37,7 +36,7 @@ try {
 */
 export function isHttpClientError(error: unknown): error is HttpClientError {
   // Every Http error inherits this brand from `HttpClientError`, including one from another realm.
-  return (error as any)?.isHttpClientError === true
+  return (error as any)?.isHttpClientError === true;
 }
 
 /**
@@ -58,10 +57,8 @@ try {
 }
 ```
 */
-export function isHTTPError<T = unknown>(
-  error: unknown,
-): error is HTTPError<T> {
-  return isErrorType(error, HTTPError)
+export function isHTTPError<T = unknown>(error: unknown): error is HTTPError<T> {
+  return isErrorType(error, HTTPError);
 }
 
 /**
@@ -83,7 +80,7 @@ try {
 ```
 */
 export function isNetworkError(error: unknown): error is NetworkError {
-  return isErrorType(error, NetworkError)
+  return isErrorType(error, NetworkError);
 }
 
 /**
@@ -105,7 +102,7 @@ try {
 ```
 */
 export function isTimeoutError(error: unknown): error is TimeoutError {
-  return isErrorType(error, TimeoutError)
+  return isErrorType(error, TimeoutError);
 }
 
 /**
@@ -132,7 +129,7 @@ const api = http.extend({
 ```
 */
 export function isForceRetryError(error: unknown): error is ForceRetryError {
-  return isErrorType(error, ForceRetryError)
+  return isErrorType(error, ForceRetryError);
 }
 
 /**
@@ -154,8 +151,6 @@ try {
 }
 ```
 */
-export function isResponseSizeError(
-  error: unknown,
-): error is ResponseSizeError {
-  return isErrorType(error, ResponseSizeError)
+export function isResponseSizeError(error: unknown): error is ResponseSizeError {
+  return isErrorType(error, ResponseSizeError);
 }

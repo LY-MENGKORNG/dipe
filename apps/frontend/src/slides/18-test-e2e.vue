@@ -1,25 +1,31 @@
 <script lang="ts">
-import type { SlideMeta } from '.'
+import type { SlideMeta } from "."
 
 export const meta: SlideMeta = {
-  title: 'E2E test over HTTP',
-  section: 'Testing',
+  title: "E2E test over HTTP",
+  section: "Testing",
   notes: [
-    'We boot the real AppModule on the real Fastify adapter. Everything runs: guards, pipes, controllers, services.',
-    'app.inject() is Fastify\'s light-my-request — it simulates an HTTP request without opening a port. Faster than supertest and no port conflicts.',
-    'overrideProvider swaps external dependencies only. Here we replace the GitHub client so tests never call the internet. The database should be a dedicated test database (DATABASE_URL in .env.test).',
+    "We boot the real AppModule on the real Fastify adapter. Everything runs: guards, pipes, controllers, services.",
+    "app.inject() is Fastify's light-my-request — it simulates an HTTP request without opening a port. Faster than supertest and no port conflicts.",
+    "overrideProvider swaps external dependencies only. Here we replace the GitHub client so tests never call the internet. The database should be a dedicated test database (DATABASE_URL in .env.test).",
     'Test the security contract explicitly: no token → 401, wrong role → 403, right role → 200. This is the proof for the "protected endpoint" part of the demo.',
-    'Always close the app in afterAll, or the test runner hangs on the open DB pool.',
+    "Always close the app in afterAll, or the test runner hangs on the open DB pool.",
   ],
-  ask: 'Why do we override the GitHub client but not the database?',
+  ask: "Why do we override the GitHub client but not the database?",
 }
 </script>
 
 <script setup lang="ts">
-import { Badge } from '@/components/ui/badge'
-import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card'
-import CodeSnippet from '@/components/deck/CodeSnippet.vue'
-import SlideLayout from '@/components/deck/SlideLayout.vue'
+import { Badge } from "@/components/ui/badge"
+import {
+  Card,
+  CardContent,
+  CardDescription,
+  CardHeader,
+  CardTitle,
+} from "@/components/ui/card"
+import CodeSnippet from "@/components/deck/CodeSnippet.vue"
+import SlideLayout from "@/components/deck/SlideLayout.vue"
 
 const code = `
   describe("Users (e2e)", () => {
@@ -57,10 +63,10 @@ const code = `
 `
 
 const checks = [
-  { req: 'GET /api/users', auth: 'none', expect: '401' },
-  { req: 'DELETE /api/users/1', auth: 'employee', expect: '403' },
-  { req: 'GET /api/users', auth: 'admin', expect: '200' },
-  { req: 'POST /api/users (bad email)', auth: 'admin', expect: '400' },
+  { req: "GET /api/users", auth: "none", expect: "401" },
+  { req: "DELETE /api/users/1", auth: "employee", expect: "403" },
+  { req: "GET /api/users", auth: "admin", expect: "200" },
+  { req: "POST /api/users (bad email)", auth: "admin", expect: "400" },
 ]
 </script>
 
@@ -71,19 +77,32 @@ const checks = [
     subtitle="Boot the real app, fake only the outside world, and assert on status codes."
   >
     <div class="grid gap-6 lg:grid-cols-[minmax(0,3fr)_minmax(0,2fr)]">
-      <CodeSnippet :code="code" title="test/users.e2e-spec.ts" size="sm" :highlight="[6, 7, 19, 20, 27, 29]" />
+      <CodeSnippet
+        :code="code"
+        title="test/users.e2e-spec.ts"
+        size="sm"
+        :highlight="[6, 7, 19, 20, 27, 29]"
+      />
       <Card>
         <CardHeader>
           <CardTitle>The security contract</CardTitle>
           <CardDescription>Cases worth one E2E test each.</CardDescription>
         </CardHeader>
         <CardContent class="flex flex-col gap-3">
-          <div v-for="check in checks" :key="check.req + check.auth" class="flex items-center justify-between gap-3 text-sm">
+          <div
+            v-for="check in checks"
+            :key="check.req + check.auth"
+            class="flex items-center justify-between gap-3 text-sm"
+          >
             <div class="flex min-w-0 flex-col">
               <span class="truncate font-mono text-xs">{{ check.req }}</span>
-              <span class="text-xs text-muted-foreground">as {{ check.auth }}</span>
+              <span class="text-xs text-muted-foreground"
+                >as {{ check.auth }}</span
+              >
             </div>
-            <Badge :variant="check.expect === '200' ? 'default' : 'destructive'">
+            <Badge
+              :variant="check.expect === '200' ? 'default' : 'destructive'"
+            >
               {{ check.expect }}
             </Badge>
           </div>

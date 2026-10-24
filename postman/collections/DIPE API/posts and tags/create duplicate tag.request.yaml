@@ -1,6 +1,6 @@
 $kind: http-request
 method: POST
-url: '{{base_url}}/tags'
+url: "{{base_url}}/tags"
 order: 2000
 headers:
   - key: Content-Type

@@ -1,9 +1,12 @@
-import { type User } from "../generated/client";
-import { type PrismaTx } from "@common/database";
+import { type User } from "../generated/client"
+import { type PrismaTx } from "@common/database"
 
-type SeedUser = Omit<User, "id" | "passwordHash" | "isActive" | "createdAt" | "updatedAt"> & {
-  password: string;
-};
+type SeedUser = Omit<
+  User,
+  "id" | "passwordHash" | "isActive" | "createdAt" | "updatedAt"
+> & {
+  password: string
+}
 
 export const users: SeedUser[] = [
   {
@@ -24,13 +27,13 @@ export const users: SeedUser[] = [
     password: Bun.env.SEED_STAFF_PASSWORD ?? "Staff@12345",
     role: "staff",
   },
-];
+]
 
 export async function userSeed(tx: PrismaTx) {
-  const seeded: User[] = [];
+  const seeded: User[] = []
 
   for (const { password, ...user } of users) {
-    const passwordHash = await Bun.password.hash(password);
+    const passwordHash = await Bun.password.hash(password)
 
     seeded.push(
       await tx.user.upsert({
@@ -38,9 +41,9 @@ export async function userSeed(tx: PrismaTx) {
         update: { passwordHash, role: user.role, isActive: true },
         create: { ...user, passwordHash },
       }),
-    );
-    console.log(`seeded ${user.role}: ${user.email}`);
+    )
+    console.log(`seeded ${user.role}: ${user.email}`)
   }
 
-  return seeded;
+  return seeded
 }

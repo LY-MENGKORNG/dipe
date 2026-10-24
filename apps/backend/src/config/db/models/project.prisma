@@ -1,0 +1,16 @@
+model Project {
+  id          String    @id @default(uuid())
+  name        String    @unique
+  description String
+  budget      Float
+  deadline    DateTime?
+  createdAt   DateTime  @default(now()) @map("created_at")
+
+  workspaceId Int @map("workspace_id")
+
+  workspace Workspace       @relation(fields: [workspaceId], references: [id], onDelete: Cascade)
+  members   ProjectMember[]
+
+  @@index([workspaceId])
+  @@map("project")
+}

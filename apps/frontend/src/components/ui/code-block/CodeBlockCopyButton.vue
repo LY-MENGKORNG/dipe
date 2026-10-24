@@ -1,25 +1,30 @@
 <script setup lang="ts">
-import type { PrimitiveProps } from 'reka-ui'
+import type { PrimitiveProps } from "reka-ui"
 
-import type { HTMLAttributes } from 'vue'
-import type { ButtonVariants } from '@/components/ui/button'
-import { CheckIcon, CopyIcon } from '@lucide/vue'
-import { useClipboard } from '@vueuse/core'
-import { cn } from 'cn'
-import { Button } from '@/components/ui/button'
+import type { HTMLAttributes } from "vue"
+import type { ButtonVariants } from "@/components/ui/button"
+import { CheckIcon, CopyIcon } from "@lucide/vue"
+import { useClipboard } from "@vueuse/core"
+import { cn } from "cn"
+import { Button } from "@/components/ui/button"
 
 defineOptions({ inheritAttrs: false })
 
-const props = withDefaults(defineProps<PrimitiveProps & {
-  value: string
-  variant?: ButtonVariants['variant']
-  size?: ButtonVariants['size']
-  class?: HTMLAttributes['class']
-}>(), {
-  as: 'button',
-  variant: 'ghost',
-  size: 'icon-xs',
-})
+const props = withDefaults(
+  defineProps<
+    PrimitiveProps & {
+      value: string
+      variant?: ButtonVariants["variant"]
+      size?: ButtonVariants["size"]
+      class?: HTMLAttributes["class"]
+    }
+  >(),
+  {
+    as: "button",
+    variant: "ghost",
+    size: "icon-xs",
+  },
+)
 
 const { copy, copied } = useClipboard({ copiedDuring: 2000, legacy: true })
 </script>

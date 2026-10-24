@@ -1,17 +1,16 @@
 <script setup lang="ts">
-import type { AccordionRootEmits, AccordionRootProps } from 'reka-ui'
-import type { HTMLAttributes } from 'vue'
-import { reactiveOmit } from '@vueuse/core'
-import { cn } from 'cn'
-import {
-  AccordionRoot,
-  useForwardPropsEmits,
-} from 'reka-ui'
+import type { AccordionRootEmits, AccordionRootProps } from "reka-ui"
+import type { HTMLAttributes } from "vue"
+import { reactiveOmit } from "@vueuse/core"
+import { cn } from "cn"
+import { AccordionRoot, useForwardPropsEmits } from "reka-ui"
 
-const props = defineProps<AccordionRootProps & { class?: HTMLAttributes['class'] }>()
+const props = defineProps<
+  AccordionRootProps & { class?: HTMLAttributes["class"] }
+>()
 const emits = defineEmits<AccordionRootEmits>()
 
-const delegatedProps = reactiveOmit(props, 'class')
+const delegatedProps = reactiveOmit(props, "class")
 const forwarded = useForwardPropsEmits(delegatedProps, emits)
 </script>
 

@@ -1,31 +1,35 @@
 <script lang="ts">
-import type { SlideMeta } from '.'
+import type { SlideMeta } from "."
 
 export const meta: SlideMeta = {
-  title: 'Transactions',
-  section: 'Database & ORM',
+  title: "Transactions",
+  section: "Database & ORM",
   notes: [
-    'A transaction = several writes that succeed together or fail together (Atomicity in ACID).',
-    'Sequential form: pass an array of queries. Simple, but you cannot use the result of query 1 in query 2.',
-    'Interactive form: a callback receives `tx`. Use `tx` — not `this.db` — for every query inside, or that query escapes the transaction.',
-    'Throwing inside the callback rolls everything back. That is the whole API.',
-    'Across repositories: each repository has its own this.db, so the plain tx parameter cannot reach them. TransactionHost.run() opens the transaction once; every repository called inside it uses the same tx automatically (AsyncLocalStorage). Nested run() calls join the outer transaction.',
+    "A transaction = several writes that succeed together or fail together (Atomicity in ACID).",
+    "Sequential form: pass an array of queries. Simple, but you cannot use the result of query 1 in query 2.",
+    "Interactive form: a callback receives `tx`. Use `tx` — not `this.db` — for every query inside, or that query escapes the transaction.",
+    "Throwing inside the callback rolls everything back. That is the whole API.",
+    "Across repositories: each repository has its own this.db, so the plain tx parameter cannot reach them. TransactionHost.run() opens the transaction once; every repository called inside it uses the same tx automatically (AsyncLocalStorage). Nested run() calls join the outer transaction.",
     'Proof in the repo: the e2e test "rolls back every repository write when the callback throws" creates a user through UserRepository, throws, and checks Postgres has no row.',
-    'Keep it short: a transaction holds locks and a connection. Never call an external API or send an email inside one — that is what queues are for (next section).',
+    "Keep it short: a transaction holds locks and a connection. Never call an external API or send an email inside one — that is what queues are for (next section).",
     'Show the migration warning from the repo: the `user_snake_case` migration DROPPED the User table to rename it. In prod that is data loss — edit the SQL to `ALTER TABLE "User" RENAME TO "user"` before applying.',
   ],
-  ask: 'What happens to the user row if creating the welcome post fails?',
+  ask: "What happens to the user row if creating the welcome post fails?",
 }
 </script>
 
 <script setup lang="ts">
-import { ChevronsUpDown, TriangleAlert } from '@lucide/vue'
-import { Alert, AlertDescription, AlertTitle } from '@/components/ui/alert'
-import { Button } from '@/components/ui/button'
-import { Collapsible, CollapsibleContent, CollapsibleTrigger } from '@/components/ui/collapsible'
-import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs'
-import CodeSnippet from '@/components/deck/CodeSnippet.vue'
-import SlideLayout from '@/components/deck/SlideLayout.vue'
+import { ChevronsUpDown, TriangleAlert } from "@lucide/vue"
+import { Alert, AlertDescription, AlertTitle } from "@/components/ui/alert"
+import { Button } from "@/components/ui/button"
+import {
+  Collapsible,
+  CollapsibleContent,
+  CollapsibleTrigger,
+} from "@/components/ui/collapsible"
+import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs"
+import CodeSnippet from "@/components/deck/CodeSnippet.vue"
+import SlideLayout from "@/components/deck/SlideLayout.vue"
 
 const sequential = `
   // Independent writes: all or nothing
@@ -89,24 +93,33 @@ const migrationFix = `
   >
     <Tabs default-value="interactive">
       <TabsList>
-        <TabsTrigger value="sequential">
-          Sequential
-        </TabsTrigger>
-        <TabsTrigger value="interactive">
-          Interactive
-        </TabsTrigger>
-        <TabsTrigger value="across">
-          Across repositories
-        </TabsTrigger>
+        <TabsTrigger value="sequential"> Sequential </TabsTrigger>
+        <TabsTrigger value="interactive"> Interactive </TabsTrigger>
+        <TabsTrigger value="across"> Across repositories </TabsTrigger>
       </TabsList>
       <TabsContent value="sequential">
-        <CodeSnippet :code="sequential" title="Sequential — $transaction([…])" size="sm" :highlight="[2]" />
+        <CodeSnippet
+          :code="sequential"
+          title="Sequential — $transaction([…])"
+          size="sm"
+          :highlight="[2]"
+        />
       </TabsContent>
       <TabsContent value="interactive">
-        <CodeSnippet :code="interactive" title="Interactive — $transaction(async tx => …)" size="sm" :highlight="[2, 3, 7, 11]" />
+        <CodeSnippet
+          :code="interactive"
+          title="Interactive — $transaction(async tx => …)"
+          size="sm"
+          :highlight="[2, 3, 7, 11]"
+        />
       </TabsContent>
       <TabsContent value="across">
-        <CodeSnippet :code="acrossRepositories" title="TransactionHost.run — repositories join automatically" size="sm" :highlight="[9, 10, 11]" />
+        <CodeSnippet
+          :code="acrossRepositories"
+          title="TransactionHost.run — repositories join automatically"
+          size="sm"
+          :highlight="[9, 10, 11]"
+        />
       </TabsContent>
     </Tabs>
 
@@ -114,7 +127,8 @@ const migrationFix = `
       <TriangleAlert />
       <AlertTitle>Keep transactions short</AlertTitle>
       <AlertDescription>
-        They hold a connection and row locks. No HTTP calls, no emails, no sleeps inside — enqueue that work after commit.
+        They hold a connection and row locks. No HTTP calls, no emails, no
+        sleeps inside — enqueue that work after commit.
       </AlertDescription>
     </Alert>
 
@@ -126,7 +140,13 @@ const migrationFix = `
         </Button>
       </CollapsibleTrigger>
       <CollapsibleContent>
-        <CodeSnippet :code="migrationFix" lang="sql" title="db/migrations/20261015115245_user_snake_case" size="sm" :highlight="[2, 6]" />
+        <CodeSnippet
+          :code="migrationFix"
+          lang="sql"
+          title="db/migrations/20261015115245_user_snake_case"
+          size="sm"
+          :highlight="[2, 6]"
+        />
       </CollapsibleContent>
     </Collapsible>
   </SlideLayout>

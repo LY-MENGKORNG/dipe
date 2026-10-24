@@ -43,13 +43,13 @@ postman webhook scripts set <webhookId> ./webhooks/github-on-event.js --event on
 
 ## What a script can use
 
-| Available | Not available |
-| --- | --- |
-| `pm.request.headers.get(name)`, `pm.request.body.raw` | `pm.globals`, `pm.collectionVariables`, `pm.iterationData` |
-| `pm.test`, `pm.expect` | `pm.execution.setNextRequest`, `pm.visualizer` |
-| `pm.environment.get`, from the environment linked to the webhook | State that lasts beyond one delivery |
-| `require("crypto-js")` and other packages, from the Package Library, npm or JSR | |
-| `pm.execution.runRequest`, to run a saved collection request | |
+| Available                                                                       | Not available                                              |
+| ------------------------------------------------------------------------------- | ---------------------------------------------------------- |
+| `pm.request.headers.get(name)`, `pm.request.body.raw`                           | `pm.globals`, `pm.collectionVariables`, `pm.iterationData` |
+| `pm.test`, `pm.expect`                                                          | `pm.execution.setNextRequest`, `pm.visualizer`             |
+| `pm.environment.get`, from the environment linked to the webhook                | State that lasts beyond one delivery                       |
+| `require("crypto-js")` and other packages, from the Package Library, npm or JSR |                                                            |
+| `pm.execution.runRequest`, to run a saved collection request                    |                                                            |
 
 Parse and hash `pm.request.body.raw`. Postman keeps the body exactly as the
 sender sent it, and every signature scheme below is computed over those exact
@@ -63,17 +63,19 @@ delivery that breaks it, instead of when the handler happens to crash.
 
 ```javascript
 // Just a reference based on expected payload, it can be of a different data type as well.
-const event = JSON.parse(pm.request.body.raw);
+const event = JSON.parse(pm.request.body.raw)
 
 pm.test("is a JSON event with an id and a type", function () {
-    pm.expect(event).to.have.property("id").that.is.a("string");
-    pm.expect(event).to.have.property("type").that.is.a("string");
-});
+  pm.expect(event).to.have.property("id").that.is.a("string")
+  pm.expect(event).to.have.property("type").that.is.a("string")
+})
 
 pm.test("is an event this handler subscribes to", function () {
-    pm.expect(["payment_intent.succeeded", "payment_intent.payment_failed"])
-        .to.include(event.type);
-});
+  pm.expect([
+    "payment_intent.succeeded",
+    "payment_intent.payment_failed",
+  ]).to.include(event.type)
+})
 ```
 
 ## Signature checks
@@ -90,15 +92,16 @@ webhook's configuration.
 body. There's no timestamp, so a replayed delivery still verifies.
 
 ```javascript
-const CryptoJS = require("crypto-js");
+const CryptoJS = require("crypto-js")
 
-const secret = pm.environment.get("github_webhook_secret");
-const expected = "sha256=" +
-    CryptoJS.HmacSHA256(pm.request.body.raw, secret).toString(CryptoJS.enc.Hex);
+const secret = pm.environment.get("github_webhook_secret")
+const expected =
+  "sha256=" +
+  CryptoJS.HmacSHA256(pm.request.body.raw, secret).toString(CryptoJS.enc.Hex)
 
 pm.test("GitHub signature matches the body", function () {
-    pm.expect(pm.request.headers.get("X-Hub-Signature-256")).to.equal(expected);
-});
+  pm.expect(pm.request.headers.get("X-Hub-Signature-256")).to.equal(expected)
+})
 ```
 
 ### Stripe
@@ -109,22 +112,26 @@ More than one `v1` appears while a secret is being rolled, and any one of them
 can match.
 
 ```javascript
-const CryptoJS = require("crypto-js");
+const CryptoJS = require("crypto-js")
 
-const secret = pm.environment.get("stripe_webhook_secret");
-const fields = pm.request.headers.get("Stripe-Signature").split(",");
-const t = fields.find(f => f.startsWith("t=")).slice(2);
-const signatures = fields.filter(f => f.startsWith("v1=")).map(f => f.slice(3));
-const expected = CryptoJS.HmacSHA256(t + "." + pm.request.body.raw, secret)
-    .toString(CryptoJS.enc.Hex);
+const secret = pm.environment.get("stripe_webhook_secret")
+const fields = pm.request.headers.get("Stripe-Signature").split(",")
+const t = fields.find((f) => f.startsWith("t=")).slice(2)
+const signatures = fields
+  .filter((f) => f.startsWith("v1="))
+  .map((f) => f.slice(3))
+const expected = CryptoJS.HmacSHA256(
+  t + "." + pm.request.body.raw,
+  secret,
+).toString(CryptoJS.enc.Hex)
 
 pm.test("Stripe signature matches the body", function () {
-    pm.expect(signatures).to.include(expected);
-});
+  pm.expect(signatures).to.include(expected)
+})
 
 pm.test("Stripe timestamp is within five minutes", function () {
-    pm.expect(Math.abs(Date.now() / 1000 - Number(t))).to.be.below(300);
-});
+  pm.expect(Math.abs(Date.now() / 1000 - Number(t))).to.be.below(300)
+})
 ```
 
 The timestamp test fails on a replay of anything older than five minutes. That
@@ -136,21 +143,23 @@ Slack signs `v0:<X-Slack-Request-Timestamp>:<raw body>` with the app's signing
 secret and sends `X-Slack-Signature: v0=<hex>`.
 
 ```javascript
-const CryptoJS = require("crypto-js");
+const CryptoJS = require("crypto-js")
 
-const secret = pm.environment.get("slack_signing_secret");
-const ts = pm.request.headers.get("X-Slack-Request-Timestamp");
-const expected = "v0=" +
-    CryptoJS.HmacSHA256("v0:" + ts + ":" + pm.request.body.raw, secret)
-        .toString(CryptoJS.enc.Hex);
+const secret = pm.environment.get("slack_signing_secret")
+const ts = pm.request.headers.get("X-Slack-Request-Timestamp")
+const expected =
+  "v0=" +
+  CryptoJS.HmacSHA256("v0:" + ts + ":" + pm.request.body.raw, secret).toString(
+    CryptoJS.enc.Hex,
+  )
 
 pm.test("Slack signature matches the body", function () {
-    pm.expect(pm.request.headers.get("X-Slack-Signature")).to.equal(expected);
-});
+  pm.expect(pm.request.headers.get("X-Slack-Signature")).to.equal(expected)
+})
 
 pm.test("Slack timestamp is within five minutes", function () {
-    pm.expect(Math.abs(Date.now() / 1000 - Number(ts))).to.be.below(300);
-});
+  pm.expect(Math.abs(Date.now() / 1000 - Number(ts))).to.be.below(300)
+})
 ```
 
 ### Any other HMAC scheme, including your own API's

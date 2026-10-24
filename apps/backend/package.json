@@ -3,7 +3,7 @@
   "version": "0.0.1",
   "private": true,
   "description": "Introduction to NestJS data, integration and production essentials.",
-  "author": "",
+  "author": "LY-MENGKORNG",
   "scripts": {
     "build": "bun --bun run nest build",
     "dev": "bun --env-file=../../.env --watch ./src/main.ts",

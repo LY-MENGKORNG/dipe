@@ -1,12 +1,12 @@
 $kind: http-request
 method: POST
-url: '{{base_url}}/users'
+url: "{{base_url}}/users"
 order: 9000
 auth:
   type: bearer
   credentials:
     - key: token
-      value: '{{employee_token}}'
+      value: "{{employee_token}}"
 headers:
   - key: Content-Type
     value: application/json

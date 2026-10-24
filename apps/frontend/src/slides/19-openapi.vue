@@ -1,37 +1,43 @@
 <script lang="ts">
-import type { SlideMeta } from '.'
+import type { SlideMeta } from "."
 
 export const meta: SlideMeta = {
-  title: 'API Documentation',
-  section: 'API Documentation',
+  title: "API Documentation",
+  section: "API Documentation",
   notes: [
-    'OpenAPI is the spec (a JSON/YAML description of every route, schema and auth scheme). Swagger UI / Scalar are viewers that render it and let you send requests.',
-    'Nest builds the document from code: controllers and routes come for free; DTO schemas come from nestjs-zod; descriptions and responses from @Api* decorators.',
-    'This repo already has it: DocumentBuilder in docs.config.ts with a bearer scheme, rendered by Scalar at GET /docs.',
-    'With nestjs-zod, run `cleanupOpenApiDoc()` on the document so Zod schemas render cleanly, and register `ZodValidationPipe` globally — otherwise the schema is documented but NOT enforced.',
-    'Document responses, not just requests. @ZodResponse does it in one decorator: it documents the response AND strips the return value down to the schema (ZodSerializerInterceptor). Errors still use @ApiNotFoundResponse, @ApiUnauthorizedResponse.',
-    'Why strip? A Prisma row can carry passwordHash. The response schema is an allow-list: anything not in it never leaves the server.',
-    'Dates: Prisma returns Date, JSON wants a string. The isoDate codec encodes Date → ISO string on the way out, and the docs still say string/date-time.',
-    'If a response does not match its schema, the client gets a plain 500 and SerializationExceptionFilter logs the route plus the exact Zod issues. Demo: change name to z.number() in users.schema.ts and call GET /api/users/1.',
-    'Demo: open /docs, click Authorize, paste the token from /auth/login, call GET /api/users — that is testing endpoints through the UI.',
+    "OpenAPI is the spec (a JSON/YAML description of every route, schema and auth scheme). Swagger UI / Scalar are viewers that render it and let you send requests.",
+    "Nest builds the document from code: controllers and routes come for free; DTO schemas come from nestjs-zod; descriptions and responses from @Api* decorators.",
+    "This repo already has it: DocumentBuilder in docs.config.ts with a bearer scheme, rendered by Scalar at GET /docs.",
+    "With nestjs-zod, run `cleanupOpenApiDoc()` on the document so Zod schemas render cleanly, and register `ZodValidationPipe` globally — otherwise the schema is documented but NOT enforced.",
+    "Document responses, not just requests. @ZodResponse does it in one decorator: it documents the response AND strips the return value down to the schema (ZodSerializerInterceptor). Errors still use @ApiNotFoundResponse, @ApiUnauthorizedResponse.",
+    "Why strip? A Prisma row can carry passwordHash. The response schema is an allow-list: anything not in it never leaves the server.",
+    "Dates: Prisma returns Date, JSON wants a string. The isoDate codec encodes Date → ISO string on the way out, and the docs still say string/date-time.",
+    "If a response does not match its schema, the client gets a plain 500 and SerializationExceptionFilter logs the route plus the exact Zod issues. Demo: change name to z.number() in users.schema.ts and call GET /api/users/1.",
+    "Demo: open /docs, click Authorize, paste the token from /auth/login, call GET /api/users — that is testing endpoints through the UI.",
   ],
 }
 </script>
 
 <script setup lang="ts">
-import { ArrowRight } from '@lucide/vue'
-import { Badge } from '@/components/ui/badge'
-import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs'
-import CodeSnippet from '@/components/deck/CodeSnippet.vue'
-import SlideLayout from '@/components/deck/SlideLayout.vue'
+import { ArrowRight } from "@lucide/vue"
+import { Badge } from "@/components/ui/badge"
+import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs"
+import CodeSnippet from "@/components/deck/CodeSnippet.vue"
+import SlideLayout from "@/components/deck/SlideLayout.vue"
 
-const flow = ['Zod DTOs', '@ZodResponse + @Api*', 'DocumentBuilder', 'openapi.json', 'Scalar at /docs']
+const flow = [
+  "Zod DTOs",
+  "@ZodResponse + @Api*",
+  "DocumentBuilder",
+  "openapi.json",
+  "Scalar at /docs",
+]
 
 const tabs = [
   {
-    value: 'builder',
-    label: 'docs.config.ts',
-    title: 'src/config/docs.config.ts (repo + cleanupOpenApiDoc)',
+    value: "builder",
+    label: "docs.config.ts",
+    title: "src/config/docs.config.ts (repo + cleanupOpenApiDoc)",
     highlight: [5, 6, 11],
     code: `
       const config = new DocumentBuilder()
@@ -52,9 +58,9 @@ const tabs = [
     `,
   },
   {
-    value: 'dto',
-    label: 'Zod DTO',
-    title: 'users/dto/create-user.dto.ts (in the repo)',
+    value: "dto",
+    label: "Zod DTO",
+    title: "users/dto/create-user.dto.ts (in the repo)",
     highlight: [9, 10, 13],
     code: `
       export const createUserSchema = z.object({
@@ -73,9 +79,9 @@ const tabs = [
     `,
   },
   {
-    value: 'controller',
-    label: 'Controller',
-    title: 'users.controller.ts',
+    value: "controller",
+    label: "Controller",
+    title: "users.controller.ts",
     highlight: [7, 8],
     code: `
       @ApiTags("Users")
@@ -94,9 +100,10 @@ const tabs = [
     `,
   },
   {
-    value: 'serializer',
-    label: 'Response guard',
-    title: 'helpers/schema.ts · users.dto.ts · serialization-exception.filter.ts',
+    value: "serializer",
+    label: "Response guard",
+    title:
+      "helpers/schema.ts · users.dto.ts · serialization-exception.filter.ts",
     highlight: [2, 7, 12, 16],
     code: `
       // Prisma gives Date, JSON needs string: encode on the way out
@@ -137,7 +144,10 @@ const tabs = [
         <Badge :variant="i === flow.length - 1 ? 'default' : 'secondary'">
           {{ step }}
         </Badge>
-        <ArrowRight v-if="i < flow.length - 1" class="size-4 text-muted-foreground" />
+        <ArrowRight
+          v-if="i < flow.length - 1"
+          class="size-4 text-muted-foreground"
+        />
       </template>
     </div>
     <Tabs default-value="builder">
@@ -147,7 +157,11 @@ const tabs = [
         </TabsTrigger>
       </TabsList>
       <TabsContent v-for="tab in tabs" :key="tab.value" :value="tab.value">
-        <CodeSnippet :code="tab.code" :title="tab.title" :highlight="tab.highlight" />
+        <CodeSnippet
+          :code="tab.code"
+          :title="tab.title"
+          :highlight="tab.highlight"
+        />
       </TabsContent>
     </Tabs>
   </SlideLayout>

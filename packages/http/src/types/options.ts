@@ -1,6 +1,6 @@
-import type { LiteralUnion } from './common.js'
-import type { Hooks, NormalizedHooks } from './hooks.js'
-import type { MutableRetryOptions, RetryOptions } from './retry.js'
+import type { LiteralUnion } from "./common.js";
+import type { Hooks, NormalizedHooks } from "./hooks.js";
+import type { MutableRetryOptions, RetryOptions } from "./retry.js";
 
 // eslint-disable-next-line unicorn/prevent-abbreviations
 export type SearchParamsInit =
@@ -8,7 +8,7 @@ export type SearchParamsInit =
   | string[][]
   | Record<string, string>
   | URLSearchParams
-  | undefined
+  | undefined;
 
 // `null` is intentionally not allowed in the object form even though the runtime sends it as the string `'null'` (like `URLSearchParams` does), so accidental nulls are caught by the type checker.
 // eslint-disable-next-line unicorn/prevent-abbreviations
@@ -16,45 +16,35 @@ export type SearchParamsOption =
   | Exclude<SearchParamsInit, string[][]>
   | Record<string, string | number | boolean | undefined>
   | Array<Array<string | number | boolean>>
-  | ReadonlyArray<ReadonlyArray<string | number | boolean>>
+  | ReadonlyArray<ReadonlyArray<string | number | boolean>>;
 
-export type RequestHttpMethod =
-  | 'get'
-  | 'post'
-  | 'put'
-  | 'patch'
-  | 'head'
-  | 'delete'
-  | 'query'
-export type HttpMethod = LiteralUnion<
-  RequestHttpMethod | 'options' | 'trace',
-  string
->
+export type RequestHttpMethod = "get" | "post" | "put" | "patch" | "head" | "delete" | "query";
+export type HttpMethod = LiteralUnion<RequestHttpMethod | "options" | "trace", string>;
 
-export type Input = string | URL | Request
+export type Input = string | URL | Request;
 
 export type Progress = {
   /**
 	A number between `0` and `1` representing the progress percentage.
 	*/
-  percent: number
+  percent: number;
 
   /**
 	The number of bytes transferred so far.
 	*/
-  transferredBytes: number
+  transferredBytes: number;
 
   /**
 	The total number of bytes to be transferred. This is an estimate and may be `0` for an empty transfer or when the total size cannot be determined.
 	*/
-  totalBytes: number
-}
+  totalBytes: number;
+};
 
 // Not HeadersInit directly because @types/node doesn't export it
 export type HttpHeadersInit =
-  | NonNullable<RequestInit['headers']>
+  | NonNullable<RequestInit["headers"]>
   | Record<string, string | undefined>
-  | ReadonlyArray<readonly [string, string]>
+  | ReadonlyArray<readonly [string, string]>;
 
 /**
 Custom Http options
@@ -68,7 +58,7 @@ export type HttpOptions = {
 
 	The `Content-Type` header is set to `application/json` unless you set a `Content-Type` in the `headers` option, which always takes precedence. A `Content-Type` on a `Request` input is replaced, because the `Request` constructor sets one automatically from its body.
 	*/
-  json?: unknown
+  json?: unknown;
 
   /**
 	User-defined JSON-parsing function.
@@ -106,11 +96,8 @@ export type HttpOptions = {
 	*/
   // `options` is intentionally not included in the context to avoid exposing Http internals through a parsing callback. `request`/`response` already provide the metadata needed for logging.
   parseJson?:
-    | ((
-        text: string,
-        context: { request: Request; response: Response },
-      ) => unknown)
-    | undefined
+    | ((text: string, context: { request: Request; response: Response }) => unknown)
+    | undefined;
 
   /**
 	User-defined JSON-stringifying function.
@@ -136,7 +123,7 @@ export type HttpOptions = {
 	}).json();
 	```
 	*/
-  stringifyJson?: ((data: unknown) => string) | undefined
+  stringifyJson?: ((data: unknown) => string) | undefined;
 
   /**
 	Search parameters to include in the request URL. Setting this will merge with any existing search parameters in the input URL.
@@ -147,7 +134,7 @@ export type HttpOptions = {
 
 	When `input` is a [`Request`](https://developer.mozilla.org/en-US/docs/Web/API/Request) with a body, the body is sent as a stream, which requires [request stream support](https://caniuse.com/wf-fetch-request-streams) and, in Chromium-based browsers, an HTTP/2 or HTTP/3 connection (streaming uploads over HTTP/1.1 fail with a network error, even over plain HTTP). The inherited body is dropped when the search parameters change the URL and the request has to be rebuilt in an environment that cannot reuse it, which is the case without request stream support, when `keepalive` is true, or when the effective mode is `'no-cors'`. A search parameter value that leaves the URL unchanged does not rebuild the request, so the body is kept. A compatible body passed explicitly with the `body` option is still used.
 	*/
-  searchParams?: SearchParamsOption
+  searchParams?: SearchParamsOption;
 
   /**
 	A base URL to [resolve](https://developer.mozilla.org/en-US/docs/Web/API/URL_API/Resolving_relative_references) the `input` against. When the `input` (after applying the `prefix` option) is only a relative URL, such as `'users'`, `'/users'`, or `'//my-site.com'`, it will be resolved against the `baseUrl` to determine the destination of the request. Otherwise, the `input` is absolute, such as `'https://my-site.com'`, and it will bypass the `baseUrl`.
@@ -171,7 +158,7 @@ export type HttpOptions = {
 	//=> 'https://example.com/users'
 	```
 	*/
-  baseUrl?: URL | string | undefined
+  baseUrl?: URL | string | undefined;
 
   /**
 	A prefix to prepend to the `input` before making the request (and before it is resolved against the `baseUrl`). It can be any valid path or URL, either relative or absolute. A trailing slash `/` is optional and will be added automatically, if needed, when it is joined with `input`. Only takes effect when `input` is a string.
@@ -197,7 +184,7 @@ export type HttpOptions = {
 	//=> 'https://example.com/api/users'
 	```
 	*/
-  prefix?: URL | string | undefined
+  prefix?: URL | string | undefined;
 
   /**
 	Controls retry behavior. Each field is documented in the `RetryOptions` type.
@@ -229,7 +216,7 @@ export type HttpOptions = {
 	}).json();
 	```
 	*/
-  retry?: RetryOptions | number | undefined
+  retry?: RetryOptions | number | undefined;
 
   /**
 	Per-attempt timeout in milliseconds for getting a response, applied independently to each retry. Http shortcut methods also use this value as a separate timeout for reading the response body. Must be a non-negative number or `false`, or a `TypeError` is thrown. A value greater than 2147483647, `Infinity` included, throws a `RangeError`. See also `totalTimeout`.
@@ -240,7 +227,7 @@ export type HttpOptions = {
 
 	@default 10000
 	*/
-  timeout?: number | false | undefined
+  timeout?: number | false | undefined;
 
   /**
 	Overall timeout in milliseconds for the entire operation, including retries and delays. Throws a `TimeoutError` if exceeded. Must be a non-negative number or `false`, or a `TypeError` is thrown. A value greater than 2147483647, `Infinity` included, throws a `RangeError`.
@@ -266,7 +253,7 @@ export type HttpOptions = {
 	}).json();
 	```
 	*/
-  totalTimeout?: number | false | undefined
+  totalTimeout?: number | false | undefined;
 
   /**
 	Maximum response body size in bytes. Must be a non-negative safe integer or `Infinity`. Set to `0` to allow only empty bodies.
@@ -288,14 +275,14 @@ export type HttpOptions = {
 	}).json();
 	```
 	*/
-  maxResponseSize?: number | undefined
+  maxResponseSize?: number | undefined;
 
   /**
 	Hooks allow modifications during the request lifecycle. Hook functions may be async and are run serially, unless otherwise noted.
 
 	Each hook must be an array of functions. A single function, a string, or any other value, `null` included, throws a `TypeError` rather than being silently dropped. `undefined` means absent, so it clears the hooks it would have replaced.
 	*/
-  hooks?: Hooks | undefined
+  hooks?: Hooks | undefined;
 
   /**
 	Throw an `HTTPError` when, after following redirects, the response has a non-2xx status code. To also throw for redirects instead of following them, set the [`redirect`](https://developer.mozilla.org/en-US/docs/Web/API/WindowOrWorkerGlobalScope/fetch#Parameters) option to `'manual'`.
@@ -310,7 +297,7 @@ export type HttpOptions = {
 
 	@default true
 	*/
-  throwHttpErrors?: boolean | ((status: number) => boolean) | undefined
+  throwHttpErrors?: boolean | ((status: number) => boolean) | undefined;
 
   /**
 	Download progress event handler.
@@ -337,9 +324,7 @@ export type HttpOptions = {
 	});
 	```
 	*/
-  onDownloadProgress?:
-    | ((progress: Progress, chunk: Uint8Array) => void)
-    | undefined
+  onDownloadProgress?: ((progress: Progress, chunk: Uint8Array) => void) | undefined;
 
   /**
 	Upload progress event handler.
@@ -367,9 +352,7 @@ export type HttpOptions = {
 	});
 	```
 	*/
-  onUploadProgress?:
-    | ((progress: Progress, chunk: Uint8Array) => void)
-    | undefined
+  onUploadProgress?: ((progress: Progress, chunk: Uint8Array) => void) | undefined;
 
   /**
 	User-defined `fetch` function.
@@ -398,9 +381,7 @@ export type HttpOptions = {
 	const json = await api('https://example.com').json();
 	```
 	*/
-  fetch?:
-    | ((input: Request, init?: RequestInit) => Promise<Response>)
-    | undefined
+  fetch?: ((input: Request, init?: RequestInit) => Promise<Response>) | undefined;
 
   /**
 	User-defined data passed to hooks.
@@ -463,21 +444,21 @@ export type HttpOptions = {
 
 	@default {}
 	*/
-  context?: Record<string, unknown> | undefined
-}
+  context?: Record<string, unknown> | undefined;
+};
 
 /**
 Each key from HttpOptions is present and set to `true`.
 
 This type is used for identifying and working with the known keys in HttpOptions.
 */
-export type HttpOptionsRegistry = { [K in keyof HttpOptions]-?: true }
+export type HttpOptionsRegistry = { [K in keyof HttpOptions]-?: true };
 
 type RequestOptions = {
-  [Key in Exclude<keyof RequestInit, 'headers' | 'signal' | 'method'>]?:
+  [Key in Exclude<keyof RequestInit, "headers" | "signal" | "method">]?:
     | RequestInit[Key]
-    | undefined
-}
+    | undefined;
+};
 
 /**
 Options are the same as `window.fetch`, except for the HttpOptions
@@ -489,7 +470,7 @@ export interface Options extends HttpOptions, RequestOptions {
 
 	Internally, the standard methods (`GET`, `POST`, `PUT`, `PATCH`, `HEAD`, `DELETE`, and `QUERY`) are uppercased in order to avoid server errors due to case sensitivity.
 	*/
-  method?: LiteralUnion<HttpMethod, string> | undefined
+  method?: LiteralUnion<HttpMethod, string> | undefined;
 
   /**
 	HTTP headers used to make the request.
@@ -531,7 +512,7 @@ export interface Options extends HttpOptions, RequestOptions {
 	await extended(url);
 	```
 	*/
-  headers?: HttpHeadersInit | undefined
+  headers?: HttpHeadersInit | undefined;
 
   /**
 	An `AbortSignal` to abort the request.
@@ -541,39 +522,32 @@ export interface Options extends HttpOptions, RequestOptions {
 	`null` is accepted for `RequestInit` compatibility and is treated like an absent signal, so it does not remove an inherited signal.
 	*/
   // eslint-disable-next-line @typescript-eslint/no-restricted-types
-  signal?: AbortSignal | null | undefined
+  signal?: AbortSignal | null | undefined;
 }
 
-export type InitOptions = Omit<Options, 'retry' | 'hooks'> & {
-  retry?: MutableRetryOptions | number | undefined
-  hooks?:
-    | { [Key in keyof Hooks]?: NormalizedHooks[Key] | undefined }
-    | undefined
-}
+export type InitOptions = Omit<Options, "retry" | "hooks"> & {
+  retry?: MutableRetryOptions | number | undefined;
+  hooks?: { [Key in keyof Hooks]?: NormalizedHooks[Key] | undefined } | undefined;
+};
 
 type NormalizedRetryOptions = {
-  [
-    Key in Exclude<keyof MutableRetryOptions, 'shouldRetry'>
-  ]-?: Key extends 'jitter'
+  [Key in Exclude<keyof MutableRetryOptions, "shouldRetry">]-?: Key extends "jitter"
     ? MutableRetryOptions[Key]
-    : Exclude<MutableRetryOptions[Key], undefined>
-} & Pick<MutableRetryOptions, 'shouldRetry'>
+    : Exclude<MutableRetryOptions[Key], undefined>;
+} & Pick<MutableRetryOptions, "shouldRetry">;
 
-export type InternalOptions = Omit<
-  Options,
-  'hooks' | 'retry' | 'context' | 'throwHttpErrors'
-> & {
-  headers: Headers
-  hooks: NormalizedHooks
-  retry: NormalizedRetryOptions
-  fetch: NonNullable<Options['fetch']>
-  prefix: string
-  timeout: number | false
-  totalTimeout: number | false
-  maxResponseSize: number
-  context: Record<string, unknown>
-  throwHttpErrors: boolean | ((status: number) => boolean)
-}
+export type InternalOptions = Omit<Options, "hooks" | "retry" | "context" | "throwHttpErrors"> & {
+  headers: Headers;
+  hooks: NormalizedHooks;
+  retry: NormalizedRetryOptions;
+  fetch: NonNullable<Options["fetch"]>;
+  prefix: string;
+  timeout: number | false;
+  totalTimeout: number | false;
+  maxResponseSize: number;
+  context: Record<string, unknown>;
+  throwHttpErrors: boolean | ((status: number) => boolean);
+};
 
 /**
 Normalized options passed to the `fetch` call and hooks.
@@ -581,17 +555,17 @@ Normalized options passed to the `fetch` call and hooks.
 export interface NormalizedOptions extends Readonly<RequestInit> {
   // eslint-disable-line @typescript-eslint/consistent-type-definitions -- This must stay an interface so that it can be extended outside of Http for use in `http.create`.
   // Extended from `RequestInit`, but ensured to be set (not optional).
-  readonly method: NonNullable<RequestInit['method']>
-  readonly credentials?: NonNullable<RequestInit['credentials']>
-  readonly headers: Headers
+  readonly method: NonNullable<RequestInit["method"]>;
+  readonly credentials?: NonNullable<RequestInit["credentials"]>;
+  readonly headers: Headers;
 
   // Extended from custom `HttpOptions`, but ensured to be set (not optional).
-  readonly retry: NormalizedRetryOptions
-  readonly baseUrl?: Options['baseUrl']
-  readonly prefix: string
-  readonly onDownloadProgress?: NonNullable<Options['onDownloadProgress']>
-  readonly onUploadProgress?: NonNullable<Options['onUploadProgress']>
-  readonly context: Record<string, unknown>
+  readonly retry: NormalizedRetryOptions;
+  readonly baseUrl?: Options["baseUrl"];
+  readonly prefix: string;
+  readonly onDownloadProgress?: NonNullable<Options["onDownloadProgress"]>;
+  readonly onUploadProgress?: NonNullable<Options["onUploadProgress"]>;
+  readonly context: Record<string, unknown>;
 }
 
-export type { RetryOptions, ShouldRetryState } from './retry.js'
+export type { RetryOptions, ShouldRetryState } from "./retry.js";

@@ -1,39 +1,66 @@
 <script lang="ts">
-import type { SlideMeta } from '.'
+import type { SlideMeta } from "."
 
 export const meta: SlideMeta = {
-  title: 'CRUD with Prisma',
-  section: 'Database & ORM',
+  title: "CRUD with Prisma",
+  section: "Database & ORM",
   notes: [
-    'Left: how REST routes map to Prisma calls. Right: the code for each.',
-    '`select` decides which columns leave the database. Never return password_hash — define a reusable `publicUser` select (or use Prisma 7 `omit`).',
-    'Pagination: take/skip is fine for small tables; cursor pagination for big or infinite-scroll lists.',
-    '`include` loads relations (posts of a user) in one call — avoids N+1 queries.',
-    'Errors: Prisma throws known codes. P2002 = unique constraint (email already used → 409), P2025 = record not found (→ 404). Map them, do not leak 500s.',
-    'Today the repo `findAll` returns every column including password_hash — fix it live as the first demo step.',
+    "Left: how REST routes map to Prisma calls. Right: the code for each.",
+    "`select` decides which columns leave the database. Never return password_hash — define a reusable `publicUser` select (or use Prisma 7 `omit`).",
+    "Pagination: take/skip is fine for small tables; cursor pagination for big or infinite-scroll lists.",
+    "`include` loads relations (posts of a user) in one call — avoids N+1 queries.",
+    "Errors: Prisma throws known codes. P2002 = unique constraint (email already used → 409), P2025 = record not found (→ 404). Map them, do not leak 500s.",
+    "Today the repo `findAll` returns every column including password_hash — fix it live as the first demo step.",
   ],
   ask: 'What status code should "email already exists" return?',
 }
 </script>
 
 <script setup lang="ts">
-import { Badge, type BadgeVariants } from '@/components/ui/badge'
-import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from '@/components/ui/table'
-import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs'
-import CodeSnippet from '@/components/deck/CodeSnippet.vue'
-import SlideLayout from '@/components/deck/SlideLayout.vue'
+import { Badge, type BadgeVariants } from "@/components/ui/badge"
+import {
+  Table,
+  TableBody,
+  TableCell,
+  TableHead,
+  TableHeader,
+  TableRow,
+} from "@/components/ui/table"
+import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs"
+import CodeSnippet from "@/components/deck/CodeSnippet.vue"
+import SlideLayout from "@/components/deck/SlideLayout.vue"
 
-const routes: {verb: string, path: string, call: string, variant: BadgeVariants["variant"] }[] = [
-  { verb: 'POST', path: '/users', call: 'user.create', variant: 'default' },
-  { verb: 'GET', path: '/users', call: 'user.findMany', variant: 'secondary' },
-  { verb: 'GET', path: '/users/:id', call: 'user.findUnique', variant: 'secondary' },
-  { verb: 'PATCH', path: '/users/:id', call: 'user.update', variant: 'outline' },
-  { verb: 'DELETE', path: '/users/:id', call: 'user.delete', variant: 'destructive' },
+const routes: {
+  verb: string
+  path: string
+  call: string
+  variant: BadgeVariants["variant"]
+}[] = [
+  { verb: "POST", path: "/users", call: "user.create", variant: "default" },
+  { verb: "GET", path: "/users", call: "user.findMany", variant: "secondary" },
+  {
+    verb: "GET",
+    path: "/users/:id",
+    call: "user.findUnique",
+    variant: "secondary",
+  },
+  {
+    verb: "PATCH",
+    path: "/users/:id",
+    call: "user.update",
+    variant: "outline",
+  },
+  {
+    verb: "DELETE",
+    path: "/users/:id",
+    call: "user.delete",
+    variant: "destructive",
+  },
 ]
 
 const ops = [
   {
-    value: 'create',
+    value: "create",
     code: `
       const publicUser = { id: true, name: true, email: true, role: true } as const;
 
@@ -47,7 +74,7 @@ const ops = [
     highlight: [1, 6],
   },
   {
-    value: 'read',
+    value: "read",
     code: `
       findMany({ q, role, limit, offset }: ListUserQuery) {
         return this.db.user.findMany({
@@ -72,7 +99,7 @@ const ops = [
     highlight: [9, 10, 17],
   },
   {
-    value: 'update',
+    value: "update",
     code: `
       update(id: number, data: UpdateUserDto) {
         return this.db.user.update({
@@ -85,7 +112,7 @@ const ops = [
     highlight: [3, 4],
   },
   {
-    value: 'delete',
+    value: "delete",
     code: `
       remove(id: number) {
         return this.db.user.delete({ where: { id } });
@@ -99,7 +126,7 @@ const ops = [
     highlight: [6, 7, 8],
   },
   {
-    value: 'errors',
+    value: "errors",
     code: `
       import { Prisma } from "@config/db/generated/client";
 
@@ -152,12 +179,22 @@ const ops = [
 
       <Tabs default-value="create" class="min-w-0">
         <TabsList>
-          <TabsTrigger v-for="op in ops" :key="op.value" :value="op.value" class="capitalize">
+          <TabsTrigger
+            v-for="op in ops"
+            :key="op.value"
+            :value="op.value"
+            class="capitalize"
+          >
             {{ op.value }}
           </TabsTrigger>
         </TabsList>
         <TabsContent v-for="op in ops" :key="op.value" :value="op.value">
-          <CodeSnippet :code="op.code" title="users.repository.ts" size="sm" :highlight="op.highlight" />
+          <CodeSnippet
+            :code="op.code"
+            title="users.repository.ts"
+            size="sm"
+            :highlight="op.highlight"
+          />
         </TabsContent>
       </Tabs>
     </div>

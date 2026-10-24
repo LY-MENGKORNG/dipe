@@ -1,31 +1,54 @@
 <script lang="ts">
-import type { SlideMeta } from '.'
+import type { SlideMeta } from "."
 
 export const meta: SlideMeta = {
-  title: 'Calling external APIs',
-  section: 'HTTP Client & External APIs',
+  title: "Calling external APIs",
+  section: "HTTP Client & External APIs",
   notes: [
-    'Our API is now a client of someone else\'s API. Everything that can go wrong on our side can go wrong on theirs — plus the network.',
-    'Wrap every third-party API in one injectable class. The rest of the app calls `github.getUser()` and never sees URLs or headers.',
-    'Auth headers: secrets come from config/env, never hard-coded, never logged. Bearer token in Authorization, or an API-key header depending on the provider.',
-    'Timeouts: fetch has NO timeout by default — a hung upstream hangs your request forever. `AbortSignal.timeout(ms)` is one line.',
-    'Validate the response with Zod. You do not control their schema; parse it at the boundary so a surprise becomes a clear error, not `undefined` three layers deeper.',
-    'Native fetch is enough on Bun/Node 18+. @nestjs/axios is fine too if the team prefers interceptors — the principles are identical. A good home for this is the `@repo/http` package.',
+    "Our API is now a client of someone else's API. Everything that can go wrong on our side can go wrong on theirs — plus the network.",
+    "Wrap every third-party API in one injectable class. The rest of the app calls `github.getUser()` and never sees URLs or headers.",
+    "Auth headers: secrets come from config/env, never hard-coded, never logged. Bearer token in Authorization, or an API-key header depending on the provider.",
+    "Timeouts: fetch has NO timeout by default — a hung upstream hangs your request forever. `AbortSignal.timeout(ms)` is one line.",
+    "Validate the response with Zod. You do not control their schema; parse it at the boundary so a surprise becomes a clear error, not `undefined` three layers deeper.",
+    "Native fetch is enough on Bun/Node 18+. @nestjs/axios is fine too if the team prefers interceptors — the principles are identical. A good home for this is the `@repo/http` package.",
   ],
 }
 </script>
 
 <script setup lang="ts">
-import { Clock, KeyRound, ShieldCheck, Waypoints } from '@lucide/vue'
-import { Item, ItemContent, ItemDescription, ItemGroup, ItemMedia, ItemTitle } from '@/components/ui/item'
-import CodeSnippet from '@/components/deck/CodeSnippet.vue'
-import SlideLayout from '@/components/deck/SlideLayout.vue'
+import { Clock, KeyRound, ShieldCheck, Waypoints } from "@lucide/vue"
+import {
+  Item,
+  ItemContent,
+  ItemDescription,
+  ItemGroup,
+  ItemMedia,
+  ItemTitle,
+} from "@/components/ui/item"
+import CodeSnippet from "@/components/deck/CodeSnippet.vue"
+import SlideLayout from "@/components/deck/SlideLayout.vue"
 
 const rules = [
-  { icon: Waypoints, title: 'One client per provider', desc: 'Injectable class; URLs and headers stay inside.' },
-  { icon: KeyRound, title: 'Auth from config', desc: 'Token via ConfigService / env. Never in code or logs.' },
-  { icon: Clock, title: 'Always a timeout', desc: 'fetch waits forever by default. @repo/http: timeout + retry.' },
-  { icon: ShieldCheck, title: 'Validate the response', desc: 'Zod-parse at the boundary — trust nothing.' },
+  {
+    icon: Waypoints,
+    title: "One client per provider",
+    desc: "Injectable class; URLs and headers stay inside.",
+  },
+  {
+    icon: KeyRound,
+    title: "Auth from config",
+    desc: "Token via ConfigService / env. Never in code or logs.",
+  },
+  {
+    icon: Clock,
+    title: "Always a timeout",
+    desc: "fetch waits forever by default. @repo/http: timeout + retry.",
+  },
+  {
+    icon: ShieldCheck,
+    title: "Validate the response",
+    desc: "Zod-parse at the boundary — trust nothing.",
+  },
 ]
 
 const code = `
@@ -77,7 +100,12 @@ const code = `
           </ItemContent>
         </Item>
       </ItemGroup>
-      <CodeSnippet :code="code" title="src/modules/github/github.client.ts" size="sm" :highlight="[11, 12, 13, 17, 25]" />
+      <CodeSnippet
+        :code="code"
+        title="src/modules/github/github.client.ts"
+        size="sm"
+        :highlight="[11, 12, 13, 17, 25]"
+      />
     </div>
   </SlideLayout>
 </template>

@@ -103,30 +103,33 @@ single-quote it:
 ## Worked example: "bookstore api"
 
 `postman/collections/bookstore api/get all books.request.yaml`
+
 ```yaml
 $kind: http-request
 method: GET
-url: '{{base_url}}/books'
+url: "{{base_url}}/books"
 order: 1000
 ```
 
 `postman/collections/bookstore api/get-book-by-id.request.yaml`
+
 ```yaml
 $kind: http-request
-name: 'get book by :id'
+name: "get book by :id"
 method: GET
-url: '{{base_url}}/books/:id'
+url: "{{base_url}}/books/:id"
 order: 2000
 pathVariables:
   - key: id
-    value: '1'
+    value: "1"
 ```
 
 `postman/collections/bookstore api/add new book.request.yaml`
+
 ```yaml
 $kind: http-request
 method: POST
-url: '{{base_url}}/books'
+url: "{{base_url}}/books"
 order: 3000
 headers:
   - key: Content-Type
@@ -141,10 +144,11 @@ body:
 ```
 
 `postman/collections/bookstore api/.resources/definition.yaml`
+
 ```yaml
 $kind: collection
 name: Bookstore API
 variables:
   - key: base_url
-    value: 'https://api.bookstore.com/v1'
+    value: "https://api.bookstore.com/v1"
 ```

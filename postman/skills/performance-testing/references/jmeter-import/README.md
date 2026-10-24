@@ -1,4 +1,3 @@
-
 # Importing a JMeter `.jmx` into Postman
 
 > Reference for the `performance-testing` skill. Run the importer, review the report, then the result is an ordinary performance run.
@@ -19,7 +18,7 @@ Postman performance runs do not support everything JMeter does. The scripts alre
 
 These are JMeter semantics that are easy to get subtly wrong. They're covered by `tests/score.py`:
 
-- **Implicit HTTP success** — JMeter fails a sample on HTTP ≥ 400 even with no assertion. Each request gets a default `pm.test` asserting the code is 200–399, **unless** the plan already checks the status code or sets *assume_success* (Ignore Status).
+- **Implicit HTTP success** — JMeter fails a sample on HTTP ≥ 400 even with no assertion. Each request gets a default `pm.test` asserting the code is 200–399, **unless** the plan already checks the status code or sets _assume_success_ (Ignore Status).
 - **Port 0 / -1** → "use protocol default" → omitted from the URL.
 - **Full-URL path** — if `HTTPSampler.path` is itself an absolute URL, it's used verbatim; domain/port are ignored.
 - **HEAD / TRACE arguments** — JMeter does not send separate parameters as a query for these; they're dropped (reported).
@@ -37,6 +36,7 @@ python3 scripts/jmx_to_postman.py INPUT.jmx -o OUTDIR --json-report
 ```
 
 Produces in `OUTDIR`:
+
 - `<name>.postman_collection.json` — the collection (import-ready)
 - `<name>.perf.md` / `<name>.perf.json` — performance config + CLI command
 - `<name>.report.md` — the import report
@@ -49,7 +49,7 @@ Python 3.8+ only, standard library — no pip installs.
 Open `<name>.ir.json` and read `manual_tasks`. Each has `request`, `kind`, `detail`. Handle by kind:
 
 - **`script`** — a JSR223/BeanShell pre/post-processor was auto-translated to JS and wrapped in an IIFE. Open that request's `event` script in the collection, read the `// REVIEW` block, and correct the translation. Use `script-translation.md` for the mapping. Common fixes: `prev`/`ctx`/`sampler` accessors, `.each{}` loops, `import`/`new` statements.
-- **`script_sampler`** — a standalone JSR223/BeanShell *sampler* (no HTTP). The stub is a GET to an empty URL carrying the translated script. Decide with the user: delete it, fold its logic into an adjacent request's pre/post script, or replace with a real request.
+- **`script_sampler`** — a standalone JSR223/BeanShell _sampler_ (no HTTP). The stub is a GET to an empty URL carrying the translated script. Decide with the user: delete it, fold its logic into an adjacent request's pre/post script, or replace with a real request.
 - **`xpath` / `css`** — the Postman sandbox has no built-in XPath/CSS selector engine. Rewrite the extractor against the JSON body if the response is JSON, or use `xml2js`/`cheerio` via `require(...)` in the script (confirm availability), or drop it with a note.
 - **`jsonpath` too complex** — the path used wildcards/filters/recursion. Rewrite it as explicit property access in the request's test script.
 
@@ -73,7 +73,7 @@ Only on explicit user consent — and **never make the user paste a workspace ID
 
 - **If the current folder is already a connected workspace** (the usual headless case), use it — `postman workspace push` targets the workspace bound to this directory, no ID. Just tell the user which one.
 - **If the user named a workspace** (by name), resolve it with `postman workspace list --json` and match.
-- **Otherwise present a choice, don't demand an ID.** Run `postman workspace list --json`, show the **names**, and ask the user to pick one *or* create a new one:
+- **Otherwise present a choice, don't demand an ID.** Run `postman workspace list --json`, show the **names**, and ask the user to pick one _or_ create a new one:
   - **pick existing** → connect it once with `postman workspace pull <id>` (ID taken from the list), then push.
   - **create new** → the CLI has no `create`; make it via MCP `createWorkspace` (or the Postman app), then `pull` and push.
 - **Get the imported collection into the bound workspace before pushing.** The importer emits a standalone v2.1 `*.postman_collection.json`; a pulled workspace is a git-native v3 tree. After `pull`, bring the file in with `postman collection migrate <file>.postman_collection.json` into the workspace's collections directory (check `postman collection migrate -h`), then `postman workspace push`. Pushing a folder that has no collection in its tree uploads nothing.

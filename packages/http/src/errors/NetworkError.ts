@@ -1,5 +1,5 @@
-import type { HttpRequest } from '../types/request.js'
-import { HttpClientError } from './HttpClientError.js'
+import type { HttpRequest } from "../types/request.js";
+import { HttpClientError } from "./HttpClientError.js";
 
 /**
 Error thrown when a network error occurs during the request (e.g., DNS failure, connection refused, offline). It has a `request` property with the `Request` object. The original error is available via the standard `cause` property.
@@ -9,14 +9,11 @@ Network errors are automatically retried (for retriable methods). A connection t
 Note: Network errors are detected using runtime-specific heuristics. Unrecognized runtimes may produce errors that are not wrapped in `NetworkError`. Use the `shouldRetry` option to handle such cases.
 */
 export class NetworkError extends HttpClientError {
-  override name = 'NetworkError'
-  request: HttpRequest
+  override name = "NetworkError";
+  request: HttpRequest;
 
   constructor(request: Request, options?: { cause?: Error | undefined }) {
-    super(
-      `Request failed due to a network error: ${request.method} ${request.url}`,
-      options,
-    )
-    this.request = request
+    super(`Request failed due to a network error: ${request.method} ${request.url}`, options);
+    this.request = request;
   }
 }

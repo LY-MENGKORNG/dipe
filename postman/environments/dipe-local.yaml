@@ -1,7 +1,7 @@
 name: DIPE local
 values:
   - key: base_url
-    value: 'http://localhost:3000/api'
+    value: "http://localhost:3000/api"
     enabled: true
     type: default
   - key: admin_email
@@ -21,34 +21,34 @@ values:
     enabled: true
     type: secret
   - key: admin_token
-    value: ''
+    value: ""
     enabled: true
     type: secret
   - key: employee_token
-    value: ''
+    value: ""
     enabled: true
     type: secret
   - key: user_email
-    value: ''
+    value: ""
     enabled: true
     type: default
   - key: user_id
-    value: ''
+    value: ""
     enabled: true
     type: default
   - key: tag_name
-    value: ''
+    value: ""
     enabled: true
     type: default
   - key: tag_id
-    value: ''
+    value: ""
     enabled: true
     type: default
   - key: post_id
-    value: ''
+    value: ""
     enabled: true
     type: default
   - key: post_tag_ids
-    value: ''
+    value: ""
     enabled: true
     type: default

@@ -1,30 +1,30 @@
 <script lang="ts">
-import type { SlideMeta } from '.'
+import type { SlideMeta } from "."
 
 export const meta: SlideMeta = {
-  title: 'Wiring Prisma into Nest',
-  section: 'Database & ORM',
+  title: "Wiring Prisma into Nest",
+  section: "Database & ORM",
   notes: [
-    'Five small files: create the client once, expose it through DI, track the current transaction, give every repository a transaction-aware db, keep Prisma out of services.',
-    'The PRISMA Symbol is the DI token. Using a Symbol instead of the class avoids collisions and makes it trivial to swap in a mock in tests.',
-    'DBModule is @Global and uses useValue — the client already exists, no factory needed. onApplicationShutdown + enableShutdownHooks() closes the pool on SIGTERM.',
+    "Five small files: create the client once, expose it through DI, track the current transaction, give every repository a transaction-aware db, keep Prisma out of services.",
+    "The PRISMA Symbol is the DI token. Using a Symbol instead of the class avoids collisions and makes it trivial to swap in a mock in tests.",
+    "DBModule is @Global and uses useValue — the client already exists, no factory needed. onApplicationShutdown + enableShutdownHooks() closes the pool on SIGTERM.",
     'TransactionHost keeps the active transaction client in AsyncLocalStorage — think "a variable that follows the request through every await".',
-    'BaseRepository.db returns that transaction when one is running, otherwise the global client. Repositories write normal Prisma code and automatically join a transaction their caller opened.',
-    'Repositories keep Prisma out of services. Services stay testable: in a unit test we mock UserRepository, not Prisma.',
+    "BaseRepository.db returns that transaction when one is running, otherwise the global client. Repositories write normal Prisma code and automatically join a transaction their caller opened.",
+    "Repositories keep Prisma out of services. Services stay testable: in a unit test we mock UserRepository, not Prisma.",
   ],
 }
 </script>
 
 <script setup lang="ts">
-import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs'
-import CodeSnippet from '@/components/deck/CodeSnippet.vue'
-import SlideLayout from '@/components/deck/SlideLayout.vue'
+import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs"
+import CodeSnippet from "@/components/deck/CodeSnippet.vue"
+import SlideLayout from "@/components/deck/SlideLayout.vue"
 
 const tabs = [
   {
-    value: 'client',
-    label: '1 · client',
-    title: 'src/config/db/index.ts',
+    value: "client",
+    label: "1 · client",
+    title: "src/config/db/index.ts",
     highlight: [5, 7],
     code: `
       import { PrismaPg } from "@prisma/adapter-pg";
@@ -38,9 +38,9 @@ const tabs = [
     `,
   },
   {
-    value: 'module',
-    label: '2 · module',
-    title: 'src/modules/db.module.ts',
+    value: "module",
+    label: "2 · module",
+    title: "src/modules/db.module.ts",
     highlight: [3, 4, 9, 10],
     code: `
       @Global()
@@ -58,9 +58,9 @@ const tabs = [
     `,
   },
   {
-    value: 'host',
-    label: '3 · transaction host',
-    title: 'src/common/database/transaction.host.ts',
+    value: "host",
+    label: "3 · transaction host",
+    title: "src/common/database/transaction.host.ts",
     highlight: [3, 8, 12, 13],
     code: `
       @Injectable()
@@ -81,9 +81,9 @@ const tabs = [
     `,
   },
   {
-    value: 'base',
-    label: '4 · base repository',
-    title: 'src/common/database/base.repository.ts',
+    value: "base",
+    label: "4 · base repository",
+    title: "src/common/database/base.repository.ts",
     highlight: [5, 6, 9, 10],
     code: `
       @Injectable()
@@ -101,9 +101,9 @@ const tabs = [
     `,
   },
   {
-    value: 'repo',
-    label: '5 · repository',
-    title: 'src/modules/users/users.repository.ts',
+    value: "repo",
+    label: "5 · repository",
+    title: "src/modules/users/users.repository.ts",
     highlight: [2, 4, 8],
     code: `
       @Injectable()
@@ -137,7 +137,11 @@ const tabs = [
         </TabsTrigger>
       </TabsList>
       <TabsContent v-for="tab in tabs" :key="tab.value" :value="tab.value">
-        <CodeSnippet :code="tab.code" :title="tab.title" :highlight="tab.highlight" />
+        <CodeSnippet
+          :code="tab.code"
+          :title="tab.title"
+          :highlight="tab.highlight"
+        />
       </TabsContent>
     </Tabs>
   </SlideLayout>

@@ -6,9 +6,9 @@ You can use `instanceof HttpClientError` to check if an error originated from Ht
 Note: `SchemaValidationError` is intentionally not considered a Http error. `HttpClientError` covers failures in Http's HTTP lifecycle (bad status, timeout, retry), while schema validation errors originate from the user-provided schema, not from Http itself.
 */
 export class HttpClientError extends Error {
-  override name = 'HttpClientError'
+  override name = "HttpClientError";
 
   get isHttpClientError(): true {
-    return true
+    return true;
   }
 }

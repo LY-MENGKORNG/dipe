@@ -1,7 +1,7 @@
-import type { NormalizedOptions } from '../types/options.js'
-import type { HttpRequest } from '../types/request.js'
-import type { HttpResponse } from '../types/response.js'
-import { HttpClientError } from './HttpClientError.js'
+import type { NormalizedOptions } from "../types/options.js";
+import type { HttpRequest } from "../types/request.js";
+import type { HttpResponse } from "../types/response.js";
+import { HttpClientError } from "./HttpClientError.js";
 
 /**
 Error thrown when the response has a non-2xx status code and `throwHttpErrors` is enabled.
@@ -13,26 +13,22 @@ The response body is automatically consumed when populating `error.data`, so `er
 Be aware that some types of errors, such as network errors, inherently mean that a response was not received. In that case, the error will be an instance of `NetworkError` instead of `HTTPError` and will not contain a `response` property.
 */
 export class HTTPError<T = unknown> extends HttpClientError {
-  override name = 'HTTPError'
-  response: HttpResponse<T>
-  request: HttpRequest
-  options: Readonly<NormalizedOptions>
-  data: T | string | undefined
+  override name = "HTTPError";
+  response: HttpResponse<T>;
+  request: HttpRequest;
+  options: Readonly<NormalizedOptions>;
+  data: T | string | undefined;
 
-  constructor(
-    response: Response,
-    request: Request,
-    options: Readonly<NormalizedOptions>,
-  ) {
-    const code = response.status || response.status === 0 ? response.status : ''
-    const title = response.statusText ?? ''
-    const status = `${code} ${title}`.trim()
-    const reason = status ? `status code ${status}` : 'an unknown error'
+  constructor(response: Response, request: Request, options: Readonly<NormalizedOptions>) {
+    const code = response.status || response.status === 0 ? response.status : "";
+    const title = response.statusText ?? "";
+    const status = `${code} ${title}`.trim();
+    const reason = status ? `status code ${status}` : "an unknown error";
 
-    super(`Request failed with ${reason}: ${request.method} ${request.url}`)
+    super(`Request failed with ${reason}: ${request.method} ${request.url}`);
 
-    this.response = response
-    this.request = request
-    this.options = options
+    this.response = response;
+    this.request = request;
+    this.options = options;
   }
 }

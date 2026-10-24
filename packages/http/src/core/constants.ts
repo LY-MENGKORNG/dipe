@@ -1,95 +1,79 @@
-import type { Expect, Equal } from '@type-challenges/utils'
-import {
-  type HttpOptionsRegistry,
-  type RequestHttpMethod,
-} from '../types/options.js'
+import type { Expect, Equal } from "@type-challenges/utils";
+import { type HttpOptionsRegistry, type RequestHttpMethod } from "../types/options.js";
 
 export const supportsRequestStreams = (() => {
-  let duplexAccessed = false
-  let hasContentType = false
-  const supportsReadableStream = typeof globalThis.ReadableStream === 'function'
-  const supportsRequest = typeof globalThis.Request === 'function'
+  let duplexAccessed = false;
+  let hasContentType = false;
+  const supportsReadableStream = typeof globalThis.ReadableStream === "function";
+  const supportsRequest = typeof globalThis.Request === "function";
 
   if (supportsReadableStream && supportsRequest) {
     try {
-      hasContentType = new globalThis.Request('https://empty.invalid', {
+      hasContentType = new globalThis.Request("https://empty.invalid", {
         body: new globalThis.ReadableStream(),
-        method: 'POST',
+        method: "POST",
         // @ts-expect-error - Types are outdated.
         get duplex() {
-          duplexAccessed = true
-          return 'half'
+          duplexAccessed = true;
+          return "half";
         },
-      }).headers.has('Content-Type')
+      }).headers.has("Content-Type");
     } catch {
       // Unsupported implementations throw different errors, such as QQBrowser on iOS throwing "unsupported BodyInit type" (see issue #581).
-      return false
+      return false;
     }
   }
 
   // Bun and Deno support streaming request bodies but never read the `duplex` option, which the check relies on to tell streaming support apart from WebKit, where the `Request` constructor accepts a stream body that `fetch()` then rejects.
-  const isBunOrDeno = 'Bun' in globalThis || 'Deno' in globalThis
+  const isBunOrDeno = "Bun" in globalThis || "Deno" in globalThis;
 
-  return (duplexAccessed || isBunOrDeno) && !hasContentType
-})()
+  return (duplexAccessed || isBunOrDeno) && !hasContentType;
+})();
 
-export const supportsAbortController =
-  typeof globalThis.AbortController === 'function'
+export const supportsAbortController = typeof globalThis.AbortController === "function";
 export const supportsAbortSignal =
-  typeof globalThis.AbortSignal === 'function' &&
-  typeof globalThis.AbortSignal.any === 'function'
-export const supportsResponseStreams =
-  typeof globalThis.ReadableStream === 'function'
-export const supportsFormData = typeof globalThis.FormData === 'function'
+  typeof globalThis.AbortSignal === "function" && typeof globalThis.AbortSignal.any === "function";
+export const supportsResponseStreams = typeof globalThis.ReadableStream === "function";
+export const supportsFormData = typeof globalThis.FormData === "function";
 
-export const requestMethods = [
-  'get',
-  'post',
-  'put',
-  'patch',
-  'head',
-  'delete',
-  'query',
-] as const
+export const requestMethods = ["get", "post", "put", "patch", "head", "delete", "query"] as const;
 
-const validate = <T extends Array<true>>() => undefined as unknown as T
-validate<[Expect<Equal<(typeof requestMethods)[number], RequestHttpMethod>>]>()
+const validate = <T extends Array<true>>() => undefined as unknown as T;
+validate<[Expect<Equal<(typeof requestMethods)[number], RequestHttpMethod>>]>();
 
 // The media type each shortcut advertises. Deliberately narrow: `.text()` asks for text and `.formData()` for multipart, so a server can serve a different representation of the same resource when the caller wants one.
 export const responseTypes = {
-  json: 'application/json',
-  text: 'text/*',
-  formData: 'multipart/form-data',
-  arrayBuffer: '*/*',
-  blob: '*/*',
+  json: "application/json",
+  text: "text/*",
+  formData: "multipart/form-data",
+  arrayBuffer: "*/*",
+  blob: "*/*",
   // Supported in modern Fetch implementations (for example, browsers and recent Node.js/undici).
   // We still feature-check at runtime before exposing the shortcut.
-  bytes: '*/*',
-} as const
+  bytes: "*/*",
+} as const;
 
 // Only expose `.bytes()` when the environment implements it. Checked on each call, so a polyfill added after Http is imported still counts.
-export const getSupportedResponseTypes = (): Array<
-  keyof typeof responseTypes
-> =>
+export const getSupportedResponseTypes = (): Array<keyof typeof responseTypes> =>
   (Object.keys(responseTypes) as Array<keyof typeof responseTypes>).filter(
     (type) =>
-      type !== 'bytes' ||
-      typeof (globalThis.Response?.prototype as unknown as { bytes?: unknown })
-        ?.bytes === 'function',
-  )
+      type !== "bytes" ||
+      typeof (globalThis.Response?.prototype as unknown as { bytes?: unknown })?.bytes ===
+        "function",
+  );
 
 // The maximum value of a 32bit int (see issue #117)
-export const maxSafeTimeout = 2_147_483_647
+export const maxSafeTimeout = 2_147_483_647;
 
 // Size in bytes of a typical form boundary (e.g., '------WebKitFormBoundaryaxpyiPgbbPti10Rw'), used to help estimate upload size. Bun's boundary is 54 bytes, so there the estimate runs 14 bytes low for each part and once more for the closing boundary. That is negligible next to a file, but for a body of many small fields `percent` can reach its ceiling before the upload ends. The final event always reports the real total.
-export const usualFormBoundarySize = 40
+export const usualFormBoundarySize = 40;
 
 /**
 Symbol that can be returned by a `beforeRetry` hook to stop retrying without throwing an error.
 
 Registered globally so that a hook written against a second copy of Http, which happens with a duplicated dependency, still stops the retries. A plain `Symbol` is per module, so the copies would not recognise each other's symbol.
 */
-export const stop = Symbol.for('http.stop')
+export const stop = Symbol.for("http.stop");
 
 /**
 Options for forcing a retry via `http.retry()`.
@@ -104,7 +88,7 @@ export type ForceRetryOptions = {
 
 	Must be a non-negative number, `Infinity` included, or `undefined`; anything else makes the request throw a `TypeError` rather than collapsing to a 1ms retry.
 	*/
-  delay?: number | undefined
+  delay?: number | undefined;
 
   /**
 	Error code for the retry.
@@ -117,7 +101,7 @@ export type ForceRetryOptions = {
 	// Resulting error message: 'Forced retry: RATE_LIMIT'
 	```
 	*/
-  code?: string | undefined
+  code?: string | undefined;
 
   /**
 	Original error that caused the retry.
@@ -137,7 +121,7 @@ export type ForceRetryOptions = {
 	}
 	```
 	*/
-  cause?: Error | undefined
+  cause?: Error | undefined;
 
   /**
 	Custom request to use for the retry.
@@ -172,8 +156,8 @@ export type ForceRetryOptions = {
 	});
 	```
 	*/
-  request?: Request | undefined
-}
+  request?: Request | undefined;
+};
 
 /**
 Marker returned by `http.retry()` to signal a forced retry from `afterResponse` hooks.
@@ -181,19 +165,19 @@ Marker returned by `http.retry()` to signal a forced retry from `afterResponse` 
 export class RetryMarker {
   // Branded so a marker created by a second copy of Http, which happens with a duplicated dependency, is still recognised. A plain `instanceof` check fails across module instances, and the hook's intent would then vanish silently: no retry and no error.
   get isRetryMarker(): true {
-    return true
+    return true;
   }
 
-  options: ForceRetryOptions | undefined
+  options: ForceRetryOptions | undefined;
 
   constructor(options?: ForceRetryOptions) {
-    this.options = options
+    this.options = options;
   }
 }
 
 export const isRetryMarker = (value: unknown): value is RetryMarker =>
   value instanceof RetryMarker ||
-  (value as { isRetryMarker?: unknown } | undefined)?.isRetryMarker === true
+  (value as { isRetryMarker?: unknown } | undefined)?.isRetryMarker === true;
 
 /**
 Force a retry from an `afterResponse` hook.
@@ -280,16 +264,16 @@ const api = http.extend({
 const response = await api.get('https://example.com/api');
 ```
 */
-export const retry = (options?: ForceRetryOptions) => new RetryMarker(options)
+export const retry = (options?: ForceRetryOptions) => new RetryMarker(options);
 
 // Http reads these again for every attempt, so a `beforeRetry` hook can change them without rebuilding the request.
 export const beforeRetryOptionKeys = [
-  'onUploadProgress',
-  'onDownloadProgress',
-  'timeout',
-  'fetch',
-  'throwHttpErrors',
-] as const
+  "onUploadProgress",
+  "onDownloadProgress",
+  "timeout",
+  "fetch",
+  "throwHttpErrors",
+] as const;
 
 export const httpOptionKeys: HttpOptionsRegistry = {
   json: true,
@@ -308,7 +292,7 @@ export const httpOptionKeys: HttpOptionsRegistry = {
   onUploadProgress: true,
   fetch: true,
   context: true,
-}
+};
 
 // Standard RequestInit options that should NOT be passed separately to fetch()
 // because they're already applied to the Request object.
@@ -330,4 +314,4 @@ export const requestOptionsRegistry = {
   signal: true,
   window: true,
   duplex: true,
-} as const
+} as const;

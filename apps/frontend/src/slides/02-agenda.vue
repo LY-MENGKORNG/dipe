@@ -1,20 +1,26 @@
 <script lang="ts">
-import type { SlideMeta } from '.'
+import type { SlideMeta } from "."
 
 export const meta: SlideMeta = {
-  title: 'Agenda',
-  section: 'Intro',
+  title: "Agenda",
+  section: "Intro",
   notes: [
-    'Six topics, each one ends with something concrete we add to the demo API.',
-    'Time-box strictly: the live demo at the end is the payoff, protect those 15 minutes.',
+    "Six topics, each one ends with something concrete we add to the demo API.",
+    "Time-box strictly: the live demo at the end is the payoff, protect those 15 minutes.",
     'Security gets the most time because it has the most "looks fine, is broken" traps.',
   ],
 }
 </script>
 
 <script setup lang="ts">
-import { Badge } from '@/components/ui/badge'
-import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card'
+import { Badge } from "@/components/ui/badge"
+import {
+  Card,
+  CardContent,
+  CardDescription,
+  CardHeader,
+  CardTitle,
+} from "@/components/ui/card"
 import {
   Table,
   TableBody,
@@ -23,35 +29,59 @@ import {
   TableHead,
   TableHeader,
   TableRow,
-} from '@/components/ui/table'
-import SlideLayout from '@/components/deck/SlideLayout.vue'
+} from "@/components/ui/table"
+import SlideLayout from "@/components/deck/SlideLayout.vue"
 
 const rows = [
-  { topic: 'Intro & request lifecycle', outcome: 'Shared mental model', min: 10 },
-  { topic: 'Database & ORM', outcome: 'Users + Posts in Postgres via Prisma', min: 25 },
-  { topic: 'HTTP client & external APIs', outcome: 'Call a 3rd-party API safely', min: 15 },
-  { topic: 'Events & queues', outcome: 'Send "welcome email" in the background', min: 10 },
-  { topic: 'Security', outcome: 'Login + protected endpoint', min: 20 },
-  { topic: 'Testing', outcome: 'One unit + one E2E test passing', min: 15 },
-  { topic: 'API Documentation', outcome: 'How to build & document a reliable API', min: 10 },
-  { topic: 'Live demo & Q&A', outcome: 'Run the whole thing end to end', min: 15 },
+  {
+    topic: "Intro & request lifecycle",
+    outcome: "Shared mental model",
+    min: 10,
+  },
+  {
+    topic: "Database & ORM",
+    outcome: "Users + Posts in Postgres via Prisma",
+    min: 25,
+  },
+  {
+    topic: "HTTP client & external APIs",
+    outcome: "Call a 3rd-party API safely",
+    min: 15,
+  },
+  {
+    topic: "Events & queues",
+    outcome: 'Send "welcome email" in the background',
+    min: 10,
+  },
+  { topic: "Security", outcome: "Login + protected endpoint", min: 20 },
+  { topic: "Testing", outcome: "One unit + one E2E test passing", min: 15 },
+  {
+    topic: "API Documentation",
+    outcome: "How to build & document a reliable API",
+    min: 10,
+  },
+  {
+    topic: "Live demo & Q&A",
+    outcome: "Run the whole thing end to end",
+    min: 15,
+  },
 ]
 </script>
 
 <template>
-  <SlideLayout section="Intro" title="Agenda" subtitle="Two hours, six topics, one API that grows with every section.">
+  <SlideLayout
+    section="Intro"
+    title="Agenda"
+    subtitle="Two hours, six topics, one API that grows with every section."
+  >
     <div class="grid gap-6 lg:grid-cols-[2fr_1fr]">
       <Table>
         <TableHeader>
           <TableRow>
-            <TableHead class="w-10">
-              #
-            </TableHead>
+            <TableHead class="w-10"> # </TableHead>
             <TableHead>Topic</TableHead>
             <TableHead>What we add to the API</TableHead>
-            <TableHead class="text-right">
-              Min
-            </TableHead>
+            <TableHead class="text-right"> Min </TableHead>
           </TableRow>
         </TableHeader>
         <TableBody>
@@ -72,9 +102,7 @@ const rows = [
         </TableBody>
         <TableFooter>
           <TableRow>
-            <TableCell colspan="3">
-              Total
-            </TableCell>
+            <TableCell colspan="3"> Total </TableCell>
             <TableCell class="text-right tabular-nums">
               {{ rows.reduce((sum, r) => sum + r.min, 0) }}
             </TableCell>
@@ -85,7 +113,9 @@ const rows = [
       <Card>
         <CardHeader>
           <CardTitle>Expected demo</CardTitle>
-          <CardDescription>What "done" looks like at the end of the session.</CardDescription>
+          <CardDescription
+            >What "done" looks like at the end of the session.</CardDescription
+          >
         </CardHeader>
         <CardContent class="flex flex-col gap-2 text-sm">
           <div class="flex items-center gap-2">

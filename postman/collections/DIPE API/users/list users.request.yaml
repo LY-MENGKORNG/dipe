@@ -1,14 +1,14 @@
 $kind: http-request
 method: GET
-url: '{{base_url}}/users?limit=5&offset=0'
+url: "{{base_url}}/users?limit=5&offset=0"
 order: 1000
 queryParams:
   - key: limit
-    value: '5'
+    value: "5"
   - key: offset
-    value: '0'
+    value: "0"
   - key: q
-    value: ''
+    value: ""
     disabled: true
   - key: role
     value: admin
@@ -25,4 +25,4 @@ scripts:
         pm.expect(body.total).to.be.a("number");
       });
       pm.test("no password hashes", () => body.data.forEach((u) => pm.expect(u).to.not.have.property("password_hash")));
-examples: './.resources/list users.resources/examples'
+examples: "./.resources/list users.resources/examples"

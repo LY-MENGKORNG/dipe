@@ -1,3 +1,3 @@
-import { createObserveModule } from "@nestjs/observe";
+import { createObserveModule } from "@nestjs/observe"
 
-export const { ObserveModule, ObserveInstrument } = createObserveModule();
+export const { ObserveModule, ObserveInstrument } = createObserveModule()

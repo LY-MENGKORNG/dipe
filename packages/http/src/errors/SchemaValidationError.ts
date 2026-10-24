@@ -1,4 +1,4 @@
-import type { StandardSchemaV1Issue } from '../types/standard-schema.js'
+import type { StandardSchemaV1Issue } from "../types/standard-schema.js";
 
 /**
 The error thrown when [Standard Schema](https://github.com/standard-schema/standard-schema) validation fails in `.json(schema)`. It has an `issues` property with the validation issues from the schema.
@@ -23,11 +23,11 @@ try {
 ```
 */
 export class SchemaValidationError extends Error {
-  override name = 'SchemaValidationError'
-  readonly issues: readonly StandardSchemaV1Issue[]
+  override name = "SchemaValidationError";
+  readonly issues: readonly StandardSchemaV1Issue[];
 
   constructor(issues: readonly StandardSchemaV1Issue[]) {
-    super('Response schema validation failed')
-    this.issues = issues
+    super("Response schema validation failed");
+    this.issues = issues;
   }
 }

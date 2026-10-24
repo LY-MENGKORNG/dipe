@@ -1,4 +1,4 @@
-import { z } from "zod/v4";
+import { z } from "zod/v4"
 
 export const githubUserSchema = z.object({
   login: z.string(),
@@ -7,6 +7,6 @@ export const githubUserSchema = z.object({
   html_url: z.url(),
   public_repos: z.int().positive(),
   followers: z.int().positive(),
-});
+})
 
-export type GithubUser = z.infer<typeof githubUserSchema>;
+export type GithubUser = z.infer<typeof githubUserSchema>

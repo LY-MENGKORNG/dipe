@@ -1,30 +1,28 @@
-import { BullModule } from "@nestjs/bullmq";
-import { join } from "node:path";
-import { MiddlewareConsumer, Module, NestModule } from "@nestjs/common";
-import { ConfigModule } from "@nestjs/config";
-import { APP_FILTER, APP_GUARD, APP_INTERCEPTOR, APP_PIPE } from "@nestjs/core";
-import { ThrottlerGuard, ThrottlerModule } from "@nestjs/throttler";
-import { MailerModule } from "@nestjs-modules/mailer";
-import { HandlebarsAdapter } from "@nestjs-modules/mailer/dist/adapters/handlebars.adapter";
-import { ZodValidationPipe, ZodSerializerInterceptor } from "nestjs-zod";
-import { env, envSchema } from "@repo/env";
-import { AuthGuard, RolesGuard } from "@common/guards";
+import { BullModule } from "@nestjs/bullmq"
+import { join } from "node:path"
+import { MiddlewareConsumer, Module, NestModule } from "@nestjs/common"
+import { ConfigModule } from "@nestjs/config"
+import { APP_FILTER, APP_GUARD, APP_INTERCEPTOR, APP_PIPE } from "@nestjs/core"
+import { ThrottlerGuard, ThrottlerModule } from "@nestjs/throttler"
+import { MailerModule } from "@nestjs-modules/mailer"
+import { HandlebarsAdapter } from "@nestjs-modules/mailer/dist/adapters/handlebars.adapter"
+import { ZodValidationPipe, ZodSerializerInterceptor } from "nestjs-zod"
+import { env, envSchema } from "@repo/env"
+import { AuthGuard, RolesGuard } from "@common/guards"
 import {
   SerializationExceptionFilter,
   PrismaExceptionFilter,
   UpstreamExceptionFilter,
-} from "@common/filters";
-import { AuthModule } from "@modules/auth/auth.module";
-import { DBModule } from "@modules/db.module";
-import { GithubModule } from "@modules/github/github.module";
-import { NotificationsModule } from "@modules/notifications/notifications.module";
-import { ObserveModule } from "@modules/observe.module";
-import { UsersModule } from "./users/users.module";
-import { PostsModule } from "./posts/posts.module";
-import { TagsModule } from "./tags/tags.module";
-import { AuthMiddleware } from "./auth/auth.middleware";
-import { AuthController } from "./auth/auth.controller";
-import { WorkspacesModule } from './workspaces/workspaces.module';
+} from "@common/filters"
+import { AuthModule } from "@modules/auth/auth.module"
+import { DBModule } from "@modules/db.module"
+import { GithubModule } from "@modules/github/github.module"
+import { NotificationsModule } from "@modules/notifications/notifications.module"
+import { ObserveModule } from "@modules/observe.module"
+import { UsersModule } from "./users/users.module"
+import { AuthMiddleware } from "./auth/auth.middleware"
+import { AuthController } from "./auth/auth.controller"
+import { WorkspacesModule } from "./workspaces/workspaces.module"
 
 @Module({
   imports: [
@@ -32,12 +30,12 @@ import { WorkspacesModule } from './workspaces/workspaces.module';
       isGlobal: true,
       cache: true,
       validate: (raw) => {
-        const result = envSchema.safeParse(raw);
+        const result = envSchema.safeParse(raw)
 
         if (result.success) {
-          return result.data;
+          return result.data
         }
-        throw result.error;
+        throw result.error
       },
     }),
     ObserveModule.forRoot({
@@ -50,7 +48,9 @@ import { WorkspacesModule } from './workspaces/workspaces.module';
         host: env.SMTP_HOST,
         port: env.SMTP_PORT,
         ignoreTLS: !env.SMTP_USER,
-        ...(env.SMTP_USER && { auth: { user: env.SMTP_USER, pass: env.SMTP_PASS } }),
+        ...(env.SMTP_USER && {
+          auth: { user: env.SMTP_USER, pass: env.SMTP_PASS },
+        }),
       },
       defaults: { from: env.MAIL_FROM },
       template: {
@@ -70,8 +70,6 @@ import { WorkspacesModule } from './workspaces/workspaces.module';
     AuthModule,
     GithubModule,
     NotificationsModule,
-    PostsModule,
-    TagsModule,
     WorkspacesModule,
   ],
   providers: [
@@ -87,6 +85,6 @@ import { WorkspacesModule } from './workspaces/workspaces.module';
 })
 export class AppModule implements NestModule {
   configure(consumer: MiddlewareConsumer) {
-    consumer.apply(AuthMiddleware).forRoutes(AuthController);
+    consumer.apply(AuthMiddleware).forRoutes(AuthController)
   }
 }

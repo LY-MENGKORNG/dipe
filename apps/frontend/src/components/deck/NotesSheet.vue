@@ -1,9 +1,15 @@
 <script setup lang="ts">
-import { Lightbulb } from '@lucide/vue'
-import { Alert, AlertDescription, AlertTitle } from '@/components/ui/alert'
-import { ScrollArea } from '@/components/ui/scroll-area'
-import { Sheet, SheetContent, SheetDescription, SheetHeader, SheetTitle } from '@/components/ui/sheet'
-import { useDeck } from '@/composables/useDeck'
+import { Lightbulb } from "@lucide/vue"
+import { Alert, AlertDescription, AlertTitle } from "@/components/ui/alert"
+import { ScrollArea } from "@/components/ui/scroll-area"
+import {
+  Sheet,
+  SheetContent,
+  SheetDescription,
+  SheetHeader,
+  SheetTitle,
+} from "@/components/ui/sheet"
+import { useDeck } from "@/composables/useDeck"
 
 const { current, notesOpen } = useDeck()
 </script>
@@ -17,7 +23,9 @@ const { current, notesOpen } = useDeck()
       </SheetHeader>
       <ScrollArea class="min-h-0 flex-1">
         <div class="flex flex-col gap-4 px-4 pb-6">
-          <ol class="flex list-decimal flex-col gap-3 ps-5 text-sm leading-relaxed">
+          <ol
+            class="flex list-decimal flex-col gap-3 ps-5 text-sm leading-relaxed"
+          >
             <li v-for="note in current.meta.notes" :key="note">
               {{ note }}
             </li>
