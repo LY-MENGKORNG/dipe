@@ -11,10 +11,14 @@ variables:
   base_url: http://localhost:3000/api
   admin_email: admin@dipe.dev
   admin_token: ""
-  admin_password: Admin@12345
+  admin_password: user@12345
   employee_email: employee@dipe.dev
-  employee_password: Employee@12345
+  employee_password: user@12345
   employee_token: ""
+  admin_user_id: "1"
+  staff_user_id: "3"
+  seeded_workspace_id: "1"
+  workspace_name: ""
 auth:
   - id: 2d7724bd-b1d9-4e9e-a4db-162470ab8ca1
     type: bearer

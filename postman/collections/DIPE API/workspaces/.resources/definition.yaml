@@ -1,0 +1,5 @@
+$kind: collection
+description: |-
+  Workspaces own projects. Private workspaces return 404 to non-members; only the owner or an `ADMIN` can
+  update, delete or manage members. Run after **auth** — the employee creates a workspace that **projects** reuses.
+order: 5000

@@ -1,0 +1,14 @@
+$kind: http-request
+method: DELETE
+url: "{{base_url}}/workspaces/{{workspace_id}}/members/{{workspace_owner_id}}"
+order: 8000
+auth:
+  type: bearer
+  credentials:
+    - key: token
+      value: "{{employee_token}}"
+scripts:
+  - type: afterResponse
+    language: text/javascript
+    code: |-
+      pm.test("409 Conflict (owner cannot leave)", () => pm.response.to.have.status(409));

@@ -23,6 +23,7 @@ import { UsersModule } from "./users/users.module"
 import { AuthMiddleware } from "./auth/auth.middleware"
 import { AuthController } from "./auth/auth.controller"
 import { WorkspacesModule } from "./workspaces/workspaces.module"
+import { ProjectsModule } from "./projects/projects.module"
 
 @Module({
   imports: [
@@ -71,6 +72,7 @@ import { WorkspacesModule } from "./workspaces/workspaces.module"
     GithubModule,
     NotificationsModule,
     WorkspacesModule,
+    ProjectsModule,
   ],
   providers: [
     { provide: APP_GUARD, useClass: ThrottlerGuard }, // applies it globally.

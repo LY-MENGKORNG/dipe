@@ -1,0 +1,11 @@
+$kind: http-request
+url: "{{base_url}}/workspaces"
+method: GET
+order: 1000
+scripts:
+  - type: afterResponse
+    language: text/javascript
+    code: |-
+      pm.test("200 OK", () => pm.response.to.have.status(200));
+      const body = pm.response.json();
+      pm.test("is paginated", () => pm.expect(body).to.include.keys("data", "total", "limit", "offset"));

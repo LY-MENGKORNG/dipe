@@ -23,7 +23,7 @@ scripts:
     code: |-
       pm.test("201 Created", () => pm.response.to.have.status(201));
       const body = pm.response.json();
-      pm.test("defaults to employee", () => pm.expect(body.role).to.equal("employee"));
+      pm.test("defaults to employee", () => pm.expect(body.role).to.equal("EMPLOYEE"));
       pm.test("never exposes the password hash", () => pm.expect(body).to.not.have.property("password_hash"));
       pm.environment.set("user_id", String(body.id));
 examples: "./.resources/create user.resources/examples"

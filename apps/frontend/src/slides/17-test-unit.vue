@@ -5,11 +5,11 @@ export const meta: SlideMeta = {
   title: "Unit test with mocks",
   section: "Testing",
   notes: [
-    "We test UsersService alone. Its only dependency, UserRepository, is replaced with a mock object via useValue.",
+    "We test UsersService alone. Its dependencies, UserRepository and EmailProducer, are replaced with mock objects via useValue.",
     "Test.createTestingModule builds a tiny DI container — same wiring as production, but we choose the providers.",
     "Arrange / Act / Assert: set up the mock's return value, call the method, check the result AND that the mock was called correctly.",
     "Test the unhappy path too: repository returns null → service throws NotFoundException. That is usually where bugs live.",
-    "Compare with the generated spec files in the repo (users.guard.spec.ts) which only check `toBeDefined()` — a good start, but they assert nothing about behaviour.",
+    "Tests live in test/, never next to the code: test/unit mirrors src/ and imports through the @modules / @common aliases. Compare with the generated test/unit/modules/auth/auth.middleware.spec.ts, which only checks `toBeDefined()` — a good start, but it asserts nothing about behaviour.",
   ],
 }
 </script>
@@ -21,47 +21,61 @@ import CodeSnippet from "@/components/deck/CodeSnippet.vue"
 import SlideLayout from "@/components/deck/SlideLayout.vue"
 
 const code = `
-  import { beforeEach, describe, expect, it, mock } from "bun:test";
-  import { Test } from "@nestjs/testing";
-  import { NotFoundException } from "@nestjs/common";
+  import { beforeEach, describe, expect, it, mock } from "bun:test"
+  import { NotFoundException } from "@nestjs/common"
+  import { Test } from "@nestjs/testing"
+  import { EmailProducer } from "@modules/notifications/email.producer"
+  import { UserRepository } from "@modules/users/users.repository"
+  import { UsersService } from "@modules/users/users.service"
 
   describe("UsersService", () => {
-    let service: UsersService;
-    const repository = { findMany: mock(), findOne: mock() };
+    let service: UsersService
+    const repository = { findById: mock(), create: mock(), update: mock() }
+    const email = { sendWelcome: mock() }
 
     beforeEach(async () => {
-      repository.findOne.mockReset();
+      Object.values(repository).forEach((fn) => fn.mockReset())
       const module = await Test.createTestingModule({
-        providers: [UsersService, { provide: UserRepository, useValue: repository }],
-      }).compile();
-      service = module.get(UsersService);
-    });
+        providers: [
+          UsersService,
+          { provide: UserRepository, useValue: repository },
+          { provide: EmailProducer, useValue: email },
+        ],
+      }).compile()
+      service = module.get(UsersService)
+    })
 
     it("returns the user when it exists", async () => {
-      repository.findOne.mockResolvedValue({ id: 1, name: "Dara" });   // arrange
+      repository.findById.mockResolvedValue(user)            // arrange
 
-      const user = await service.findOne(1);                           // act
+      const found = await service.findOne(1)                 // act
 
-      expect(user).toEqual({ id: 1, name: "Dara" });                   // assert
-      expect(repository.findOne).toHaveBeenCalledWith(1);
-    });
+      expect(found).toEqual(user)                            // assert
+      expect(repository.findById).toHaveBeenCalledWith(1)
+    })
 
-    it("throws 404 when the user is missing", async () => {
-      repository.findOne.mockResolvedValue(null);
-      await expect(service.findOne(99)).rejects.toThrow(NotFoundException);
-    });
-  });
+    it("throws NotFoundException when the user is missing", async () => {
+      repository.findById.mockResolvedValue(null)
+
+      const error = await service.findOne(99).catch((e: unknown) => e)
+
+      expect(error).toBeInstanceOf(NotFoundException)
+    })
+  })
 `
 
 const output = `
   $ bun test users.service
-  users.service.spec.ts:
+  test/unit/modules/users/users.service.spec.ts:
   ✓ UsersService > returns the user when it exists [2.10ms]
-  ✓ UsersService > throws 404 when the user is missing [0.41ms]
+  ✓ UsersService > throws NotFoundException when the user is missing [0.41ms]
+  ✓ UsersService > hashes the password and never stores it in plain text
+  ✓ UsersService > enqueues a welcome email after creating the user
+  ✓ UsersService > only rehashes when a new password is sent
 
-   2 pass
+   5 pass
    0 fail
-  Ran 2 tests across 1 file. [118.00ms]
+  Ran 5 tests across 1 file. [283.00ms]
 `
 </script>
 
@@ -74,9 +88,9 @@ const output = `
     <div class="grid gap-6 lg:grid-cols-[minmax(0,3fr)_minmax(0,2fr)]">
       <CodeSnippet
         :code="code"
-        title="src/modules/users/users.service.spec.ts"
+        title="test/unit/modules/users/users.service.spec.ts"
         size="sm"
-        :highlight="[7, 12, 18, 22, 23, 28]"
+        :highlight="[10, 18, 26, 28, 30, 31, 39]"
       />
       <div class="flex flex-col gap-4">
         <CodeSnippet :code="output" lang="ansi" title="terminal" size="sm" />

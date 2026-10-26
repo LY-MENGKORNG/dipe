@@ -109,11 +109,11 @@ const tabs = [
       @Injectable()
       export class UserRepository extends BaseRepository {
         findById(id: number) {
-          return this.db.user.findUnique({ where: { id }, select: publicUser });
+          return this.db.user.findUnique({ where: { id }, omit: { passwordHash: true } });
         }
 
         create(data: Prisma.UserCreateInput) {
-          return this.db.user.create({ data, select: publicUser });
+          return this.db.user.create({ data, omit: { passwordHash: true } });
         }
       }
 

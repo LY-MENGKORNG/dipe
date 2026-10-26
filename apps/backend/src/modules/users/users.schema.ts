@@ -1,5 +1,6 @@
 import { ROLES } from "@common/constants/role"
 import { commonSchema, isoDate, omit } from "@common/helpers/schema"
+import { workspaceSchema } from "@modules/workspaces/schema/workspace.schema"
 import { z } from "zod/v4"
 
 export const userFields = {
@@ -15,7 +16,7 @@ const userFieldsNoId = omit(userFields, ["id"])
 
 export const createUserSchema = z.object({
   ...userFieldsNoId,
-  role: userFields.role.default("employee"),
+  role: userFields.role.default("EMPLOYEE"),
   isActive: userFields.isActive.default(true),
 })
 
@@ -29,10 +30,10 @@ export const listUserQuerySchema = z.object({
 
 export const userResponseSchema = z.object({
   id: userFields.id,
-  name: z.string(),
-  email: z.email(),
-  role: z.enum(ROLES),
-  isActive: z.boolean(),
+  name: userFields.name,
+  email: userFields.email,
+  role: userFields.role,
+  isActive: userFields.isActive,
   createdAt: isoDate,
   updatedAt: isoDate,
 })
@@ -41,4 +42,16 @@ export const userListResponseSchema = z.object({
   data: userResponseSchema.array(),
   total: z.int().nonnegative(),
   ...commonSchema,
+})
+
+export const userWorkspacesResponseSchema = z.object({
+  id: userFields.id,
+  name: userFields.name,
+  email: userFields.email,
+  role: userFields.role,
+  isActive: userFields.isActive,
+  createdAt: isoDate,
+  updatedAt: isoDate,
+  workspaces: workspaceSchema.array(),
+  createdWorkspaces: workspaceSchema.omit({ ownerId: true }).array(),
 })

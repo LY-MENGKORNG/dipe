@@ -1,0 +1,34 @@
+$kind: http-request
+method: POST
+url: "{{base_url}}/workspaces/{{workspace_id}}/projects"
+order: 1000
+auth:
+  type: bearer
+  credentials:
+    - key: token
+      value: "{{employee_token}}"
+headers:
+  - key: Content-Type
+    value: application/json
+body:
+  type: json
+  content: |-
+    {
+      "name": "{{project_name}}",
+      "description": "Created from Postman",
+      "budget": 2500000,
+      "currency": "KHR",
+      "deadline": "2027-03-31T00:00:00.000Z"
+    }
+scripts:
+  - type: beforeRequest
+    language: text/javascript
+    code: |-
+      pm.environment.set("project_name", `Demo Project ${Date.now()}`);
+  - type: afterResponse
+    language: text/javascript
+    code: |-
+      pm.test("201 Created", () => pm.response.to.have.status(201));
+      const body = pm.response.json();
+      pm.test("deadline round-trips as ISO", () => pm.expect(body.deadline).to.equal("2027-03-31T00:00:00.000Z"));
+      pm.environment.set("project_id", body.id);

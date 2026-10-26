@@ -1,0 +1,24 @@
+$kind: http-request
+method: POST
+url: "{{base_url}}/workspaces/{{workspace_id}}/members"
+order: 4000
+auth:
+  type: bearer
+  credentials:
+    - key: token
+      value: "{{employee_token}}"
+headers:
+  - key: Content-Type
+    value: application/json
+body:
+  type: json
+  content: |-
+    {
+      "userId": {{staff_user_id}}
+    }
+scripts:
+  - type: afterResponse
+    language: text/javascript
+    code: |-
+      pm.test("201 Created", () => pm.response.to.have.status(201));
+      pm.test("returns the member", () => pm.expect(pm.response.json().id).to.equal(Number(pm.collectionVariables.get("staff_user_id"))));

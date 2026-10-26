@@ -1,0 +1,23 @@
+$kind: http-request
+method: PATCH
+url: "{{base_url}}/workspaces/{{seeded_workspace_id}}"
+order: 7000
+auth:
+  type: bearer
+  credentials:
+    - key: token
+      value: "{{employee_token}}"
+headers:
+  - key: Content-Type
+    value: application/json
+body:
+  type: json
+  content: |-
+    {
+      "name": "Taken over"
+    }
+scripts:
+  - type: afterResponse
+    language: text/javascript
+    code: |-
+      pm.test("403 Forbidden (member, not owner)", () => pm.response.to.have.status(403));

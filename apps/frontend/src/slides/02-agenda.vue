@@ -40,7 +40,7 @@ const rows = [
   },
   {
     topic: "Database & ORM",
-    outcome: "Users + Posts in Postgres via Prisma",
+    outcome: "Users, workspaces & projects in Postgres via Prisma",
     min: 25,
   },
   {

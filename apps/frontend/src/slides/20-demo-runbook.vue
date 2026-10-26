@@ -9,7 +9,9 @@ export const meta: SlideMeta = {
     "Before the session: Postgres and Redis running (brew services start redis), migrations applied, demo users seeded, a token copied somewhere. Live typing of setup steps is where demos die.",
     "Keep a terminal with `bun test` ready — running the test live is a strong closer for the testing section.",
     "Plan B for every network step: if GitHub is unreachable, show the E2E test where GithubClient is mocked and explain why that test still passes.",
-    "Seeded logins: admin@dipe.dev / Admin@12345 and employee@dipe.dev / Employee@12345 — the employee token is how you show a 403 on POST /api/users.",
+    "Seeded logins: admin@dipe.dev, employee@dipe.dev and staff@dipe.dev all use the password user@12345 — the employee token is how you show a 403 on POST /api/users.",
+    "db:seed is safe to re-run (skipDuplicates everywhere) and bumps the id sequences after inserting fixed ids. For a truly clean slate use `bun run db:reset`.",
+    "The Postman run (`bun run test:api`) now also walks workspaces → projects: create, members, 403/409/422 cases, then deletes the workspace and proves the project cascaded (404).",
   ],
 }
 </script>
@@ -56,7 +58,7 @@ const steps = [
   },
   {
     title: "Log in, then call it with a token",
-    cmd: 'curl -X POST localhost:3000/api/auth/login -H "content-type: application/json" -d \'{"email":"admin@dipe.dev","password":"Admin@12345"}\'',
+    cmd: 'curl -X POST localhost:3000/api/auth/login -H "content-type: application/json" -d \'{"email":"admin@dipe.dev","password":"user@12345"}\'',
     proves: "Security",
   },
   {
@@ -66,7 +68,7 @@ const steps = [
   },
   {
     title: "Run the tests",
-    cmd: "bun run test   # unit + e2e",
+    cmd: "bun run test   # unit + integration + e2e",
     proves: "Testing",
   },
 ]

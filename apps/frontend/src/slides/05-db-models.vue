@@ -5,12 +5,14 @@ export const meta: SlideMeta = {
   title: "Schema models & relationships",
   section: "Database & ORM",
   notes: [
-    "These are the real models from the repo. A User has many Posts — a one-to-many relation.",
-    'The foreign key lives on the "many" side (Post). `fields` is our column, `references` is the column on the other table.',
-    'The relation name "post_poster" connects both sides; it is required when two models have more than one relation between them, optional otherwise.',
-    "@@map renames the table, @@index adds an index — always index foreign keys you filter or join on.",
-    "Naming nit worth calling out live: the FK on Post is called `postId` but it points at a user. `authorId` / `posterId` would read better. Renaming later costs a migration.",
-    "Walk through the accordion for 1-1 and many-to-many so people can map their own domain.",
+    "These are the real models from the repo: User, Workspace, Project and two join models — WorkspaceMember and ProjectMember.",
+    'One-to-many: a User owns many Workspaces (Workspace.ownerId), a Workspace has many Projects (Project.workspaceId). The foreign key always lives on the "many" side.',
+    "Many-to-many: users ↔ workspaces goes through WorkspaceMember, users ↔ projects through ProjectMember. Explicit join models because the link carries data (ProjectMember.role).",
+    "@@id([userId, workspaceId]) is a composite primary key — the same user cannot join the same workspace twice.",
+    "Join rows use onDelete: Cascade: deleting a user, workspace or project removes its membership rows instead of blocking the delete. Workspace.owner stays RESTRICT on purpose — deleting a user who still owns a workspace returns 409.",
+    "User has two relations to Workspace (createdWorkspaces via owner, workspaces via WorkspaceMember). Separate join model keeps them unambiguous; otherwise you need a named @relation on both sides.",
+    "Enums live in db/models/types/*.prisma (Role, Language, Currency, WorkspaceVisibility, ProjectMemberRole). Values are UPPER_CASE — changing an enum's values is a migration, so pick the convention early.",
+    "@@map renames the table, @@index adds an index — always index foreign keys you filter or join on (workspace.owner_id, project.workspace_id).",
   ],
 }
 </script>
@@ -28,41 +30,57 @@ import Term from "@/components/deck/Term.vue"
 
 const user = `
   enum Role {
-    employee
-    staff
-    admin
+    EMPLOYEE
+    STAFF
+    ADMIN
   }
 
   model User {
-    id            Int      @id @default(autoincrement())
-    createdAt     DateTime @default(now())
-    updatedAt     DateTime @updatedAt
-    name          String
-    email         String   @unique
-    password_hash String
-    role          Role     @default(employee)
-    isActive      Boolean  @default(true)
+    id           Int      @id @default(autoincrement())
+    name         String
+    email        String   @unique
+    passwordHash String   @map("password_hash")
+    role         Role     @default(EMPLOYEE)
+    language     Language @default(EN)
+    isActive     Boolean  @default(true) @map("is_active")
+    createdAt    DateTime @default(now()) @map("created_at")
+    updatedAt    DateTime @updatedAt @map("updated_at")
 
-    postedPosts Post[] @relation("post_poster")
+    projects          ProjectMember[]   // user *-* project
+    workspaces        WorkspaceMember[] // user *-* workspace
+    createdWorkspaces Workspace[]       // user 1-* workspace
 
     @@map("user")
   }
 `
 
-const post = `
-  model Post {
-    id          Int      @id @default(autoincrement())
-    title       String
-    description String?
-    createdAt   DateTime @default(now())
-    updatedAt   DateTime @updatedAt
+const workspace = `
+  model Workspace {
+    id         Int                 @id @default(autoincrement())
+    name       String
+    slug       String
+    visibility WorkspaceVisibility @default(PRIVATE)
 
-    postId Int
-    poster User @relation("post_poster",
-                  fields: [postId], references: [id])
+    ownerId Int  @map("owner_id")
+    owner   User @relation(fields: [ownerId], references: [id])
 
-    @@index([postId])
-    @@map("post")
+    projects Project[]
+    members  WorkspaceMember[]
+
+    @@unique([slug])
+    @@index([ownerId])
+    @@map("workspace")
+  }
+
+  model WorkspaceMember {
+    userId      Int @map("user_id")
+    workspaceId Int @map("workspace_id")
+
+    member    User      @relation(fields: [userId], references: [id], onDelete: Cascade)
+    workspace Workspace @relation(fields: [workspaceId], references: [id], onDelete: Cascade)
+
+    @@id([userId, workspaceId])
+    @@map("workspace_members")
   }
 `
 
@@ -80,24 +98,34 @@ const relations = [
   },
   {
     value: "1-n",
-    title: "One-to-many — User → Posts (what we have)",
+    title: "One-to-many — Workspace → Projects (what we have)",
     code: `
       // FK lives on the "many" side
-      model Post {
-        authorId Int
-        author   User @relation(fields: [authorId], references: [id])
+      model Project {
+        workspaceId Int       @map("workspace_id")
+        workspace   Workspace @relation(fields: [workspaceId], references: [id], onDelete: Cascade)
+        @@index([workspaceId])
       }
-      model User { posts Post[] }
+      model Workspace { projects Project[] }
     `,
   },
   {
     value: "n-m",
-    title: "Many-to-many — Post ↔ Tag",
+    title: "Many-to-many — User ↔ Project via ProjectMember (what we have)",
     code: `
-      // implicit: Prisma creates the _PostToTag join table
-      model Post { tags Tag[] }
-      model Tag  { posts Post[] }
-      // explicit join model when the link has data (e.g. addedAt)
+      // explicit join model: the link carries data (role)
+      model ProjectMember {
+        projectId String            @map("project_id")
+        memberId  Int               @map("member_id")
+        role      ProjectMemberRole @default(MEMBER)
+
+        project Project @relation(fields: [projectId], references: [id], onDelete: Cascade)
+        user    User    @relation(fields: [memberId], references: [id], onDelete: Cascade)
+
+        @@id([projectId, memberId])
+      }
+      // implicit alternative when the link has no data:
+      // model Project { tags Tag[] }  model Tag { projects Project[] }
     `,
   },
 ]
@@ -107,7 +135,7 @@ const relations = [
   <SlideLayout
     section="Database & ORM"
     title="Schema models & relationships"
-    subtitle="Our real models: one User has many Posts."
+    subtitle="Our real models: users own workspaces, workspaces hold projects, join models link members."
   >
     <div class="grid gap-4 lg:grid-cols-2">
       <CodeSnippet
@@ -115,14 +143,14 @@ const relations = [
         lang="prisma"
         title="db/models/user.prisma"
         size="sm"
-        :highlight="[17]"
+        :highlight="[18, 19, 20]"
       />
       <CodeSnippet
-        :code="post"
+        :code="workspace"
         lang="prisma"
-        title="db/models/post.prisma"
+        title="db/models/workspace.prisma + workspace-member.prisma"
         size="sm"
-        :highlight="[8, 9, 10, 12]"
+        :highlight="[7, 8, 25]"
       />
     </div>
 
@@ -146,6 +174,11 @@ const relations = [
       <Term
         label="@updatedAt"
         definition="Prisma sets this timestamp automatically on every update."
+      />
+      ·
+      <Term
+        label="@@id"
+        definition="Composite primary key. On a join model it stops the same pair being linked twice."
       />
     </p>
 

@@ -1,0 +1,15 @@
+$kind: http-request
+method: GET
+url: "{{base_url}}/workspaces/{{workspace_id}}/projects"
+order: 2000
+auth:
+  type: bearer
+  credentials:
+    - key: token
+      value: "{{employee_token}}"
+scripts:
+  - type: afterResponse
+    language: text/javascript
+    code: |-
+      pm.test("200 OK", () => pm.response.to.have.status(200));
+      pm.test("contains the new project", () => pm.expect(pm.response.json().data.map((p) => p.id)).to.include(pm.environment.get("project_id")));

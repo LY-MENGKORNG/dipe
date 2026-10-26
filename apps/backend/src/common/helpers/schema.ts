@@ -1,4 +1,4 @@
-import { z } from "zod/v4"
+import { z, type ZodType } from "zod/v4"
 
 export const commonSchema = {
   limit: z.coerce.number().int().min(1).max(100).default(20),
@@ -28,3 +28,5 @@ export const isoDate = z.codec(z.iso.datetime(), z.date(), {
   decode: (iso) => new Date(iso),
   encode: (date) => date.toISOString(),
 })
+
+export type ObjectSchema<T> = z.ZodObject<{ [k in keyof T]: ZodType }>

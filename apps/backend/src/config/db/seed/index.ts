@@ -1,14 +1,17 @@
-// #!/usr/bin/env bun
+#!/usr/bin/env bun
 
 import { db } from "@config/db"
 import { userSeed } from "./user.seed"
 import { workspaceSeed } from "./workspace.seed"
 import { projectSeed } from "./project.seed"
 
-void (await db.$transaction(async (tx) => {
-  const users = await userSeed(tx)
-  const workspaces = await workspaceSeed(tx)
-  await projectSeed(tx, workspaces)
-}))
+await db.$transaction(async (tx) => {
+  await userSeed(tx)
+  await workspaceSeed(tx)
+  await projectSeed(tx)
 
-void (await db.$disconnect())
+  await tx.$executeRaw`SELECT setval(pg_get_serial_sequence('"user"', 'id'), (SELECT MAX("id") FROM "user"))`
+  await tx.$executeRaw`SELECT setval(pg_get_serial_sequence('"workspace"', 'id'), (SELECT MAX("id") FROM "workspace"))`
+})
+
+await db.$disconnect()

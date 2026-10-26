@@ -21,7 +21,7 @@ response:
             "id": 3,
             "name": "Employee",
             "email": "employee@dipe.dev",
-            "role": "employee",
+            "role": "EMPLOYEE",
             "isActive": true,
             "createdAt": "2026-10-18T14:29:25.716Z",
             "updatedAt": "2026-10-18T14:29:25.716Z"
@@ -30,7 +30,7 @@ response:
             "id": 2,
             "name": "Admin",
             "email": "admin@dipe.dev",
-            "role": "admin",
+            "role": "ADMIN",
             "isActive": true,
             "createdAt": "2026-10-18T14:29:25.568Z",
             "updatedAt": "2026-10-18T14:29:25.568Z"

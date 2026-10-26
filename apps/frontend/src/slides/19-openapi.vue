@@ -67,7 +67,7 @@ const tabs = [
         name: z.string().trim().min(2).max(80),
         email: z.email(),
         password: z.string().min(8).max(128),
-        role: z.enum(ROLES).default("employee"),
+        role: z.enum(ROLES).default("EMPLOYEE"),
         isActive: z.boolean().default(true),
       });
 

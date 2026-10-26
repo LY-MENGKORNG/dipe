@@ -54,7 +54,7 @@ const takeaways = [
   },
   {
     topic: "Testing",
-    line: "Many unit tests with mocks, a few E2E journeys that prove the security contract.",
+    line: "Many unit tests with mocks, some integration tests against real Postgres, a few E2E journeys that prove the security contract.",
   },
   {
     topic: "OpenAPI",

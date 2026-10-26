@@ -21,4 +21,4 @@ scripts:
       pm.test("200 OK", () => pm.response.to.have.status(200));
       const body = pm.response.json();
       pm.test("name changed", () => pm.expect(body.name).to.equal("Demo User Renamed"));
-      pm.test("role untouched by partial update", () => pm.expect(body.role).to.equal("employee"));
+      pm.test("role untouched by partial update", () => pm.expect(body.role).to.equal("EMPLOYEE"));

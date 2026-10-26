@@ -1,0 +1,14 @@
+$kind: http-request
+method: GET
+url: "{{base_url}}/projects/{{project_id}}"
+order: 8000
+auth:
+  type: bearer
+  credentials:
+    - key: token
+      value: "{{employee_token}}"
+scripts:
+  - type: afterResponse
+    language: text/javascript
+    code: |-
+      pm.test("404 (cascaded with its workspace)", () => pm.response.to.have.status(404));

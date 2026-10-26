@@ -45,15 +45,24 @@ export class UserRepository extends BaseRepository {
   }
 
   findById(id: number) {
-    return this.db.user.findUnique({ where: { id }, select: publicUser })
+    return this.db.user.findUnique({
+      where: { id },
+      omit: { passwordHash: true },
+    })
   }
-  findByIdWithPosts(id: number) {
+
+  findByIdWithWorkspaces(id: number) {
     return this.db.user.findUnique({
       where: { id },
       omit: { passwordHash: true },
       include: {
-        posts: {
-          omit: { authorId: true },
+        workspaces: {
+          include: {
+            workspace: true,
+          },
+        },
+        createdWorkspaces: {
+          omit: { ownerId: true },
         },
       },
     })
@@ -64,14 +73,18 @@ export class UserRepository extends BaseRepository {
   }
 
   create(data: Prisma.UserCreateInput) {
-    return this.db.user.create({ data, select: publicUser })
+    return this.db.user.create({ data, omit: { passwordHash: true } })
   }
 
   update(id: number, data: Prisma.UserUpdateInput) {
-    return this.db.user.update({ where: { id }, data, select: publicUser })
+    return this.db.user.update({
+      where: { id },
+      data,
+      omit: { passwordHash: true },
+    })
   }
 
   delete(id: number) {
-    return this.db.user.delete({ where: { id }, select: publicUser })
+    return this.db.user.delete({ where: { id }, omit: { passwordHash: true } })
   }
 }

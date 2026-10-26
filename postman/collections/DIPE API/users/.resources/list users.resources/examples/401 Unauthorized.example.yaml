@@ -11,7 +11,7 @@ request:
       value: ""
       disabled: true
     - key: "role"
-      value: "admin"
+      value: "ADMIN"
       disabled: true
 response:
   statusCode: 401

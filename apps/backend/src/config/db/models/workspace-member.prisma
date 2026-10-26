@@ -1,0 +1,10 @@
+model WorkspaceMember {
+  userId      Int @map("user_id")
+  workspaceId Int @map("workspace_id")
+
+  member    User      @relation(fields: [userId], references: [id], onDelete: Cascade)
+  workspace Workspace @relation(fields: [workspaceId], references: [id], onDelete: Cascade)
+
+  @@id([userId, workspaceId])
+  @@map("workspace_members")
+}

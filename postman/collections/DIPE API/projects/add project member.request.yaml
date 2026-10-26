@@ -1,0 +1,25 @@
+$kind: http-request
+method: POST
+url: "{{base_url}}/projects/{{project_id}}/members"
+order: 3000
+auth:
+  type: bearer
+  credentials:
+    - key: token
+      value: "{{employee_token}}"
+headers:
+  - key: Content-Type
+    value: application/json
+body:
+  type: json
+  content: |-
+    {
+      "userId": {{staff_user_id}},
+      "role": "DESIGNER"
+    }
+scripts:
+  - type: afterResponse
+    language: text/javascript
+    code: |-
+      pm.test("201 Created", () => pm.response.to.have.status(201));
+      pm.test("keeps the project role", () => pm.expect(pm.response.json().role).to.equal("DESIGNER"));

@@ -27,6 +27,7 @@ import {
   ListUserQuery,
   UserListResponseDto,
   UserResponseDto,
+  UserWorkspacesResponseDto,
 } from "./dto/user.dto"
 
 // docs
@@ -45,7 +46,7 @@ export class UsersController {
   @ApiForbiddenResponse({ description: "Admin role required" })
   // ---
   @Post()
-  @Roles(["admin"])
+  @Roles(["ADMIN"])
   create(@Body() dto: CreateUserDto) {
     return this.usersService.create(dto)
   }
@@ -70,13 +71,23 @@ export class UsersController {
   }
 
   // docs
+  @ApiOperation({ summary: "Get one user with related workspaces" })
+  @ZodResponse({ status: 200, type: UserWorkspacesResponseDto })
+  @ApiNotFoundResponse({ description: "No user with this id" })
+  // ---
+  @Get(":id/workspaces")
+  findOneWithWorkspaces(@Param("id", ParseIntPipe) id: number) {
+    return this.usersService.findOneWithWorkspaces(id)
+  }
+
+  // docs
   @ApiOperation({ summary: "Update a user (admin)" })
   @ZodResponse({ status: 200, type: UserResponseDto })
   @ApiNotFoundResponse({ description: "No user with this id" })
   @ApiForbiddenResponse({ description: "Admin role required" })
   // ---
   @Patch(":id")
-  @Roles(["admin"])
+  @Roles(["ADMIN"])
   update(@Param("id", ParseIntPipe) id: number, @Body() dto: UpdateUserDto) {
     return this.usersService.update(id, dto)
   }
@@ -85,11 +96,11 @@ export class UsersController {
   @ApiOperation({ summary: "Delete a user (admin)" })
   @ZodResponse({ status: 200, type: UserResponseDto })
   @ApiNotFoundResponse({ description: "No user with this id" })
-  @ApiConflictResponse({ description: "User still has posts" })
+  @ApiConflictResponse({ description: "User still owns workspaces" })
   @ApiForbiddenResponse({ description: "Admin role required" })
   // ---
   @Delete(":id")
-  @Roles(["admin"])
+  @Roles(["ADMIN"])
   remove(@Param("id", ParseIntPipe) id: number) {
     return this.usersService.remove(id)
   }

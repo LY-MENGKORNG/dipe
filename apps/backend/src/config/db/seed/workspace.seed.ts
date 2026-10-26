@@ -1,31 +1,19 @@
-import { type PrismaTx } from "@common/database"
-import { type Workspace } from "../generated/client"
+import type { PrismaTx } from "@common/database"
+import type { Workspace } from "../generated/client"
+import { fakeWorkspaceMembers, fakeWorkspaces } from "./fakers/workspace.faker"
 
-const workspaces: Workspace[] = [
-  {
-    id: 1,
-    name: "Default",
-    slug: "default",
-  },
-  {
-    id: 2,
-    name: "Training",
-    slug: "traing",
-  },
-  {
-    id: 3,
-    name: "Conversation",
-    slug: "conversation",
-  },
-]
-export async function workspaceSeed(tx: PrismaTx) {
-  for (const workspace of workspaces) {
-    await tx.workspace.upsert({
-      where: { slug: workspace.slug, id: workspace.id, name: workspace.name },
-      update: {},
-      create: workspace,
-    })
-    console.log(`seeded workspace: ${workspace.name}`)
-  }
-  return workspaces
+export async function workspaceSeed(tx: PrismaTx): Promise<Workspace[]> {
+  const seededWorkspaces = await tx.workspace.createManyAndReturn({
+    data: fakeWorkspaces,
+    skipDuplicates: true,
+  })
+
+  await tx.workspaceMember.createMany({
+    data: fakeWorkspaceMembers,
+    skipDuplicates: true,
+  })
+
+  console.log(`workspaces seeded.`)
+
+  return seededWorkspaces
 }

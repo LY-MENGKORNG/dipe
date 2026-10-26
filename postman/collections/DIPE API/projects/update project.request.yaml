@@ -1,0 +1,24 @@
+$kind: http-request
+method: PATCH
+url: "{{base_url}}/projects/{{project_id}}"
+order: 6000
+auth:
+  type: bearer
+  credentials:
+    - key: token
+      value: "{{employee_token}}"
+headers:
+  - key: Content-Type
+    value: application/json
+body:
+  type: json
+  content: |-
+    {
+      "budget": 3000000
+    }
+scripts:
+  - type: afterResponse
+    language: text/javascript
+    code: |-
+      pm.test("200 OK", () => pm.response.to.have.status(200));
+      pm.test("budget updated", () => pm.expect(pm.response.json().budget).to.equal(3000000));

@@ -9,7 +9,7 @@ values:
     enabled: true
     type: default
   - key: admin_password
-    value: Admin@12345
+    value: user@12345
     enabled: true
     type: secret
   - key: employee_email
@@ -17,7 +17,7 @@ values:
     enabled: true
     type: default
   - key: employee_password
-    value: Employee@12345
+    value: user@12345
     enabled: true
     type: secret
   - key: admin_token
@@ -36,19 +36,23 @@ values:
     value: ""
     enabled: true
     type: default
-  - key: tag_name
+  - key: workspace_name
     value: ""
     enabled: true
     type: default
-  - key: tag_id
+  - key: workspace_id
     value: ""
     enabled: true
     type: default
-  - key: post_id
+  - key: workspace_owner_id
     value: ""
     enabled: true
     type: default
-  - key: post_tag_ids
+  - key: project_name
+    value: ""
+    enabled: true
+    type: default
+  - key: project_id
     value: ""
     enabled: true
     type: default

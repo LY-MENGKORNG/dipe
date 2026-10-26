@@ -8,7 +8,7 @@ export const meta: SlideMeta = {
     "Authentication (authN) = who are you? Fails with 401 Unauthorized (the name is historical — it really means unauthenticated).",
     "Authorization (authZ) = are you allowed to do this? Fails with 403 Forbidden.",
     "Flow: POST /auth/login checks the password hash, signs a short-lived JWT containing the user id and role. The client sends it as `Authorization: Bearer <token>`.",
-    "AuthGuard verifies the signature + expiry and attaches the user to the request. RolesGuard reads the @Roles() metadata and compares with user.role (our Role enum: employee, staff, admin).",
+    "AuthGuard verifies the signature + expiry and attaches the user to the request. RolesGuard reads the @Roles() metadata and compares with user.role (our Role enum: EMPLOYEE, STAFF, ADMIN).",
     "Register AuthGuard globally (APP_GUARD) so endpoints are protected by default; opt out with @Public(). Secure by default beats remembering to add a decorator.",
     "The repo has an empty users.guard.ts that returns true — this is where it gets real.",
   ],
@@ -83,7 +83,7 @@ const usage = `
   @Post("auth/login")
   login(@Body() dto: LoginDto) { … }        // returns { accessToken }
 
-  @Roles(["admin"])
+  @Roles(["ADMIN"])
   @Delete(":id")
   remove(@Param("id", ParseIntPipe) id: number) { … }
 `
@@ -121,7 +121,7 @@ const usage = `
             >
           </CardHeader>
           <CardContent class="font-mono text-xs text-muted-foreground">
-            @Roles(["admin"]) · user.role = "employee" → ✗
+            @Roles(["ADMIN"]) · user.role = "EMPLOYEE" → ✗
           </CardContent>
         </Card>
       </div>

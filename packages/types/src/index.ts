@@ -8,10 +8,10 @@ export type ObjectEntries<T> =
     : Array<{ [K in keyof T]: [K, T[K]] }[keyof T]>
 
 import type {
-  User,
+  User as PrivateUser,
   Workspace,
   Project,
   ProjectMember,
 } from "../../../apps/backend/src/config/db/generated/browser"
 
-export type PublicUser = Omit<User, "passwordHash">
+export type User = Omit<PrivateUser, "passwordHash">

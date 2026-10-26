@@ -1,0 +1,13 @@
+enum Language {
+  EN
+  KM
+  FR
+  ES
+  DE
+  IT
+  PT
+  RU
+  ZH
+  JA
+  KO
+}

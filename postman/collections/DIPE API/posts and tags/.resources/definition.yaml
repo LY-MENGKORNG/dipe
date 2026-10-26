@@ -1,6 +1,0 @@
-$kind: collection
-description: |-
-  Many-to-many between posts and tags through the explicit `post_tag` join table.
-  Reads need any valid token, writes need the `admin` role. Run in order: the demo tag is
-  attached next to a seeded post's existing tags, then deleted, which cascades its `post_tag` rows away.
-order: 2500

@@ -1,20 +1,17 @@
-enum Role {
-  employee
-  staff
-  admin
-}
-
 model User {
   id           Int      @id @default(autoincrement())
   name         String
   email        String   @unique
   passwordHash String   @map("password_hash")
-  role         Role     @default(employee)
+  role         Role     @default(EMPLOYEE)
+  language     Language @default(EN)
   isActive     Boolean  @default(true) @map("is_active")
   createdAt    DateTime @default(now()) @map("created_at")
   updatedAt    DateTime @updatedAt @map("updated_at")
 
-  projects ProjectMember[]
+  projects          ProjectMember[] // user *-* project
+  workspaces        WorkspaceMember[] // user *-* workspace
+  createdWorkspaces Workspace[] // user 1-* workspace
 
   @@map("user")
 }

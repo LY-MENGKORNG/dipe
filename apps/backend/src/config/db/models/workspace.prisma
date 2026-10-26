@@ -1,9 +1,18 @@
 model Workspace {
-  id   Int    @id @default(autoincrement())
-  name String @unique
-  slug String
+  id         Int                 @id @default(autoincrement())
+  name       String
+  slug       String
+  // Visibility of the workspace
+  visibility WorkspaceVisibility @default(PRIVATE)
+
+  // Who owns/create this workspace
+  ownerId Int  @map("owner_id")
+  owner   User @relation(fields: [ownerId], references: [id])
 
   projects Project[]
+  members  WorkspaceMember[]
 
+  @@unique([slug])
+  @@index([ownerId])
   @@map("workspace")
 }

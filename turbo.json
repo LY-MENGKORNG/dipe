@@ -26,6 +26,9 @@
     "//#test": {
       "cache": false
     },
+    "//#test:e2e": {
+      "cache": false
+    },
     "//#lint:check": {},
     "//#fmt": {
       "cache": false

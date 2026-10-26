@@ -37,16 +37,21 @@ export class UsersService {
     return user
   }
 
-  async findOneWithPosts(id: number) {
-    const userWithPosts = await this.repository.findByIdWithPosts(id)
-    if (!userWithPosts) throw new NotFoundException(`User #${id} not found`)
-    return userWithPosts
+  async findOneWithWorkspaces(id: number) {
+    const userWithWorkspaces = await this.repository.findByIdWithWorkspaces(id)
+    if (!userWithWorkspaces) {
+      throw new NotFoundException(`User #${id} not found`)
+    }
+    return {
+      ...userWithWorkspaces,
+      workspaces: userWithWorkspaces.workspaces.map((m) => m.workspace),
+    }
   }
 
   async update(id: number, { password, ...data }: UpdateUserDto) {
     return this.repository.update(id, {
       ...data,
-      ...(password && { password_hash: await Bun.password.hash(password) }),
+      ...(password && { passwordHash: await Bun.password.hash(password) }),
     })
   }
 

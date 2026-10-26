@@ -1,0 +1,6 @@
+$kind: collection
+description: |-
+  Projects live inside a workspace. Workspace members can create them; the creator becomes `LEAD`.
+  Only LEAD / MANAGER / ADMIN project members, the workspace owner or an `ADMIN` user can edit.
+  Uses `workspace_id` from **workspaces** and deletes that workspace at the end.
+order: 6000

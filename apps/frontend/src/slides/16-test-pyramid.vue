@@ -6,7 +6,8 @@ export const meta: SlideMeta = {
   section: "Testing",
   notes: [
     "Unit tests: one class, all dependencies mocked. Milliseconds each, so we can have hundreds. They test logic, not wiring.",
-    "Integration tests: a few real pieces together — e.g. the repository against a real Postgres (a test DB or Testcontainers). They catch wrong queries and broken migrations, which mocks never will.",
+    "Integration tests: a few real pieces together — the repository against a real Postgres, no HTTP. Test.createTestingModule imports only DBModule plus the repository under test. They catch wrong queries, missing constraints and broken migrations, which mocks never will.",
+    "Every tier has its own folder under test/ — unit, integration, e2e — so test code never sits next to production code and each tier has its own script.",
     "E2E tests: boot the whole Nest app and send real HTTP requests. Slow-ish, so test the important journeys: login, create user, protected route returns 401/403.",
     "Mocking = replacing a dependency with a fake you control. Mock what is slow or external (DB in unit tests, GitHub API everywhere). Do not mock the thing you are testing.",
     "This repo uses `bun test` (Jest-compatible API: describe/it/expect/mock) — no Jest config needed.",
@@ -42,7 +43,7 @@ const tiers = [
     share: 25,
     speed: "100s of ms",
     scope: "Repository + real Postgres",
-    tools: "test DB / Testcontainers",
+    tools: "DBModule + repository, real Postgres",
     width: "lg:w-3/5",
   },
   {
@@ -56,9 +57,11 @@ const tiers = [
 ]
 
 const commands = `
-  bun test                         # run everything
+  bun run test                     # run everything
+  bun run test:unit                # test/unit         (no DB needed)
+  bun run test:int                 # test/integration  (needs Postgres)
+  bun run test:e2e                 # test/e2e          (needs Postgres + Redis)
   bun test users                   # filter by file name
-  bun test --watch                 # re-run on save
   bun test --coverage              # line / function coverage table
 `
 </script>

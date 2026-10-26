@@ -1,11 +1,5 @@
 import { InjectQueue } from "@nestjs/bullmq"
-import {
-  Controller,
-  Get,
-  Logger,
-  NotFoundException,
-  Param,
-} from "@nestjs/common"
+import { Controller, Get, NotFoundException, Param } from "@nestjs/common"
 import {
   ApiBearerAuth,
   ApiForbiddenResponse,
@@ -24,10 +18,9 @@ import { EMAIL_QUEUE, type WelcomeEmailData } from "./email.queue"
 @ApiUnauthorizedResponse({ description: "Missing or invalid bearer token" })
 @ApiForbiddenResponse({ description: "Admin role required" })
 // ---
-@Roles(["admin"])
+@Roles(["ADMIN"])
 @Controller("jobs/email")
 export class JobsController {
-  private readonly logger = new Logger(JobsController.name)
   constructor(
     @InjectQueue(EMAIL_QUEUE) private readonly queue: Queue<WelcomeEmailData>,
   ) {}

@@ -1,0 +1,32 @@
+$kind: http-request
+method: POST
+url: "{{base_url}}/workspaces"
+order: 2000
+auth:
+  type: bearer
+  credentials:
+    - key: token
+      value: "{{employee_token}}"
+headers:
+  - key: Content-Type
+    value: application/json
+body:
+  type: json
+  content: |-
+    {
+      "name": "{{workspace_name}}"
+    }
+scripts:
+  - type: beforeRequest
+    language: text/javascript
+    code: |-
+      pm.environment.set("workspace_name", `Demo Space ${Date.now()}`);
+  - type: afterResponse
+    language: text/javascript
+    code: |-
+      pm.test("201 Created", () => pm.response.to.have.status(201));
+      const body = pm.response.json();
+      pm.test("slug derived from the name", () => pm.expect(body.slug).to.match(/^demo-space-\d+$/));
+      pm.test("private by default", () => pm.expect(body.visibility).to.equal("PRIVATE"));
+      pm.environment.set("workspace_id", String(body.id));
+      pm.environment.set("workspace_owner_id", String(body.ownerId));

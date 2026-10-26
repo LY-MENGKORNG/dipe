@@ -1,0 +1,15 @@
+$kind: http-request
+method: GET
+url: "{{base_url}}/workspaces/{{workspace_id}}/members"
+order: 6000
+auth:
+  type: bearer
+  credentials:
+    - key: token
+      value: "{{employee_token}}"
+scripts:
+  - type: afterResponse
+    language: text/javascript
+    code: |-
+      pm.test("200 OK", () => pm.response.to.have.status(200));
+      pm.test("owner + staff", () => pm.expect(pm.response.json().total).to.equal(2));

@@ -1,0 +1,15 @@
+enum ProjectMemberRole {
+  ADMIN
+  LEAD
+  MANAGER
+  DEVELOPER
+  TESTER
+  DESIGNER
+  MEMBER
+}
+
+enum Role {
+  EMPLOYEE
+  STAFF
+  ADMIN
+}

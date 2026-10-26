@@ -6,11 +6,11 @@ export const meta: SlideMeta = {
   section: "Database & ORM",
   notes: [
     "Left: how REST routes map to Prisma calls. Right: the code for each.",
-    "`select` decides which columns leave the database. Never return password_hash — define a reusable `publicUser` select (or use Prisma 7 `omit`).",
+    "`omit` (Prisma 7) or `select` decides which columns leave the database. Never return passwordHash — the repo uses `omit: { passwordHash: true }` on every user query.",
     "Pagination: take/skip is fine for small tables; cursor pagination for big or infinite-scroll lists.",
-    "`include` loads relations (posts of a user) in one call — avoids N+1 queries.",
+    "`include` loads relations in one call — GET /users/:id/workspaces pulls the user, their memberships and owned workspaces in one query, no N+1.",
+    "Join-model shape: include returns `workspaces: [{ userId, workspaceId, workspace: {…} }]`. The service flattens it to the workspace objects before the Zod response schema serializes it.",
     "Errors: Prisma throws known codes. P2002 = unique constraint (email already used → 409), P2025 = record not found (→ 404). Map them, do not leak 500s.",
-    "Today the repo `findAll` returns every column including password_hash — fix it live as the first demo step.",
   ],
   ask: 'What status code should "email already exists" return?',
 }
@@ -45,6 +45,12 @@ const routes: {
     variant: "secondary",
   },
   {
+    verb: "GET",
+    path: "/users/:id/workspaces",
+    call: "user.findUnique + include",
+    variant: "secondary",
+  },
+  {
     verb: "PATCH",
     path: "/users/:id",
     call: "user.update",
@@ -62,16 +68,14 @@ const ops = [
   {
     value: "create",
     code: `
-      const publicUser = { id: true, name: true, email: true, role: true } as const;
-
-      create(data: CreateUserDto, passwordHash: string) {
+      create(data: Prisma.UserCreateInput) {
         return this.db.user.create({
-          data: { name: data.name, email: data.email, password_hash: passwordHash },
-          select: publicUser,            // never return password_hash
+          data,
+          omit: { passwordHash: true },  // never return the hash
         });
       }
     `,
-    highlight: [1, 6],
+    highlight: [4],
   },
   {
     value: "read",
@@ -82,21 +86,25 @@ const ops = [
             role,
             ...(q && { name: { contains: q, mode: "insensitive" } }),
           },
-          select: publicUser,
+          omit: { passwordHash: true },
           orderBy: { createdAt: "desc" },
           take: limit,
           skip: offset,
         });
       }
 
-      findOne(id: number) {
+      findByIdWithWorkspaces(id: number) {
         return this.db.user.findUnique({
           where: { id },
-          include: { postedPosts: true },  // relation in one query
+          omit: { passwordHash: true },
+          include: {
+            workspaces: { include: { workspace: true } },  // via WorkspaceMember
+            createdWorkspaces: { omit: { ownerId: true } }, // owned (1-n)
+          },
         });
       }
     `,
-    highlight: [9, 10, 17],
+    highlight: [9, 10, 18, 19],
   },
   {
     value: "update",
@@ -105,7 +113,7 @@ const ops = [
         return this.db.user.update({
           where: { id },
           data,                // only the fields that were sent
-          select: publicUser,
+          omit: { passwordHash: true },
         });
       }
     `,
@@ -149,7 +157,7 @@ const ops = [
   <SlideLayout
     section="Database & ORM"
     title="CRUD with Prisma"
-    subtitle="Each REST route maps to one typed Prisma call — plus select, pagination and error mapping."
+    subtitle="Each REST route maps to one typed Prisma call — plus omit, include, pagination and error mapping."
   >
     <div class="grid gap-6 lg:grid-cols-[minmax(0,2fr)_minmax(0,3fr)]">
       <Table>

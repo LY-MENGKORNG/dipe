@@ -24,4 +24,4 @@ scripts:
       });
       pm.environment.set("admin_token", body.accessToken);
     language: text/javascript
-examples: ./.resources/login as admin.resources/examples
+examples: .resources/login as admin.resources/examples

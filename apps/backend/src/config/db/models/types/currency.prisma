@@ -1,0 +1,13 @@
+enum Currency {
+  USD
+  KHR
+  EUR
+  GBP
+  JPY
+  AUD
+  CAD
+  CHF
+  CNY
+  SEK
+  NZD
+}

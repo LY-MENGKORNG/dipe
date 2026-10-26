@@ -78,19 +78,19 @@ const config = `
 `
 
 const migration = `
-  -- 20261016073206_post/migration.sql (generated)
-  CREATE TABLE "post" (
+  -- 20261025123400/migration.sql (generated)
+  CREATE TYPE "WorkspaceVisibility" AS ENUM ('PRIVATE', 'PUBLIC');
+  CREATE TABLE "workspace" (
       "id" SERIAL NOT NULL,
-      "title" TEXT NOT NULL,
-      "description" TEXT,
-      "createdAt" TIMESTAMP(3) NOT NULL DEFAULT CURRENT_TIMESTAMP,
-      "updatedAt" TIMESTAMP(3) NOT NULL,
-      "postId" INTEGER NOT NULL,
-      CONSTRAINT "post_pkey" PRIMARY KEY ("id")
+      "name" TEXT NOT NULL,
+      "slug" TEXT NOT NULL,
+      "visibility" "WorkspaceVisibility" NOT NULL DEFAULT 'PRIVATE',
+      "owner_id" INTEGER NOT NULL,
+      CONSTRAINT "workspace_pkey" PRIMARY KEY ("id")
   );
-  CREATE INDEX "post_postId_idx" ON "post"("postId");
-  ALTER TABLE "post" ADD CONSTRAINT "post_postId_fkey"
-    FOREIGN KEY ("postId") REFERENCES "user"("id")
+  CREATE INDEX "workspace_owner_id_idx" ON "workspace"("owner_id");
+  ALTER TABLE "workspace" ADD CONSTRAINT "workspace_owner_id_fkey"
+    FOREIGN KEY ("owner_id") REFERENCES "user"("id")
     ON DELETE RESTRICT ON UPDATE CASCADE;
 `
 </script>
@@ -139,7 +139,7 @@ const migration = `
         <CodeSnippet
           :code="migration"
           lang="sql"
-          title="db/migrations/…_post/migration.sql"
+          title="db/migrations/20261025123400/migration.sql"
           :highlight="[11, 12, 13, 14]"
         />
       </TabsContent>
