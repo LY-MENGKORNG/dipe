@@ -6,6 +6,7 @@ import { UsersModule } from "@modules/users/users.module"
 import { AuthController } from "./auth.controller"
 import { AuthService } from "./auth.service"
 import { NotificationsModule } from "@modules/notifications/notifications.module"
+import { GithubModule } from "@modules/github/github.module"
 
 @Global()
 @Module({
@@ -23,6 +24,7 @@ import { NotificationsModule } from "@modules/notifications/notifications.module
       }),
     }),
     NotificationsModule,
+    GithubModule,
   ],
   controllers: [AuthController],
   providers: [AuthService],

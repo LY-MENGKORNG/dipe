@@ -4,11 +4,16 @@ import {
   Get,
   HttpCode,
   HttpStatus,
+  Logger,
   Post,
+  Query,
+  Redirect,
+  UnauthorizedException,
 } from "@nestjs/common"
 import { Throttle } from "@nestjs/throttler"
 import {
   ApiBearerAuth,
+  ApiFoundResponse,
   ApiOkResponse,
   ApiOperation,
   ApiTags,
@@ -19,14 +24,23 @@ import { CurrentUser, Public } from "@common/decorators"
 import type { AuthUser } from "@common/types/auth"
 import { UsersService } from "@modules/users/users.service"
 import { AuthService } from "./auth.service"
-import { LoginDto, TokenResponseDto } from "./dto/login.dto"
+import {
+  ExchangeCodeDto,
+  GithubCallbackDto,
+  LoginDto,
+  TokenResponseDto,
+} from "./dto/login.dto"
 import { UserResponseDto } from "@modules/users/dto/user.dto"
+
+const WEB_APP_URL = "http://localhost:5174/auth/login"
 
 // docs
 @ApiTags("Auth")
 // ---
 @Controller("auth")
 export class AuthController {
+  private readonly logger = new Logger(AuthController.name)
+
   constructor(
     private readonly auth: AuthService,
     private readonly users: UsersService,
@@ -57,5 +71,43 @@ export class AuthController {
   @Get("me")
   me(@CurrentUser() user: AuthUser) {
     return this.users.findOne(user.sub)
+  }
+
+  // docs
+  @ApiOperation({ summary: "Authenticate with GitHub" })
+  @ApiFoundResponse({
+    description: "Redirects to the web app, with ?error= when login fails",
+  })
+  // ---
+  @Public()
+  @Get("callback/github")
+  @Redirect(WEB_APP_URL)
+  @Throttle({ default: { ttl: 60_000, limit: 5 } })
+  async githubCallback(@Query() query: GithubCallbackDto) {
+    if (!query.code) return { url: `${WEB_APP_URL}?error=missing_code` }
+
+    try {
+      const loginCode = await this.auth.createGithubLoginCode(query.code)
+      return { url: `${WEB_APP_URL}?code=${loginCode}` }
+    } catch (error) {
+      const reason =
+        error instanceof UnauthorizedException ? error.message : "login_failed"
+      return { url: `${WEB_APP_URL}?error=${encodeURIComponent(reason)}` }
+    }
+  }
+
+  // docs
+  @ApiOperation({
+    summary: "Exchange a one-time GitHub login code for a token",
+  })
+  @ApiOkResponse({ type: TokenResponseDto })
+  @ApiUnauthorizedResponse({ description: "Invalid or expired code" })
+  // ---
+  @Public()
+  @Throttle({ default: { ttl: 60_000, limit: 5 } })
+  @Post("github/exchange")
+  @HttpCode(HttpStatus.OK)
+  exchangeGithubCode(@Body() dto: ExchangeCodeDto) {
+    return this.auth.exchangeLoginCode(dto.code)
   }
 }

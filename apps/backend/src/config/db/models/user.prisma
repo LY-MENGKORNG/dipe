@@ -6,6 +6,7 @@ model User {
   role         Role     @default(EMPLOYEE)
   language     Language @default(EN)
   isActive     Boolean  @default(true) @map("is_active")
+  provider     String?  @map("provider")
   createdAt    DateTime @default(now()) @map("created_at")
   updatedAt    DateTime @updatedAt @map("updated_at")
 

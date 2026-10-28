@@ -11,6 +11,7 @@ import { requestMethods } from "@repo/http"
 import { ObserveInstrument } from "@modules/observe.module"
 import { WsAdapter } from "@nestjs/platform-ws"
 import { type FastifyRequest } from "fastify"
+import { join } from "node:path"
 
 const app = await safeTry(
   NestFactory.create<NestFastifyApplication>(AppModule, new FastifyAdapter(), {
@@ -47,6 +48,7 @@ if (env.NODE_ENV === "production") {
 }
 app.useWebSocketAdapter(new WsAdapter(app))
 app.setGlobalPrefix("/api")
+app.useStaticAssets({ root: join(__dirname, "..", "public") })
 
 const scalaReference = apiReference(app)
 app

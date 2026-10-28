@@ -1,15 +1,6 @@
-import {
-  afterEach,
-  beforeEach,
-  describe,
-  expect,
-  it,
-  mock,
-  spyOn,
-} from "bun:test"
-import type { ConfigService } from "@nestjs/config"
+import { afterEach, beforeEach, describe, expect, it, spyOn } from "bun:test"
 import { HTTPError, SchemaValidationError } from "@repo/http"
-import type { Env } from "@repo/env"
+import { env, type Env } from "@repo/env"
 import { GithubClient } from "@modules/github/github.client"
 
 const octocat = {
@@ -29,16 +20,16 @@ const json = (body: unknown, status = 200) =>
 
 describe("GithubClient", () => {
   let fetchSpy: ReturnType<typeof spyOn<typeof globalThis, "fetch">>
-  const config = { get: mock(() => "test-token") } as unknown as ConfigService<
-    Env,
-    true
-  >
+  const mutableEnv = env as Env
+  const originalToken = env.GITHUB_TOKEN
 
   beforeEach(() => {
+    mutableEnv.GITHUB_TOKEN = "test-token"
     fetchSpy = spyOn(globalThis, "fetch")
   })
 
   afterEach(() => {
+    mutableEnv.GITHUB_TOKEN = originalToken
     fetchSpy.mockRestore()
   })
 
@@ -47,7 +38,7 @@ describe("GithubClient", () => {
   it("calls the GitHub API with auth headers and parses the profile", async () => {
     fetchSpy.mockResolvedValue(json(octocat))
 
-    const user = await new GithubClient(config).getUser("octocat")
+    const user = await new GithubClient().getUser("octocat")
 
     expect(user).toEqual(octocat)
     expect(requestAt(0).url).toBe("https://api.github.com/users/octocat")
@@ -60,7 +51,7 @@ describe("GithubClient", () => {
       .mockResolvedValueOnce(json({ message: "down" }, 503))
       .mockResolvedValueOnce(json(octocat))
 
-    const user = await new GithubClient(config).getUser("octocat")
+    const user = await new GithubClient().getUser("octocat")
 
     expect(user.login).toBe("octocat")
     expect(fetchSpy).toHaveBeenCalledTimes(2)
@@ -69,7 +60,7 @@ describe("GithubClient", () => {
   it("does not retry a 404", async () => {
     fetchSpy.mockResolvedValue(json({ message: "Not Found" }, 404))
 
-    const error = await new GithubClient(config)
+    const error = await new GithubClient()
       .getUser("nobody")
       .catch((e: unknown) => e)
 
@@ -80,7 +71,7 @@ describe("GithubClient", () => {
   it("rejects a payload that does not match the schema", async () => {
     fetchSpy.mockResolvedValue(json({ login: 42 }))
 
-    const error = await new GithubClient(config)
+    const error = await new GithubClient()
       .getUser("octocat")
       .catch((e: unknown) => e)
 

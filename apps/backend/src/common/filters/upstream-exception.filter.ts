@@ -37,6 +37,7 @@ export class UpstreamExceptionFilter implements ExceptionFilter {
     const status = isTimeoutError(exception)
       ? HttpStatus.GATEWAY_TIMEOUT
       : HttpStatus.BAD_GATEWAY
+
     void reply.status(status).send({
       statusCode: status,
       message:

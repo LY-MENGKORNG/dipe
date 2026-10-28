@@ -1,7 +1,6 @@
 {
   "ui": "tui",
   "$schema": "./node_modules/turbo/schema.json",
-  "globalDependencies": [".env", ".env.*"],
   "tasks": {
     "dev": {
       "persistent": true,
@@ -11,11 +10,19 @@
       "dependsOn": ["^build"],
       "outputs": ["dist"],
       "persistent": true,
-      "with": ["@repo/frontend#build", "@repo/backend#build"]
+      "with": [
+        "@repo/backend#build",
+        "@repo/frontend#build",
+        "@repo/onboarding#build"
+      ]
     },
     "start": {
       "dependsOn": ["^start"],
-      "with": ["@repo/backend#start"]
+      "with": [
+        "@repo/backend#build",
+        "@repo/frontend#build",
+        "@repo/onboarding#build"
+      ]
     },
     "preview": {
       "dependsOn": ["^preview"]

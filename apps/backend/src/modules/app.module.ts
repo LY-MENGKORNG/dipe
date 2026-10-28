@@ -16,6 +16,7 @@ import {
 } from "@common/filters"
 import { AuthModule } from "@modules/auth/auth.module"
 import { DBModule } from "@modules/db.module"
+import { RedisModule } from "@modules/redis.module"
 import { GithubModule } from "@modules/github/github.module"
 import { NotificationsModule } from "@modules/notifications/notifications.module"
 import { ObserveModule } from "@modules/observe.module"
@@ -67,6 +68,7 @@ import { ProjectsModule } from "./projects/projects.module"
     ThrottlerModule.forRoot([{ name: "default", ttl: 60_000, limit: 100 }]),
 
     DBModule,
+    RedisModule,
     UsersModule,
     AuthModule,
     GithubModule,

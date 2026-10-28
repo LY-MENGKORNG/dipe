@@ -38,6 +38,11 @@ export const envSchema = z
     SMTP_USER: z.string().optional().readonly(),
     SMTP_PASS: z.string().optional().readonly(),
     MAIL_FROM: z.string().default('"DIPE" <noreply@dipe.dev>').readonly(),
+
+    /** GitHub Client ID 🔍 */
+    GITHUB_CLIENT_ID: z.string().optional().readonly(),
+    /** GitHub Client Secret 🔍 */
+    GITHUB_CLIENT_SECRET: z.string().optional().readonly(),
   })
   .loose()
 

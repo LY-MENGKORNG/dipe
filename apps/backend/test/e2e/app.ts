@@ -25,7 +25,10 @@ export interface E2EContext {
   employee: TestUser
   outsider: TestUser
   createdIds: number[]
-  github: { getUser: ReturnType<typeof mock> }
+  github: Record<
+    "getUser" | "authorize" | "getProfile" | "getEmails",
+    ReturnType<typeof mock>
+  >
   mailer: { sendMail: ReturnType<typeof mock> }
 }
 
@@ -75,6 +78,9 @@ export const useE2E = (scope: string) => {
         login: "octocat",
         name: "The Octocat",
       }),
+      authorize: mock(),
+      getProfile: mock(),
+      getEmails: mock(),
     },
     mailer: { sendMail: mock().mockResolvedValue({ messageId: "test" }) },
   } as E2EContext

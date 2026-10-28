@@ -12,6 +12,7 @@ const user = {
   role: "EMPLOYEE" as const,
   language: "EN" as const,
   isActive: true,
+  provider: null,
   createdAt: new Date(),
   updatedAt: new Date(),
 }

@@ -1,6 +1,9 @@
 import { User } from "@config/db/generated/client"
 
-export type FakeUser = Omit<User, "isActive" | "createdAt" | "updatedAt">
+export type FakeUser = Omit<
+  User,
+  "isActive" | "createdAt" | "updatedAt" | "provider"
+>
 
 const defaultSeedPassword = "user@12345"
 const passwordHash = await Bun.password.hash(defaultSeedPassword)

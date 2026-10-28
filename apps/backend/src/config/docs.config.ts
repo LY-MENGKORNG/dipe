@@ -23,8 +23,9 @@ const config = new DocumentBuilder()
 export function apiReference<T>(app: INestApplication<T>) {
   return reference({
     content: () => cleanupOpenApiDoc(SwaggerModule.createDocument(app, config)),
-    theme: "saturn",
-    layout: "modern",
+    favicon: "/favicon.png",
+    theme: "deepSpace",
+    layout: "classic",
     withFastify: true,
   }) as FastifyHandler
 }
