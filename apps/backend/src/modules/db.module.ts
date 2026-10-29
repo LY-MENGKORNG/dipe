@@ -7,7 +7,7 @@ import {
 import { PRISMA } from "@common/constants"
 import { TransactionHost } from "@common/database"
 import { db, type PrismaDB } from "@config/db"
-import { safeTry } from "@repo/utils"
+import { safeTry } from "@repo/utils/exception"
 
 @Global()
 @Module({
@@ -15,7 +15,7 @@ import { safeTry } from "@repo/utils"
   exports: [PRISMA, TransactionHost],
 })
 export class DBModule implements OnApplicationShutdown {
-  constructor(@Inject(PRISMA) private readonly db: PrismaDB) {}
+  constructor(@Inject(PRISMA) private readonly db: PrismaDB) { }
 
   async onApplicationShutdown() {
     await safeTry(() => this.db.$disconnect())

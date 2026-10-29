@@ -2,7 +2,7 @@ import { InjectQueue } from "@nestjs/bullmq"
 import { Injectable, Logger } from "@nestjs/common"
 import { Queue } from "bullmq"
 import { EMAIL_QUEUE, EmailJob, type WelcomeEmailData } from "./email.queue"
-import { isError, safeTry } from "@repo/utils"
+import { isError, safeTry } from "@repo/utils/exception"
 
 @Injectable()
 export class EmailProducer {

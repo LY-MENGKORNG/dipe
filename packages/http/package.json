@@ -1,6 +1,6 @@
 {
   "name": "@repo/http",
-  "description": "Fetch-based HTTP client for the monorepo. Derived from Ky 2.2.0 by Sindre Sorhus (MIT), see LICENSE.ky",
+  "description": "Fetch-based HTTP client.",
   "exports": {
     ".": "./src/index.ts"
   },

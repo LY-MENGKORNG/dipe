@@ -5,7 +5,7 @@ import {
   FastifyAdapter,
   type NestFastifyApplication,
 } from "@nestjs/platform-fastify"
-import { isError, safeTry } from "@repo/utils"
+import { isError, safeTry } from "@repo/utils/exception"
 import { apiReference } from "@config/docs.config"
 import { requestMethods } from "@repo/http"
 import { ObserveInstrument } from "@modules/observe.module"

@@ -1,7 +1,10 @@
 {
   "name": "@repo/utils",
+  "type": "module",
   "description": "Shared utility package",
   "exports": {
-    ".": "./src/index.ts"
+    ".": "./src/index.ts",
+    "./exception": "./src/exception/index.ts",
+    "./exception/*": "./src/exception/*"
   }
 }

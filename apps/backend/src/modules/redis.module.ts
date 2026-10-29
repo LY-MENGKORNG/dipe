@@ -7,7 +7,7 @@ import {
 import { Redis } from "ioredis"
 import { env } from "@repo/env"
 import { REDIS } from "@common/constants"
-import { safeTry } from "@repo/utils"
+import { safeTry } from "@repo/utils/exception"
 
 @Global()
 @Module({

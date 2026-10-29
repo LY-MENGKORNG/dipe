@@ -1,7 +1,7 @@
 <script lang="ts">
   import { onMount } from "svelte";
   import { http } from "#lib/api";
-  import { isError, safeTry } from "@repo/utils";
+  import { isError, safeTry } from "@repo/utils/exception";
   import { Button } from "#lib/components/ui/button/index.js";
   import {
     FieldGroup,
