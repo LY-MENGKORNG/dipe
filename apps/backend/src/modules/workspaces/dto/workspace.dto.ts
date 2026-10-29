@@ -8,7 +8,7 @@ import {
   workspaceMemberListSchema,
   workspaceMemberSchema,
   workspaceSchema,
-} from "../schema/workspace.schema"
+} from "@repo/schema"
 
 export class CreateWorkspaceDto extends createZodDto(createWorkspaceSchema) {}
 

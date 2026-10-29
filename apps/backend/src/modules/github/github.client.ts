@@ -6,7 +6,7 @@ import {
   githubEmailsSchema,
   githubProfileSchema,
   githubUserSchema,
-} from "./schema/github.schema"
+} from "@repo/schema"
 
 @Injectable()
 export class GithubClient {

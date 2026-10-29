@@ -2,10 +2,11 @@ import { createZodDto } from "nestjs-zod"
 
 import {
   listUserQuerySchema,
+  unauthorizedResponseSchema,
   userListResponseSchema,
   userResponseSchema,
   userWorkspacesResponseSchema,
-} from "../users.schema"
+} from "@repo/schema"
 
 export class ListUserQuery extends createZodDto(listUserQuerySchema) {}
 
@@ -21,5 +22,9 @@ export class UserWorkspacesResponseDto extends createZodDto(
 ) {}
 
 export class UserListResponseDto extends createZodDto(userListResponseSchema, {
+  codec: true,
+}) {}
+
+export class UnauthorizedResponse extends createZodDto(unauthorizedResponseSchema, {
   codec: true,
 }) {}

@@ -5,7 +5,7 @@
   "type": "module",
   "scripts": {
     "dev": "bun --bun run vite",
-    "build": "vue-tsc -b && bun --bun run vite build",
+    "build": "bunx vue-tsc -b && bun --bun run vite build",
     "preview": "bun --bun run vite preview",
     "fmt": "bun --bun run oxfmt -c ./.oxfmtrc.json --write \"src/**/*.ts\"",
     "fmt:check": "bun --bun run oxfmt -c ./.oxfmtrc.json --check \"src/**/*.ts\"",

@@ -8,21 +8,20 @@
     },
     "build": {
       "dependsOn": ["^build"],
-      "outputs": ["dist"],
-      "persistent": true,
-      "with": [
-        "@repo/backend#build",
-        "@repo/frontend#build",
-        "@repo/onboarding#build"
-      ]
+      "outputs": ["dist"]
+      // "persistent": true,
+      // "with": [
+      //   "@repo/backend#build",
+      //   "@repo/frontend#build",
+      //   "@repo/onboarding#build"
+      // ]
     },
     "start": {
-      "dependsOn": ["^start"],
-      "with": [
-        "@repo/backend#build",
-        "@repo/frontend#build",
-        "@repo/onboarding#build"
-      ]
+      "dependsOn": ["^start"]
+      // "with": [
+      //   "@repo/backend#start",
+      //   "@repo/onboarding#start"
+      // ]
     },
     "preview": {
       "dependsOn": ["^preview"]

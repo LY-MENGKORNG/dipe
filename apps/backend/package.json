@@ -5,10 +5,10 @@
   "description": "Introduction to NestJS data, integration and production essentials.",
   "author": "LY-MENGKORNG",
   "scripts": {
-    "build": "bun --bun --env-file=../../.env nest build",
+    "build": "bun --env-file=../../.env nest build",
     "dev": "bun --bun run --env-file=../../.env --watch ./src/main.ts",
-    "preview": "bun --bun run nest start --debug --watch",
-    "start": "bun --bun run bun dist/main",
+    "preview": "bun --bun --env-file=../../.env run nest start --debug --watch",
+    "start": "bun --bun --env-file=../../.env dist/main",
     "db:fmt": "bun --bun run prisma format",
     "db:generate": "bun --bun --env-file=../../.env run prisma generate",
     "db:migration:create": "bun --bun --env-file=../../.env run prisma migrate dev --create-only",
@@ -47,6 +47,7 @@
     "@repo/env": "workspace:*",
     "@repo/http": "workspace:*",
     "@repo/utils": "workspace:*",
+    "@repo/schema": "workspace:*",
     "@scalar/nestjs-api-reference": "^1.2.29",
     "bullmq": "6.3.16",
     "fastify": "^5.12.7",
@@ -57,8 +58,7 @@
     "nodemailer": "^10.1.7",
     "pg": "^8.23.1",
     "reflect-metadata": "^0.2.2",
-    "rxjs": "^7.8.2",
-    "zod": "^4.6.7"
+    "rxjs": "^7.8.2"
   },
   "devDependencies": {
     "@nestjs/cli": "^12.0.8",

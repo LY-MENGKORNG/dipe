@@ -4,7 +4,7 @@ import {
   githubCallbackSchema,
   loginSchema,
   tokenResponseSchema,
-} from "../auth.schema"
+} from "@repo/schema"
 
 export class LoginDto extends createZodDto(loginSchema) {}
 

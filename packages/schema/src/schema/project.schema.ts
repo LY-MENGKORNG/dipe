@@ -1,13 +1,13 @@
 import { z } from "zod/v4"
-import { Currency, ProjectMemberRole } from "@config/db/generated/enums"
-import { commonSchema, isoDate } from "@common/helpers/schema"
+import { isoDate, commonSchema } from "../helper"
+import { $Enums } from "@repo/types"
 
 export const projectFields = {
   id: z.uuid(),
   name: z.string().trim().min(2).max(120),
   description: z.string().trim().max(2000),
   budget: z.number().nonnegative(),
-  currency: z.enum(Currency),
+  currency: z.enum($Enums.Currency),
   deadline: isoDate.nullable(),
   workspaceId: z.number().int().min(1),
 } as const
@@ -48,14 +48,14 @@ export const projectListResponseSchema = z.object({
 
 export const addProjectMemberSchema = z.object({
   userId: z.number().int().min(1),
-  role: z.enum(ProjectMemberRole).default("MEMBER"),
+  role: z.enum($Enums.ProjectMemberRole).default("MEMBER"),
 })
 
 export const projectMemberSchema = z.object({
   userId: z.number().int().min(1),
   name: z.string(),
   email: z.email(),
-  role: z.enum(ProjectMemberRole),
+  role: z.enum($Enums.ProjectMemberRole),
 })
 
 export const projectMemberListSchema = z.object({

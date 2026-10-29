@@ -8,7 +8,7 @@ import {
   projectMemberSchema,
   projectResponseSchema,
   updateProjectSchema,
-} from "../schema/project.schema"
+} from "@repo/schema"
 
 export class CreateProjectDto extends createZodDto(createProjectSchema) {}
 

@@ -2,8 +2,6 @@
   import { getContext } from "svelte";
   import type { PageProps } from "./$types";
 
-
-
   const sections = getContext<() => PageProps["data"]["sections"] >('sections')
 </script>
 

@@ -1,4 +1,4 @@
 import { createZodDto } from "nestjs-zod"
-import { githubUserSchema } from "../schema/github.schema"
+import { githubUserSchema } from "@repo/schema"
 
 export class GithubUserDto extends createZodDto(githubUserSchema) {}

@@ -11,7 +11,7 @@ export const commonSchema = {
  * @param {K[]} keys
  * @returns {Omit<T, K>}
  */
-export function omit<T extends object, K extends keyof T>(
+export function omit<T extends Record<string, unknown>, K extends keyof T>(
   obj: T,
   keys: K[],
 ): Omit<T, K> {

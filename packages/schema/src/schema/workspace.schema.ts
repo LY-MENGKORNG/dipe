@@ -1,6 +1,6 @@
 import { z } from "zod/v4"
-import { Role, WorkspaceVisibility } from "@config/db/generated/enums"
-import { commonSchema } from "@common/helpers/schema"
+import { commonSchema } from "../helper"
+import { $Enums } from "@repo/types"
 
 export const workspaceFields = {
   id: z.number().int().min(1),
@@ -11,7 +11,7 @@ export const workspaceFields = {
     .toLowerCase()
     .max(60)
     .regex(/^[a-z0-9]+(?:-[a-z0-9]+)*$/, "Use lowercase letters, digits and -"),
-  visibility: z.enum(WorkspaceVisibility),
+  visibility: z.enum($Enums.WorkspaceVisibility),
   ownerId: z.number().int().min(1),
 } as const
 
@@ -51,7 +51,7 @@ export const workspaceMemberSchema = z.object({
   id: z.number().int().min(1),
   name: z.string(),
   email: z.email(),
-  role: z.enum(Role),
+  role: z.enum($Enums.Role),
 })
 
 export const workspaceMemberListSchema = z.object({

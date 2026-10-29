@@ -5,8 +5,9 @@
   "type": "module",
   "scripts": {
     "dev": "bun run --bun vite dev",
-    "build": "bun run --bun --bun vite build",
-    "preview": "bun --bun vite preview",
+    "build": "bun run --bun vite build",
+    "preview": "bun --bun run vite preview",
+    "start": "PORT=5174 bun ./build/index.js",
     "prepare": "bun --bun svelte-kit sync || echo ''",
     "check": "bun --bun svelte-kit sync && svelte-check --tsconfig ./tsconfig.json",
     "check:watch": "bun --bun svelte-kit sync && svelte-check --tsconfig ./tsconfig.json --watch"

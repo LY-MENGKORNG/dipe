@@ -1,3 +1,11 @@
 {
-  "name": "@repo/schema"
+  "name": "@repo/schema",
+  "description": "Shared schema validation with Zod",
+  "exports": {
+    ".": "./src/index.ts"
+  },
+  "dependencies": {
+    "@repo/types": "workspace:*",
+    "zod": "^4.6.7"
+  }
 }

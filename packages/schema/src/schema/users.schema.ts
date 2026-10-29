@@ -1,14 +1,14 @@
-import { ROLES } from "@common/constants/role"
-import { commonSchema, isoDate, omit } from "@common/helpers/schema"
-import { workspaceSchema } from "@modules/workspaces/schema/workspace.schema"
 import { z } from "zod/v4"
+import { isoDate, commonSchema, omit } from "../helper"
+import { $Enums } from "@repo/types"
+import { workspaceSchema } from "./workspace.schema"
 
 export const userFields = {
   id: z.number().int().min(1),
   name: z.string().trim().min(2).max(80),
   email: z.email().toLowerCase(),
   password: z.string().min(8).max(128),
-  role: z.enum(ROLES),
+  role: z.enum($Enums.Role),
   isActive: z.boolean(),
 } as const
 
@@ -24,7 +24,7 @@ export const updateUserSchema = z.object(userFieldsNoId).partial()
 
 export const listUserQuerySchema = z.object({
   q: z.string().trim().min(1).optional(),
-  role: z.enum(ROLES).optional(),
+  role: z.enum($Enums.Role).optional(),
   ...commonSchema,
 })
 
@@ -54,4 +54,10 @@ export const userWorkspacesResponseSchema = z.object({
   updatedAt: isoDate,
   workspaces: workspaceSchema.array(),
   createdWorkspaces: workspaceSchema.omit({ ownerId: true }).array(),
+})
+
+export const unauthorizedResponseSchema = z.object({
+  message: z.string().default("Missing bearer token"),
+  error: z.string().default("Unauthorized"),
+  statusCode: z.number().default(401),
 })
